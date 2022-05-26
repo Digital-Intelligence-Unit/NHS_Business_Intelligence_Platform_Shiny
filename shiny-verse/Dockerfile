@@ -1,4 +1,4 @@
-FROM rocker/shiny:3.6.3
+FROM rocker/shiny:4.0.5
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libxml2-dev \
@@ -10,8 +10,9 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libssl-dev \
   libcurl4-openssl-dev \
   libssh2-1-dev \
-  unixodbc-dev \
-  && install2.r --error \
+  unixodbc-dev
+
+RUN install2.r --error  --skipinstalled \
     --deps TRUE \
     tidyverse \
     dplyr \
@@ -22,5 +23,5 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     caTools \
     lubridate \
     RPostgreSQL \
-	BiocManager \
-  && rm -rf /tmp/downloaded_packages
+    BiocManager \
+    && rm -rf /tmp/downloaded_packages
