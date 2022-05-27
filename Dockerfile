@@ -1,4 +1,4 @@
-FROM rocker/shiny:3.6.3
+FROM rocker/shiny:4.0.5
 
 ARG PGDATABASE
 ENV PGDATABASE ${PGDATABASE}
@@ -21,6 +21,7 @@ ENV AWS_SECRETKEY ${AWS_SECRETKEY}
 ENV API_NAME=biplatform-shiny, AWSREGION=eu-west-2
 
 RUN apt-get update && apt-get install -y \
+    --no-install-recommends \
     sudo \
     gdebi-core \
     pandoc \
