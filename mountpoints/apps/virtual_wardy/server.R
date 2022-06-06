@@ -5,10 +5,29 @@ library(ggplot2)
 library(plotly)
 library(RPostgreSQL)
 library(lubridate)
+library(config)
 
-pg_host <- Sys.getenv('PGDATABASE')
-pg_username <- Sys.getenv('POSTGRES_UN')
-pg_password <- Sys.getenv('POSTGRES_PW')
+config <- get()
+
+get_query <- function(query) {
+  postgres <- dbConnect(
+    RPostgreSQL::PostgreSQL(),
+    dbname = config$sql_credentials$database,
+    user = config$sql_credentials$uid,
+    host = config$sql_credentials$server,
+    password = config$sql_credentials$pwd,
+    port = config$sql_credentials$port
+  )
+
+  response <- dbGetQuery(postgres, query)
+
+  dbDisconnect(postgres)
+
+  response
+}
+
+# Check DB Connection
+get_query('SELECT * FROM covid19_cases_p1p2 LIMIT 1;') %>% print()
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -17,11 +36,11 @@ server <- function(input, output) {
         if (!exists('virtual_ward')) {
             postgres <- dbConnect(
                 PostgreSQL(),
-                dbname = 'postgres',
-                user = pg_username,
-                host = pg_host,
-                password = pg_password,
-                port = 5432
+                dbname = config$sql_credentials$database,
+                user = config$sql_credentials$uid,
+                host = config$sql_credentials$server,
+                password = config$sql_credentials$pwd,
+                port = config$sql_credentials$port
             )
 
             virtual_ward_full <- dbGetQuery(
@@ -352,11 +371,11 @@ server <- function(input, output) {
         if (!exists('virtual_ward')) {
             postgres <- dbConnect(
                 PostgreSQL(),
-                dbname = 'postgres',
-                user = pg_username,
-                host = pg_host,
-                password = pg_password,
-                port = 5432
+                dbname = config$sql_credentials$database,
+                user = config$sql_credentials$uid,
+                host = config$sql_credentials$server,
+                password = config$sql_credentials$pwd,
+                port = config$sql_credentials$port
             )
 
             virtual_ward_full <- dbGetQuery(
@@ -625,11 +644,11 @@ server <- function(input, output) {
         if (!exists('virtual_ward')) {
             postgres <- dbConnect(
                 PostgreSQL(),
-                dbname = 'postgres',
-                user = pg_username,
-                host = pg_host,
-                password = pg_password,
-                port = 5432
+                dbname = config$sql_credentials$database,
+                user = config$sql_credentials$uid,
+                host = config$sql_credentials$server,
+                password = config$sql_credentials$pwd,
+                port = config$sql_credentials$port
             )
 
             virtual_ward_full <- dbGetQuery(

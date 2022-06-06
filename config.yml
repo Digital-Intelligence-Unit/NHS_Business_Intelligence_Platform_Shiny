@@ -1,0 +1,7 @@
+default:
+  start_year: 2014
+  end_year: 2018
+  sql_credentials: !expr config::get(file = "sql.server.credentials.yml")
+  max_age: 90
+  min_age: 0
+  age_band_width: 5
