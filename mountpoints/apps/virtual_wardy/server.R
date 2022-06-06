@@ -10,8 +10,10 @@ library(config)
 config <- get()
 
 get_query <- function(query) {
+  print("Testing connection to database...")
+  print(config$sql_credentials$database)
   postgres <- dbConnect(
-    RPostgreSQL::PostgreSQL(),
+    PostgreSQL(),
     dbname = config$sql_credentials$database,
     user = config$sql_credentials$uid,
     host = config$sql_credentials$server,
