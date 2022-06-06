@@ -15,7 +15,7 @@ get_query <- function(query) {
   print("Testing connection to database...")
   print(config$sql_credentials$database)
   postgres <- dbConnect(
-    PostgreSQL(),
+    RPostgreSQL::PostgreSQL(),
     dbname = config$sql_credentials$database,
     user = config$sql_credentials$uid,
     host = config$sql_credentials$server,
@@ -39,7 +39,7 @@ server <- function(input, output) {
 
         if (!exists('virtual_ward')) {
             postgres <- dbConnect(
-                PostgreSQL(),
+                RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
                 user = config$sql_credentials$uid,
                 host = config$sql_credentials$server,
@@ -374,7 +374,7 @@ server <- function(input, output) {
 
         if (!exists('virtual_ward')) {
             postgres <- dbConnect(
-                PostgreSQL(),
+                RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
                 user = config$sql_credentials$uid,
                 host = config$sql_credentials$server,
@@ -647,7 +647,7 @@ server <- function(input, output) {
 
         if (!exists('virtual_ward')) {
             postgres <- dbConnect(
-                PostgreSQL(),
+                RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
                 user = config$sql_credentials$uid,
                 host = config$sql_credentials$server,
