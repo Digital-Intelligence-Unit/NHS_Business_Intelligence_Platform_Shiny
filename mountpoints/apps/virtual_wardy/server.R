@@ -7,9 +7,11 @@ library(RPostgreSQL)
 library(lubridate)
 library(config)
 
-config <- get()
+
 
 get_query <- function(query) {
+  config <- get()
+
   print("Testing connection to database...")
   print(config$sql_credentials$database)
   postgres <- dbConnect(
@@ -28,11 +30,11 @@ get_query <- function(query) {
   response
 }
 
-# Check DB Connection
-get_query('SELECT * FROM covid19_cases_p1p2 LIMIT 1;') %>% print()
-
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+    # Check DB Connection
+    get_query('SELECT * FROM covid19_cases_p1p2 LIMIT 1;') %>% print()
+
     output$distPlot <- renderPlotly({
 
         if (!exists('virtual_ward')) {
