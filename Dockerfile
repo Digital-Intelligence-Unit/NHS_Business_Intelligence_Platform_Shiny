@@ -60,8 +60,6 @@ RUN R -e "install.packages(\
   chown shiny:shiny /var/lib/shiny-server
 
 COPY mountpoints/apps/ /srv/shiny-server/
-COPY ./sql.server.credentials.yml .
-COPY ./config.yml .
 
 EXPOSE 3838
 
