@@ -53,7 +53,6 @@ RUN R -e "install.packages(\
     'lubridate',\
     'RPostgreSQL',\
     'BiocManager'\
-    'DT'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
 )" && \
