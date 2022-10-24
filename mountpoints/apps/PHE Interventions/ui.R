@@ -1,7 +1,105 @@
+library(shiny)
+
+# Define UI ----
+
+## ui.R ##
+
+library(stringr)
+library(DT)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(shinyWidgets)
+library(plotly)
+library(shinyjs)
+
+
+
+plot_w <- data.frame(1:1000)
+colnames(plot_w)[1] <- "thousands"
+
+first.word <- function(my.string){
+  unlist(strsplit(my.string, ":"))[1]
+}
+
+HEER <- read_excel("./Health_Economics_Evidence_Resource_HEER_July19.xlsm", 
+                   sheet = "Evidence")
+
+HEER$`Benefit-cost ratio (BCR)` <- gsub("\\ to ", "-", HEER$`Benefit-cost ratio (BCR)`)
+HEER$ICER <- gsub("\\ to ", "-", HEER$ICER)
+
+
+#HEER %>% select(`Benefit-cost ratio (BCR)`) %>% mutate(Ratios = ifelse( ':' %in% `Benefit-cost ratio (BCR)` ,sapply(`Benefit-cost ratio (BCR)`, first.word),`Benefit-cost ratio (BCR)`))
+regexAmount <- "[0-9\\.]+"
+## Table Clean BCR values
+
+HEER <- HEER  %>% mutate(Ratios2 =strsplit(`Benefit-cost ratio (BCR)`, "(?=[A-Za-z])(?<=[0-9])|(?=[0-9])(?<=[A-Za-z])", perl=TRUE))
+HEER <- HEER %>% mutate(Ratios2 = stringr::str_extract(Ratios2, "^[^:]*"))
+#HEER <- HEER  %>% mutate(Ratios2 =stringr::str_extract(Ratios2, regexAmount))
+HEER$Ratios2 <- gsub("[^0-9.-]", "", HEER$Ratios2)
+#HEER <- HEER  %>% mutate(Ratios2 = ifelse(is.na(Ratios2),0,Ratios2))
+library(stringr)
+HEER$Ratios3 <-str_split_fixed(HEER$Ratios2, fixed("-"), 2)[, 2]
+HEER <- HEER  %>% mutate(Ratios2 =stringr::str_extract(Ratios2, regexAmount))
+HEER <- HEER  %>% mutate(Ratios2 = ifelse(is.na(Ratios2),0,Ratios2))
+
+HEER$Ratios <- ifelse(HEER$Ratios3 != "", (as.numeric(HEER$Ratios2) + as.numeric(HEER$Ratios3))/2 , HEER$Ratios2)
+
+#HEER$Ratios3 <- as.numeric(unlist(strsplit(HEER$Ratios2, "-")))[2]# + as.numeric(unlist(strsplit(HEER$Ratios2, "-")))[2]) / 2, HEER$Ratios2)
+#mat  <- matrix(unlist(strsplit("1.46-2.01", "-")), ncol=2, byrow=FALSE)
+#df   <- as.data.frame(mat)
+
+
+
+HEER <- HEER  %>% mutate(ICER2 =strsplit(`ICER`, "(?=[A-Za-z])(?<=[0-9])|(?=[0-9])(?<=[A-Za-z])", perl=TRUE))
+HEER <- HEER %>% mutate(ICER2 = stringr::str_extract(ICER2, "^[^:]*"))
+#HEER <- HEER  %>% mutate(ICER2 =stringr::str_extract(ICER2, regexAmount))
+HEER$ICER2 <- gsub("[^0-9.-]", "", HEER$ICER2)
+#HEER <- HEER  %>% mutate(ICER2 = ifelse(is.na(ICER2),0,ICER2))
+library(stringr)
+HEER$ICER3 <-str_split_fixed(HEER$ICER2, fixed("-"), 2)[, 2]
+HEER <- HEER  %>% mutate(ICER2 =stringr::str_extract(ICER2, regexAmount))
+HEER <- HEER  %>% mutate(ICER2 = ifelse(is.na(ICER2),0,ICER2))
+
+HEER$ICER_VALUES <- ifelse(HEER$ICER3 != "", (as.numeric(HEER$ICER2) + as.numeric(HEER$ICER3))/2 , HEER$ICER2)
+
+
+
+
+
+# HEER <- HEER %>% mutate(ICER_VALUES = gsub(",", "", gsub("([a-zA-Z]),", "\\1 ", ICER)))
+# HEER <- HEER %>% mutate(ICER_VALUES = stringr::str_extract(ICER_VALUES, "^[^:]*"))
+# HEER <- HEER  %>% mutate(ICER_VALUES = stringr::str_extract(ICER_VALUES, "^[^-]*"))
+# HEER <- HEER  %>% mutate(ICER_VALUES = stringr::str_extract(ICER_VALUES,  "[^ROI ]+$"))
+# HEER <- HEER  %>% mutate(ICER_VALUES =stringr::str_extract(ICER_VALUES, regexAmount) %>% unlist %>% as.numeric)
+# HEER <- HEER  %>% mutate(ICER_VALUES = ifelse(is.na(ICER_VALUES),0,ICER_VALUES))
+
+# data_rows <- function(mtcars) {
+#   
+#   mymtcars <- mtcars
+#   mymtcars[["Select"]] <- paste0('<input type="checkbox" name="row_selected" value=',1:nrow(mymtcars),' unchecked>')
+#   #mymtcars[["Select"]] <- paste0('<input type="checkbox" name="row_selected" value=',(mymtcars$ID),' unchecked>')
+#   mymtcars[["_id"]] <- paste0("row_", seq(nrow(mymtcars)))
+#   return(mymtcars)
+# }
+
+#HEER <- data_rows(HEER)
+js <- "
+$(document).ready(function(){
+  $('#printPdf_CA').click(function () {
+    domtoimage.toPng(document.getElementById('mainOrder_CA'))
+      .then(function (blob) {
+        var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
+        pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
+        pdf.save('Report.pdf');
+        // that.options.api.optionsChanged(); what is that?
+      });
+  });
+});
+"
 ui <- fluidPage(
   
-  theme = shinytheme("united")
-  ,tabsetPanel(id = "inTabset",
+ tabsetPanel(id = "inTabset",
                tabPanel("Explore", fluid = TRUE,
                         
                         titlePanel("PHE"),
@@ -11,10 +109,10 @@ ui <- fluidPage(
                           sidebarPanel(
                             #helpText("Use filters to work out intervention."),
                             
-                            #sliderInput("investment", "Amount invested in £1000s:",
+                            #sliderInput("investment", "Amount invested in Â£1000s:",
                             #             min = 0, max = 1000,
                             #             value = 0, step = 10,
-                            #             pre ="£"),
+                            #             pre ="Â£"),
                             
                             pickerInput("Theme","select theme", choices=unique(HEER$Theme), options = list(`actions-box` = TRUE),multiple = T),
                             
@@ -77,12 +175,12 @@ ui <- fluidPage(
                             
                             sliderInput(
                               inputId = "ICER_FILTER",
-                              label = "Filter by ICER in £1,000s",
+                              label = "Filter by ICER in Â£1,000s",
                               value = c(0.1,2),
                               min = 0,
                               max = 2000,
                               step = 0.1,
-                              pre ="£"
+                              pre ="Â£"
                             ),
                             
                             verbatimTextOutput("ICER_MULTI"),
@@ -100,7 +198,7 @@ ui <- fluidPage(
                               min = 0,
                               max = 250,
                               step = 0.1#,
-                              #pre ="£"
+                              #pre ="Â£"
                             ),
                             
                             
@@ -111,7 +209,7 @@ ui <- fluidPage(
                             #    min = 0.25,
                             #    max = 200,
                             #    step = 0.25,
-                            #    pre ="£"
+                            #    pre ="Â£"
                             #  )
                             
                             
