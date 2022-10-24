@@ -99,7 +99,9 @@ $(document).ready(function(){
 "
 ui <- fluidPage(
   
+
  tabsetPanel(id = "inTabset",
+
                tabPanel("Explore", fluid = TRUE,
                         
                         titlePanel("PHE"),
