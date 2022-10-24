@@ -10,7 +10,7 @@ install.packages(c("tidyverse"
 ,"plotly"
 ,"shinyjs"))
 
-install.packages("DT", type = "binary")
+install.package("DT", type = "binary")
 
 library(tidyverse)
 library(shiny)
