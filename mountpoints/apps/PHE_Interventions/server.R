@@ -1,17 +1,3 @@
-## install packages ##
-
-install.packages(c("tidyverse"
-,"shiny"
-,"stringr"
-,"readxl"
-,"dplyr"
-,"ggplot2"
-,"shinyWidgets"
-,"plotly"
-,"shinyjs"))
-
-install.package("DT")
-
 library(tidyverse)
 library(shiny)
 library(stringr)
