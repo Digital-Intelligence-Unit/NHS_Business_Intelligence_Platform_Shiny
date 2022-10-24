@@ -4,7 +4,7 @@ library(shiny)
 # Define UI ----
 
 ## ui.R ##
-library(shinythemes)
+
 library(stringr)
 library(DT)
 library(readxl)

@@ -3,7 +3,7 @@ library(shiny)
 # Define UI ----
 
 ## ui.R ##
-library(shinythemes)
+
 library(stringr)
 library(DT)
 library(readxl)
@@ -99,8 +99,9 @@ $(document).ready(function(){
 "
 ui <- fluidPage(
   
-  theme = shinytheme("united")
-  ,tabsetPanel(id = "inTabset",
+
+ tabsetPanel(id = "inTabset",
+
                tabPanel("Explore", fluid = TRUE,
                         
                         titlePanel("PHE"),
