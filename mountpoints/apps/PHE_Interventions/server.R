@@ -1,3 +1,5 @@
+## install packages ##
+
 install.packages(c("tidyverse"
 ,"shiny"
 ,"stringr"
@@ -8,7 +10,6 @@ install.packages(c("tidyverse"
 ,"shinyWidgets"
 ,"plotly"
 ,"shinyjs"))
-
 
 library(tidyverse)
 library(shiny)
@@ -22,20 +23,6 @@ library(plotly)
 library(shinyjs)
 
 library(shiny)
-
-# Define UI ----
-
-## ui.R ##
-
-library(stringr)
-library(DT)
-library(readxl)
-library(dplyr)
-library(ggplot2)
-library(shinyWidgets)
-library(plotly)
-library(shinyjs)
-
 
 plot_w <- data.frame(1:1000)
 colnames(plot_w)[1] <- "thousands"
