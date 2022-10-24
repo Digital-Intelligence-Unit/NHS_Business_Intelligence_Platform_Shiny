@@ -3,13 +3,14 @@
 install.packages(c("tidyverse"
 ,"shiny"
 ,"stringr"
-,"DT"
 ,"readxl"
 ,"dplyr"
 ,"ggplot2"
 ,"shinyWidgets"
 ,"plotly"
 ,"shinyjs"))
+
+install.packages("DT", type = "binary")
 
 library(tidyverse)
 library(shiny)
