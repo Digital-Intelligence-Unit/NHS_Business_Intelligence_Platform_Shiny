@@ -40,6 +40,7 @@ RUN R -e "install.packages(\
   c(\
     'shiny',\
     'rmarkdown',\
+    'tidyverse',\
     'ggplot2',\
     'plotly',\
     'dplyr',\
@@ -54,7 +55,6 @@ RUN R -e "install.packages(\
     'RPostgreSQL',\
     'DT',\
     'readxl',\
-    'tidyverse',\
     'shinyWidgets',\
     'shinyjs',\
     'BiocManager'\
