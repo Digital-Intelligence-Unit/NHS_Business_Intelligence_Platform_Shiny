@@ -1,3 +1,5 @@
+remotes::install_github('rstudio/DT')
+
 library(tidyverse)
 library(shiny)
 library(stringr)
