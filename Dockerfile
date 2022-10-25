@@ -53,6 +53,10 @@ RUN R -e "install.packages(\
     'lubridate',\
     'RPostgreSQL',\
     'DT',\
+    'readxl',\
+    'tidyverse',\
+    'shinyWidgets',\
+    'shinyjs',\
     'BiocManager'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
