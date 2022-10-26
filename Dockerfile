@@ -40,6 +40,7 @@ RUN R -e "install.packages(\
   c(\
     'shiny',\
     'rmarkdown',\
+    'tidyverse',\
     'ggplot2',\
     'plotly',\
     'dplyr',\
@@ -52,6 +53,10 @@ RUN R -e "install.packages(\
     'config',\
     'lubridate',\
     'RPostgreSQL',\
+    'DT',\
+    'readxl',\
+    'shinyWidgets',\
+    'shinyjs',\
     'BiocManager'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
