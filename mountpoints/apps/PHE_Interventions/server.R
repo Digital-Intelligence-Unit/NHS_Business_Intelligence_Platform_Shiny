@@ -1,4 +1,10 @@
+
 library(shiny)
+
+# Define UI ----
+
+## ui.R ##
+
 library(stringr)
 library(DT)
 library(readxl)
@@ -8,7 +14,6 @@ library(shinyWidgets)
 library(plotly)
 library(shinyjs)
 
-library(shiny)
 
 plot_w <- data.frame(1:1000)
 colnames(plot_w)[1] <- "thousands"
@@ -79,19 +84,19 @@ HEER$ICER_VALUES <- ifelse(HEER$ICER3 != "", (as.numeric(HEER$ICER2) + as.numeri
 # }
 
 #HEER <- data_rows(HEER)
-js <- "
-$(document).ready(function(){
-  $('#printPdf_CA').click(function () {
-    domtoimage.toPng(document.getElementById('mainOrder_CA'))
-      .then(function (blob) {
-        var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
-        pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
-        pdf.save('Report.pdf');
-        // that.options.api.optionsChanged(); what is that?
-      });
-  });
-});
-"
+# js <- "
+# $(document).ready(function(){
+#   $('#printPdf_CA').click(function () {
+#     domtoimage.toPng(document.getElementById('mainOrder_CA'))
+#       .then(function (blob) {
+#         var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
+#         pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
+#         pdf.save('Report.pdf');
+#         // that.options.api.optionsChanged(); what is that?
+#       });
+#   });
+#});
+#"
 # checks <- function(mymtcars) {
 #   
 #   

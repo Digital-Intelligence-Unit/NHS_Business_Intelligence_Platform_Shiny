@@ -84,24 +84,22 @@ HEER$ICER_VALUES <- ifelse(HEER$ICER3 != "", (as.numeric(HEER$ICER2) + as.numeri
 # }
 
 #HEER <- data_rows(HEER)
-js <- "
-$(document).ready(function(){
-  $('#printPdf_CA').click(function () {
-    domtoimage.toPng(document.getElementById('mainOrder_CA'))
-      .then(function (blob) {
-        var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
-        pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
-        pdf.save('Report.pdf');
-        // that.options.api.optionsChanged(); what is that?
-      });
-  });
-});
-"
+# js <- "
+# $(document).ready(function(){
+#   $('#printPdf_CA').click(function () {
+#     domtoimage.toPng(document.getElementById('mainOrder_CA'))
+#       .then(function (blob) {
+#         var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
+#         pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
+#         pdf.save('Report.pdf');
+#         // that.options.api.optionsChanged(); what is that?
+#       });
+#   });
+# });
+# "
 ui <- fluidPage(
   
-
  tabsetPanel(id = "inTabset",
-
                tabPanel("Explore", fluid = TRUE,
                         
                         titlePanel("PHE"),
@@ -292,18 +290,18 @@ ui <- fluidPage(
                         )
                         ),
                         
-                        tags$head(
-                          tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"),
-                          tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"),
-                          tags$script(js)
-                        )
+                        #tags$head(
+                        #  tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"),
+                        #  tags$script(src = "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"),
+                        #  tags$script(js)
+                        #)
                         
-                        ,
+                        #,
                         
                         sidebarLayout(
                           sidebarPanel(textInput("InputId2", "Enter ID", value = "A1", width = NULL, placeholder = NULL)
-                                       ,actionButton("submit2", "Produce Report"),
-                                       actionButton("printPdf_CA", "Export page to PDF")),
+                                       ,actionButton("submit2", "Produce Report")),
+                                       #actionButton("printPdf_CA", "Export page to PDF")
                           mainPanel(div(style='width:100%',
                                         id = "mainOrder_CA",fluidRow(
                                           fluidRow(
