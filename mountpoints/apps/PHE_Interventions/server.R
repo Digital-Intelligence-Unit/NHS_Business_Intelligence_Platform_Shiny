@@ -1,4 +1,10 @@
+
 library(shiny)
+
+# Define UI ----
+
+## ui.R ##
+
 library(stringr)
 library(DT)
 library(readxl)
@@ -8,7 +14,6 @@ library(shinyWidgets)
 library(plotly)
 library(shinyjs)
 
-library(shiny)
 
 plot_w <- data.frame(1:1000)
 colnames(plot_w)[1] <- "thousands"
@@ -79,19 +84,19 @@ HEER$ICER_VALUES <- ifelse(HEER$ICER3 != "", (as.numeric(HEER$ICER2) + as.numeri
 # }
 
 #HEER <- data_rows(HEER)
-js <- "
-$(document).ready(function(){
-  $('#printPdf_CA').click(function () {
-    domtoimage.toPng(document.getElementById('mainOrder_CA'))
-      .then(function (blob) {
-        var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
-        pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
-        pdf.save('Report.pdf');
-        // that.options.api.optionsChanged(); what is that?
-      });
-  });
-});
-"
+# js <- "
+# $(document).ready(function(){
+#   $('#printPdf_CA').click(function () {
+#     domtoimage.toPng(document.getElementById('mainOrder_CA'))
+#       .then(function (blob) {
+#         var pdf = new jsPDF('l', 'pt', [$('#mainOrder_CA').width(), $('#mainOrder_CA').height()]);
+#         pdf.addImage(blob, 'PNG', (window.innerWidth*(1/6)), 0, 1000, window.innerHeight);
+#         pdf.save('Report.pdf');
+#         // that.options.api.optionsChanged(); what is that?
+#       });
+#   });
+#});
+#"
 # checks <- function(mymtcars) {
 #   
 #   
@@ -188,13 +193,14 @@ server <- function(input, output, session) {
   
   
   observe({
+   
     
     if(!is.null(input$Theme)) {
       
       #df <- HEER  %>% select(ID,Activity,ICER)
       if(isTRUE(input$icer) & isFALSE(input$bcr)){
         
-        df <- HEER  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type) %>% #select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER) %>%
+        df <- HEER  %>% filter(Theme %in% input$Theme) %>% #select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER) %>%
           filter(`ICER` != '-')
         #filter(if_all(ICER, ~ grepl("^-?\\d+(\\.\\d+)?$", ICER))) %>% 
         #mutate(across(ICER, ~ as.numeric(ICER)))
@@ -204,7 +210,7 @@ server <- function(input, output, session) {
       
       else if (isTRUE(input$bcr) & isFALSE(input$icer)){
         
-        df <- HEER  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type) %>% #select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER) %>%
+        df <- HEER  %>% filter(Theme %in% input$Theme ) %>% #select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER) %>%
           filter(`Benefit-cost ratio (BCR)` != '-')
         
         
@@ -212,7 +218,7 @@ server <- function(input, output, session) {
       
       else if (isTRUE(input$bcr) & isTRUE(input$icer)){
         
-        df <- HEER  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type) %>% #select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER) %>%
+        df <- HEER  %>% filter(Theme %in% input$Theme ) %>% #select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER) %>%
           filter(`Benefit-cost ratio (BCR)` != '-') %>%
           filter(`ICER` != '-')
         
@@ -225,20 +231,20 @@ server <- function(input, output, session) {
         
         
         #else {  
-        df <- HEER  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type)# %>% select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER)
+        df <- HEER  %>% filter(Theme %in% input$Theme )# %>% select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER)
       }#}
       
       
       if (isTRUE(input$ICER_Filter_YN) & isFALSE(input$Ratio_Filter_YN)){
         
-        df <- df  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type) %>%
+        df <- df  %>% filter(Theme %in% input$Theme ) %>%
           filter(as.numeric(ICER_VALUES) >= (input$ICER_FILTER[1] * 1000) & as.numeric(ICER_VALUES) <= (input$ICER_FILTER[2] * 1000)) %>% select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER)
       }
       
       else if (isTRUE(input$ICER_Filter_YN) & isTRUE(input$Ratio_Filter_YN))
       {
         
-        df <- df  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type) %>%
+        df <- df  %>% filter(Theme %in% input$Theme ) %>%
           filter(as.numeric(ICER_VALUES) >= (input$ICER_FILTER[1] * 1000) & as.numeric(ICER_VALUES) <= (input$ICER_FILTER[2] * 1000)) %>% 
           filter(as.numeric(Ratios) >= (input$Ratio_FILTER[1]) & as.numeric(Ratios) <= (input$Ratio_FILTER[2])) %>% 
           select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER)
@@ -248,7 +254,7 @@ server <- function(input, output, session) {
       
       else if (isTRUE(input$Ratio_Filter_YN) & isFALSE(input$ICER_Filter_YN)){
         
-        df <- df  %>% filter(Theme %in% input$Theme & `Type of analysis` %in% input$type) %>%
+        df <- df  %>% filter(Theme %in% input$Theme ) %>%
           #filter(ICER_VALUES >= (input$ICER_FILTER[1] * 1000) & ICER_VALUES <= (input$ICER_FILTER[2] * 1000)) %>% 
           filter(as.numeric(Ratios) >= (input$Ratio_FILTER[1]) & as.numeric(Ratios) <= (input$Ratio_FILTER[2])) %>% 
           select(ID,Activity,Intervention,`Benefit-cost ratio (BCR)`,ICER)
@@ -322,7 +328,7 @@ server <- function(input, output, session) {
       
       output$myresults <- DT::renderDT({
         datatable(df2 <- HEER %>% filter(ID %in% (df %>% filter(row_number() %in% (input$myDT_rows_selected)))) %>%
-                    select(ID,`Summary of evidence`,`Assumptions / Caveats`,Ratios))
+                    select(ID,`Summary of evidence`,`Assumptions / Caveats`,Ratios),options = list(dom = 't'))
         
         
         
@@ -368,18 +374,18 @@ server <- function(input, output, session) {
       
       
       
+      
+      
       observeEvent(input$myDT_rows_selected, {
         #req(input$myDT_rows_selected)
         
         
-        # eventReactive(input$submit, {
-        #   updateTabsetPanel(session, "inTabset",
-        #                     selected = "report")
-        #   
+         
+           
         updateTextInput(session,"InputId2",value = (HEER %>% filter(ID %in% (df %>% filter(row_number() %in% (input$myDT_rows_selected)))) %>%
                                                       select(ID) %>% pull))
         
-        
+
         
         output$distPlot <- renderPlotly({
           
@@ -445,6 +451,9 @@ server <- function(input, output, session) {
           ggplotly(p, tooltip = "text") 
           
         })
+        
+        
+        
         
       })
       
@@ -515,18 +524,37 @@ server <- function(input, output, session) {
   #### PG 2 STUFF
   
   
-  RESULTS2 <- eventReactive(input$submit2,{
+  #RESULTS2 <- eventReactive(input$submit2,{
+  #  if(is.null(input$InputId2)){
+  #    return()
+  #  }
+  #  
+  #  df <- HEER %>% filter(ID == toupper(input$InputId2)) 
+    
+  #  
+    #text1
+    
+  #})  
+  
+  
+  RESULTS2 <- eventReactive(input$submit,{
     if(is.null(input$InputId2)){
       return()
     }
+    
+    
+    
     
     df <- HEER %>% filter(ID == toupper(input$InputId2)) 
     
     
     #text1
     
-  })  
+  }) 
   
+  observeEvent(input$submit, {
+    updateTabsetPanel(session = session, inputId = "inTabset", selected = "report")
+  })
   
   output$text1 <- renderText({paste("Theme: ", RESULTS2() %>% select(Theme) %>% pull)})  
   output$text2 <- renderText({paste("Activity: ", RESULTS2() %>% select(Activity) %>% pull)})
