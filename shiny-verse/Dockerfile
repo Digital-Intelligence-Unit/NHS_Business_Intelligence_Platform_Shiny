@@ -1,4 +1,4 @@
-FROM rocker/shiny:4.0.5
+FROM rocker/shiny:4.0.2
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libxml2-dev \
@@ -14,14 +14,46 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
 
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \
-    tidyverse \
-    dplyr \
-    devtools \
-    formatR \
-    remotes \
-    selectr \
-    caTools \
-    lubridate \
-    RPostgreSQL \
-    BiocManager \
+    shiny\
+    rmarkdown\
+    tidyverse\
+    ggplot2\
+    plotly\
+    dplyr\
+    stringr\
+    devtools\
+    formatR\
+    remotes\
+    selectr\
+    caTools\
+    config\
+    RPostgreSQL\
+    DT\
+    readxl\
+    shinyWidgets\
+    shinyjs\
+    BiocManager\
+    DBI\
+    odbc\
+    shinydashboard\
+    shinyBS\
+    treemap\
+    RColorBrewer\
+    shinyTree\
+    scales\
+    cluster\
+    FactoMineR\
+    table\
+    epiDisplay\
+    bnlearn\
+    bnviewer\
+    fastcluster\
+    gridExtra\
+    factoextra\
+    kmed\
+    Rtsne\
+    umap\
+    rpart\
+    plot\
+    rattle\
     && rm -rf /tmp/downloaded_packages
