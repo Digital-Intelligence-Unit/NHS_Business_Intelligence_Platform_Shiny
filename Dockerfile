@@ -1,4 +1,4 @@
-FROM rocker/shiny:4.0.5
+FROM rocker/shiny
 
 ARG PGDATABASE
 ENV PGDATABASE ${PGDATABASE}
