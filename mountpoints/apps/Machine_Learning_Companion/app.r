@@ -1,8 +1,8 @@
-source("./app/data.R")
-source("./app/ui.R")
+source("./app/data.r")
+source("./app/ui.r")
 
 # code functions
-source("./app/code/mod_summary.R")
+source("./app/code/mod_summary.r")
 #source("./app/code/show_results.R")
 
 server <- function(input,output,session){
