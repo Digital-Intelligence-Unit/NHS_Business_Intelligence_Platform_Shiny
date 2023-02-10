@@ -57,7 +57,30 @@ RUN R -e "install.packages(\
     'readxl',\
     'shinyWidgets',\
     'shinyjs',\
-    'BiocManager'\
+    'BiocManager,'\
+    'DBI,'\
+    'odbc,'\
+    'shinydashboard,'\
+    'shinyBS,'\
+    'treemap,'\
+    'RColorBrewer,'\
+    'shinyTree,'\
+    'scales,'\
+    'cluster,'\
+    'FactoMineR,'\
+    'table,'\
+    'epiDisplay,'\
+    'bnlearn,'\
+    'bnviewer,'\
+    'fastcluster,'\
+    'gridExtra,'\
+    'factoextra,'\
+    'kmed,'\
+    'Rtsne,'\
+    'umap,'\
+    'rpart,'\
+    'plot,'\
+    'rattle'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
 )" && \
@@ -73,3 +96,5 @@ COPY shiny-server.sh /usr/bin/shiny-server.sh
 RUN ["chmod", "+x", "/usr/bin/shiny-server.sh"]
 
 ENTRYPOINT ["sh", "/usr/bin/shiny-server.sh"]
+
+
