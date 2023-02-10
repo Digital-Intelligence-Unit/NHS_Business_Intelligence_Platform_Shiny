@@ -123,7 +123,7 @@ server <- function(input, output, session) {
 
       output[["BCR_MULTI"]] <- renderText({
         
-        paste0('Potential ROI: Â£',format(input[["param_numeric"]] * (input$investment*1000), big.mark=",", scientific=FALSE))
+        paste0('Potential ROI: £',format(input[["param_numeric"]] * (input$investment*1000), big.mark=",", scientific=FALSE))
       })
       
       output$myresults <- DT::renderDT({
@@ -150,14 +150,14 @@ server <- function(input, output, session) {
           
           
           p <- ggplot(data = plotsW, aes(thousands,ROI,
-                                         text = paste(paste0('Investment: Â£',format((thousands * 1000), big.mark=",", scientific=FALSE)),
-                                                      paste0("<br>ROI: Â£",format((ROI), big.mark=",", scientific=FALSE))) 
+                                         text = paste(paste0('Investment: £',format((thousands * 1000), big.mark=",", scientific=FALSE)),
+                                                      paste0("<br>ROI: £",format((ROI), big.mark=",", scientific=FALSE))) 
                                      
           )) +
             geom_line(colour = "black") +
             geom_point(colour = "#408FA6")+
-            labs(y = "ROI", x = "Investment in Â£1,000s") +
-            ggtitle("Plot of investment in Â£1,000s by ROI")+
+            labs(y = "ROI", x = "Investment in £1,000s") +
+            ggtitle("Plot of investment in £1,000s by ROI")+
             theme(plot.title = element_text(size=8))
           ggplotly(p, tooltip = "text") 
           
@@ -171,15 +171,15 @@ server <- function(input, output, session) {
           plotsW <- plot_w %>% mutate(QALYS = as.numeric(`thousands` * 1000) / as.numeric(RATIO))
           
           p <- ggplot(data = plotsW, aes(thousands,QALYS,
-                                         text = paste( paste0('Investment: Â£',format((thousands * 1000), big.mark=",", scientific=FALSE)),
+                                         text = paste( paste0('Investment: £',format((thousands * 1000), big.mark=",", scientific=FALSE)),
                                                        "<br>Number of QALYS: ", QALYS) 
                                          
                                          
           )) +
             geom_line(colour = "black") +
             geom_point(colour = "#408FA6")+
-            labs(y = "Number of QALYS", x = "Investment in Â£1,000s")+
-            ggtitle("Plot of investment in Â£1,000s by QALYS gained")+
+            labs(y = "Number of QALYS", x = "Investment in £1,000s")+
+            ggtitle("Plot of investment in £1,000s by QALYS gained")+
             theme(plot.title = element_text(size=8))
           ggplotly(p, tooltip = "text") 
           
@@ -193,8 +193,8 @@ server <- function(input, output, session) {
   
   output[["ICER_MULTI"]] <- renderText({
     
-    #paste0("Â£",input[["param_numeric"]] * (input$investment*1000))
-    paste0('ICER filter ranage: Â£',format((input$ICER_FILTER[1]*1000), big.mark=",", scientific=FALSE), " to Â£",format((input$ICER_FILTER[2]*1000), big.mark=",", scientific=FALSE))
+    #paste0("£",input[["param_numeric"]] * (input$investment*1000))
+    paste0('ICER filter ranage: £',format((input$ICER_FILTER[1]*1000), big.mark=",", scientific=FALSE), " to £",format((input$ICER_FILTER[2]*1000), big.mark=",", scientific=FALSE))
   })
 
   observeEvent(input$param_numeric, {
@@ -266,7 +266,7 @@ server <- function(input, output, session) {
   
   output$textG1 <- renderText({paste("The standard (for example, another intervention or usual care) against which an intervention is compared in a study. The comparator can be no intervention.")})
   output$textG2 <- renderText({paste("A form of economic evaluation that weighs the total expected costs against the total expected benefits by valuing both in monetary terms (for example, pounds sterling) to assess whether the benefits exceed the costs. It is measured using the benefit-cost ratio (BCR), which is the ratio of benefits relative to costs (benefits/costs).")})
-  output$textG3 <- renderText({paste("The HEER defines an intervention as cost-effective if it is below the NICE cost per QALY threshold of Â£20,000.")})
+  output$textG3 <- renderText({paste("The HEER defines an intervention as cost-effective if it is below the NICE cost per QALY threshold of £20,000.")})
   output$textG4 <- renderText({paste("Cost-effectiveness analysis (CEA) compares the relative costs and outcomes (effects) of two or more courses of action. The benefits are expressed in non-monetary terms related to health, such as symptom-free days or heart attacks avoided.")})
   output$textG5 <- renderText({paste("The most common approach to assess cost-effectiveness is to use cost-utility analysis (often interchanged with CEA), where the benefits are assessed in terms of both quality and duration of life, and expressed as quality-adjusted life years (QALYs) or disability-adjusted life years (DALYs). Utility refers to the measure of the preference or value that an individual or society places upon a particular health state.")})
   output$textG6 <- renderText({paste("An intervention is considered cost-saving when the monetary benefits of an intervention are greater than its costs. Monetary savings may not necessarily accrue as cash-releasing savings, for example due to reallocation of resources such as staffing.")})
