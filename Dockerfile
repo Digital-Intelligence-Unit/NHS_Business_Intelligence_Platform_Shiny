@@ -40,7 +40,6 @@ RUN R -e "install.packages(\
   c(\
     'shiny',\
     'rmarkdown',\
-    'tidyverse',\
     'ggplot2',\
     'plotly',\
     'dplyr',\
@@ -58,6 +57,7 @@ RUN R -e "install.packages(\
     'shinyjs',\
     'BiocManager',\
     'DBI',\
+    'odbc',\
     'shinydashboard',\
     'shinyBS',\
     'treemap',\
