@@ -56,29 +56,29 @@ RUN R -e "install.packages(\
     'readxl',\
     'shinyWidgets',\
     'shinyjs',\
-    'BiocManager,'\
-    'DBI,'\
-    'odbc,'\
-    'shinydashboard,'\
-    'shinyBS,'\
-    'treemap,'\
-    'RColorBrewer,'\
-    'shinyTree,'\
-    'scales,'\
-    'cluster,'\
-    'FactoMineR,'\
-    'table,'\
-    'epiDisplay,'\
-    'bnlearn,'\
-    'bnviewer,'\
-    'fastcluster,'\
-    'gridExtra,'\
-    'factoextra,'\
-    'kmed,'\
-    'Rtsne,'\
-    'umap,'\
-    'rpart,'\
-    'plot,'\
+    'BiocManager',\
+    'DBI',\
+    'odbc',\
+    'shinydashboard',\
+    'shinyBS',\
+    'treemap',\
+    'RColorBrewer',\
+    'shinyTree',\
+    'scales',\
+    'cluster',\
+    'FactoMineR',\
+    'table',\
+    'epiDisplay',\
+    'bnlearn',\
+    'bnviewer',\
+    'fastcluster',\
+    'gridExtra',\
+    'factoextra',\
+    'kmed',\
+    'Rtsne',\
+    'umap',\
+    'rpart',\
+    'plot',\
     'rattle'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
