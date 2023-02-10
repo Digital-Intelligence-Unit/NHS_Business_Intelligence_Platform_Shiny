@@ -1,6 +1,5 @@
 library(DBI)
 library(RPostgreSQL)
-library(odbc)
 library(shiny)
 library(shinydashboard)
 library(tidyverse)

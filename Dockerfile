@@ -58,7 +58,6 @@ RUN R -e "install.packages(\
     'shinyjs',\
     'BiocManager',\
     'DBI',\
-    'odbc',\
     'shinydashboard',\
     'shinyBS',\
     'treemap',\
