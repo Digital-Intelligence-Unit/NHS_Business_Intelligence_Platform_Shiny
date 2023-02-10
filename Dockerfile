@@ -51,7 +51,6 @@ RUN R -e "install.packages(\
     'selectr',\
     'caTools',\
     'config',\
-    'lubridate',\
     'RPostgreSQL',\
     'DT',\
     'readxl',\
