@@ -24,7 +24,6 @@ library(Rtsne)
 library(umap)
 library(rpart)
 library(rpart.plot)
-library(rattle)
 library(config)
 
 set.seed(123)
