@@ -1,0 +1,2 @@
+default:
+  sql_credentials: !expr config::get(file = "sql.server.credentials.yml")

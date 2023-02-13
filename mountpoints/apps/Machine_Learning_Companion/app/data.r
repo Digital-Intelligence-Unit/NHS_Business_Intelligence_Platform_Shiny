@@ -34,7 +34,7 @@ glm_plots <-list()
 
 ## For moving to postrgres
 
-config <- get()
+config <- config::get()
 
 print("Testing connection to database...")
 print(config$sql_credentials$database)
