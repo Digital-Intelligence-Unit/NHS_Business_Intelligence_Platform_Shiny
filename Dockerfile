@@ -87,6 +87,8 @@ RUN R -e "install.packages(\
 
 COPY mountpoints/apps/ /srv/shiny-server/
 
+ENV SHINY_LOG_STDERR=1
+
 EXPOSE 3838
 
 COPY shiny-server.sh /usr/bin/shiny-server.sh
