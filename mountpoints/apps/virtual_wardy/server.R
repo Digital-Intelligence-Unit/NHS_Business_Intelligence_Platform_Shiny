@@ -38,6 +38,8 @@ server <- function(input, output) {
     output$distPlot <- renderPlotly({
 
         if (!exists('virtual_ward')) {
+            print("Hello from VW App1!")
+            print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
@@ -373,7 +375,7 @@ server <- function(input, output) {
 
 
         if (!exists('virtual_ward')) {
-            print("Hello from VW App!")
+            print("Hello from VW App2!")
             print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
@@ -648,6 +650,8 @@ server <- function(input, output) {
         plot_vw <- data.frame()
 
         if (!exists('virtual_ward')) {
+            print("Hello from VW App3!")
+            print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
