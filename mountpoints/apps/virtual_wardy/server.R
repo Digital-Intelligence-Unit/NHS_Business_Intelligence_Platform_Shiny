@@ -373,6 +373,8 @@ server <- function(input, output) {
 
 
         if (!exists('virtual_ward')) {
+            print("Hello from VW App!")
+            print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,

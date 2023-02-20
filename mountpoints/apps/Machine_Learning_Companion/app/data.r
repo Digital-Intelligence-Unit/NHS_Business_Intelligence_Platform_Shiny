@@ -39,6 +39,8 @@ config <- config::get(file = "config.yml")
 print("Testing connection to database...")
 print(config$sql_credentials$database)
 
+print("Hello from MLC App!")
+print(config$sql_credentials$server)
 con <- dbConnect(
   PostgreSQL(),
   dbname = config$sql_credentials$database,
