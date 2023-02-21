@@ -88,13 +88,12 @@ RUN R -e "install.packages(\
 COPY mountpoints/apps/ /srv/shiny-server/
 
 ENV SHINY_LOG_STDERR=1
+ENV SHINY_LOG_LEVEL=TRACE
 
 EXPOSE 3838
 
 COPY shiny-server.sh /usr/bin/shiny-server.sh
-
 RUN ["chmod", "+x", "/usr/bin/shiny-server.sh"]
-
 ENTRYPOINT ["sh", "/usr/bin/shiny-server.sh"]
 
 
