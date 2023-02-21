@@ -13,7 +13,6 @@ get_query <- function(query) {
   config <- get()
 
   print("Testing connection to database...")
-  print(config$sql_credentials$database)
   postgres <- dbConnect(
     RPostgreSQL::PostgreSQL(),
     dbname = config$sql_credentials$database,
@@ -38,8 +37,6 @@ server <- function(input, output) {
     output$distPlot <- renderPlotly({
 
         if (!exists('virtual_ward')) {
-            print("Hello from VW App1!")
-            print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
@@ -375,8 +372,6 @@ server <- function(input, output) {
 
 
         if (!exists('virtual_ward')) {
-            print("Hello from VW App2!")
-            print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
@@ -650,8 +645,6 @@ server <- function(input, output) {
         plot_vw <- data.frame()
 
         if (!exists('virtual_ward')) {
-            print("Hello from VW App3!")
-            print(config$sql_credentials$server)
             postgres <- dbConnect(
                 RPostgreSQL::PostgreSQL(),
                 dbname = config$sql_credentials$database,
