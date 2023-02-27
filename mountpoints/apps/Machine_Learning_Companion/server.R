@@ -1,11 +1,10 @@
+pdf(NULL)
 source("./app/data.r")
 source("./app/ui.r")
 
 # code functions
 source("./app/code/mod_summary.r")
 #source("./app/code/show_results.R")
-
-pdf(NULL)
 
 server <- function(input,output,session){
 
