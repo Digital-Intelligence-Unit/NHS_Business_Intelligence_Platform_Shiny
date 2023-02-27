@@ -1,4 +1,4 @@
-pdf(NULL)
+pdf(file = NULL)
 source("./app/data.r")
 source("./app/ui.r")
 
