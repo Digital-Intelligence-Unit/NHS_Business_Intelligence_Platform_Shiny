@@ -5,6 +5,8 @@ source("./app/ui.r")
 source("./app/code/mod_summary.r")
 #source("./app/code/show_results.R")
 
+pdf(NULL)
+
 server <- function(input,output,session){
 
  #Cart
@@ -62,7 +64,7 @@ server <- function(input,output,session){
             under = FALSE, # position extra info _under_ the boxes
             under.cex = .8, # size of text under the boxes (default is .8)
             fallen.leaves = TRUE, # put leaves at the bottom of plot
-            #box.palette = "GnYlRd", # color of the boxes
+            box.palette = "GnYlRd", # color of the boxes
             branch = .3, # branch lines with narrow shoulders and down slopes
             branch.type = 5,
             branch.tweak =0.25 ,
