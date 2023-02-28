@@ -1,3 +1,4 @@
+pdf(file = NULL)
 library(DBI)
 library(RPostgreSQL)
 library(shiny)
