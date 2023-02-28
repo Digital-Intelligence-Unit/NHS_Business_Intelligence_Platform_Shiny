@@ -1,3 +1,4 @@
+pdf(file = NULL)
 source("./app/tabs/welcome.r")
 source("./app/tabs/decision_tree.r")
 source("./app/tabs/glm.r")
