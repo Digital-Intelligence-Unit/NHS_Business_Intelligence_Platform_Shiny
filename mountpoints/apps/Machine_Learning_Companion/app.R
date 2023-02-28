@@ -1,5 +1,5 @@
 pdf(file = NULL)
-source("./app/data.r")
+source("./data.r")
 source("./app/ui.r")
 
 # code functions
