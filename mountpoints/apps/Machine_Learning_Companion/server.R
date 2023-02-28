@@ -397,7 +397,8 @@ server <- function(input,output,session){
     if((modeltype %>% filter(lookup == input$glm2Var2) %>% select (type )%>% pull) == "binomial") {
       output$glmoddsratios2 <- renderPlot({
         
-        plot1 <- ggplot(glm_plots$table, aes(y = 1:nrow(glm_plots$table), x = OR)) +
+       # plot1 <- 
+       ggplot(glm_plots$table, aes(y = 1:nrow(glm_plots$table), x = OR)) +
           geom_point(shape = 18, size = 5) +  
           geom_errorbarh(aes(xmin = lower95ci, xmax = upper95ci), height = 0.25) +
           geom_vline(xintercept = 1, color = "red", linetype = "dashed", cex = 1, alpha = 0.5) +
@@ -415,7 +416,7 @@ server <- function(input,output,session){
                 axis.text.x.bottom = element_text(size = 12, colour = "black"),
                 axis.title.x = element_text(size = 12, colour = "black"))
         
-        plot1
+        #plot1
         
       })
     }
