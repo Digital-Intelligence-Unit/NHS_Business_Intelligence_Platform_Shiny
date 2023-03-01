@@ -1,3 +1,4 @@
+print("ui loading libs")
 pdf(file = NULL)
 library(DBI)
 library(RPostgreSQL)
@@ -26,11 +27,15 @@ library(umap)
 library(rpart)
 library(rpart.plot)
 
+print("Sources to load ui")
+
 source("./app/tabs/welcome.r")
 source("./app/tabs/decision_tree.r")
 source("./app/tabs/glm.r")
 source("./app/tabs/bayesian_network.r")
 source("./app/tabs/clustering.r")
+
+print("Making UI")
 
 ui <- fluidPage(
   tags$head(
@@ -82,3 +87,4 @@ tabsetPanel(
       bayesian_network,
       clustering                     
         ))
+print("Ui done")
