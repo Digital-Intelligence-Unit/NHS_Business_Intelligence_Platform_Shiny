@@ -1,4 +1,4 @@
-pdf(file = NULL)
+print("Loads libs server")
 #source("./data.r")
 #source("./app/ui.r")
 
@@ -38,7 +38,7 @@ dat2 <- list()
 glm_plots <-list()
 
 ## For moving to postrgres
-
+print("About to use config server")
 config <- config::get(file = "config.yml")
 
 print("Testing connection to database...")
