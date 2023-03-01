@@ -1241,7 +1241,7 @@ server <- function(input,output,session){
             
             plot(1:8, sil_width,
                  xlab = "Number of clusters",
-                 ylab = "Silhouette Width");lines(1:8, sil_width)
+                 ylab = "Silhouette Width")#;lines(1:8, sil_width)
           })
 
       })
