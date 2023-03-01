@@ -34,6 +34,7 @@ source("./app/tabs/decision_tree.r")
 source("./app/tabs/glm.r")
 source("./app/tabs/bayesian_network.r")
 source("./app/tabs/clustering.r")
+source("./data.r")
 
 print("Making UI")
 
