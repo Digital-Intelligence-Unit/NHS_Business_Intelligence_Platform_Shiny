@@ -87,4 +87,3 @@ tabsetPanel(
       bayesian_network,
       clustering                     
         ))
-print("Ui done")
