@@ -1,3 +1,17 @@
+Bayesian_cols = c("Asthma"                               ,  "Coronary Artery Disease" ,             
+"Congestive Heart Failure"             ,  "Cancer",                               
+"Chronic obstructive pulmonary disease",  "Persistent depressive disorder" ,      
+"Diabetes"                             ,  "Hypertension" ,                        
+"Atrial fibrillation"                  ,  "Chronic kidney disease" ,              
+"Dementia"                             ,  "Epilepsy",                             
+"Hypothyroid"                          ,  "Mental health",                        
+"Learning disability"                  ,  "Osteoporosis",                         
+"Peripheral artery disease"            ,  "Rheumatoid arthritis",                 
+"Stroke"                               ,  "Sex",                                  
+"top 20 percent deprived"              ,  "age 55 and over",                      
+"age 65 and over"                      ,  "age 75 and over" ,                     
+"age Children"                         ,  "age 17-54")
+
 bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                      mainPanel(
                        fluidRow(
