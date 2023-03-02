@@ -212,6 +212,8 @@ Query <- dbGetQuery(con, "SELECT
 	FROM public.population_master
     where \"deprivation_decile\" <> 0
     and \"sex\" <> 'I'
+
+limit 100
     ")
 dbDisconnect(con)
 
