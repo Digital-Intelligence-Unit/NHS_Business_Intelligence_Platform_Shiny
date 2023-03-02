@@ -201,7 +201,7 @@ server <- function(input,output,session){
             table <- logistic.display(model, simplified=TRUE,decimal  =2)
             table <- as.data.frame(table$table)
             ordered<- rownames(table)
-            table <- merge(table, as.data.frame(`mod summary stars`), by=0, all=TRUE) 
+            table <- base::merge(table, as.data.frame(`mod summary stars`), by=0, all=TRUE) 
             table <-table[match(ordered, table$Row.names),]
 
             for(i2 in unique(onehot)){
@@ -330,7 +330,7 @@ server <- function(input,output,session){
             table <- regress.display(model, simplified=TRUE,decimal  =2)
             table <- as.data.frame(table$table)
             ordered<- rownames(table)
-            table <- merge(table, as.data.frame(`mod summary stars`), by=0, all=TRUE) 
+            table <- base::merge(table, as.data.frame(`mod summary stars`), by=0, all=TRUE) 
             table <-table[match(ordered, table$Row.names),]
 
             for(i2 in unique(onehot)){
@@ -913,7 +913,7 @@ server <- function(input,output,session){
             
             plot(1:8, sil_width,
                  xlab = "Number of clusters",
-                 ylab = "Silhouette Width")#;lines(1:8, sil_width)
+                 ylab = "Silhouette Width")lines(1:8, sil_width)
           })
 
       })
