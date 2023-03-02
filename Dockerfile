@@ -78,7 +78,8 @@ RUN R -e "install.packages(\
     'umap',\
     'rpart',\
     'plot',\
-    'rattle'\
+    'rattle',\
+    'forcats'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
 )" && \
