@@ -1,11 +1,11 @@
 print("Loads libs server")
-source("./data.r")
+source("./data.r", local = TRUE)
 #source("./app/ui.r")
 
 pdf(file = NULL)
 
 # code functions
-source("./app/code/mod_summary.r")
+source("./app/code/mod_summary.r", local = TRUE)
 #source("./app/code/show_results.R")
 
 server <- function(input,output,session){
