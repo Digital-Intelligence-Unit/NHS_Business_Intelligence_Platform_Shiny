@@ -1,15 +1,15 @@
 print("Loads libs server")
 
 #source("./app/ui.r")
+source("./data.r", local = TRUE)
 
-pdf(file = NULL)
 
 # code functions
 source("./app/code/mod_summary.r", local = TRUE)
 #source("./app/code/show_results.R")
 
 server <- function(input,output,session){
-source("./data.r", local = TRUE)
+
  #Cart
   observeEvent(input$twoCARTgo, {
     if(!is.null(input$twoCARTVar1)) {
