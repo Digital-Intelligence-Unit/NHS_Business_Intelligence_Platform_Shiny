@@ -1,5 +1,5 @@
 print("Loads libs server")
-#source("./data.r")
+source("./data.r")
 #source("./app/ui.r")
 
 pdf(file = NULL)
