@@ -213,7 +213,6 @@ Query <- dbGetQuery(con, "SELECT
     where \"deprivation_decile\" <> 0
     and \"sex\" <> 'I'
 
-limit 100
     ")
 dbDisconnect(con)
 
