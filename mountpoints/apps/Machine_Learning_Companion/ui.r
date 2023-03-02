@@ -29,12 +29,12 @@ library(rpart.plot)
 
 print("Sources to load ui")
 
-source("./app/tabs/welcome.r")
-source("./app/tabs/decision_tree.r")
-source("./app/tabs/glm.r")
-source("./app/tabs/bayesian_network.r")
-source("./app/tabs/clustering.r")
-source("./data.r")
+source("./app/tabs/welcome.r", local = TRUE)
+source("./app/tabs/decision_tree.r", local = TRUE)
+source("./app/tabs/glm.r", local = TRUE)
+source("./app/tabs/bayesian_network.r", local = TRUE)
+source("./app/tabs/clustering.r", local = TRUE)
+#source("./data.r")
 
 print("Making UI")
 
