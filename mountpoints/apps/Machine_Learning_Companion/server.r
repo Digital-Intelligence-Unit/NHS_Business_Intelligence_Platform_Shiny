@@ -5,7 +5,7 @@ source("./data.r", local = TRUE)
 
 
 # code functions
-source("./app/code/mod_summary.r", local = TRUE)
+source("./app/code/mod_summary.r")
 #source("./app/code/show_results.R")
 
 server <- function(input,output,session){
