@@ -109,7 +109,7 @@ server <- function(input,output,session){
     }
   })
   observeEvent(input$twoCARTTreeRules, ignoreInit = T, {
-    if(input$twoCARTTreeRules & !is.na(dat2$cartModel)) {
+    #if(input$twoCARTTreeRules & !is.na(dat2$cartModel)) {
       output$twoCARTTreeRulesTable <- renderTable({
         rules <- rpart.rules(dat2$cartModel, nn = TRUE)
         newIDs <- 1:nrow(rules)
@@ -120,7 +120,7 @@ server <- function(input,output,session){
         colnames(rules)[3:ncol(rules)] <- " "
         cbind("Segment" = paste0("Segment ", newSeg), rules)
       })
-    }
+   # }
   })
 
   output$twoCARTTreeRulesTableUIVARIMP <- renderUI({
