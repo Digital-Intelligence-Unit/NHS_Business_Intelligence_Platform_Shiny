@@ -108,6 +108,8 @@ server <- function(input,output,session){
       uiOutput("twoCARTTreeRulesTableUIBlank")
     }
   })
+ 
+  try({
   observeEvent(input$twoCARTTreeRules, ignoreInit = T, {
     if(!is.na(dat2$cartModel)) {
       output$twoCARTTreeRulesTable <- renderTable({
@@ -121,6 +123,7 @@ server <- function(input,output,session){
         cbind("Segment" = paste0("Segment ", newSeg), rules)
       })
     }
+   })
   })
 
   output$twoCARTTreeRulesTableUIVARIMP <- renderUI({
