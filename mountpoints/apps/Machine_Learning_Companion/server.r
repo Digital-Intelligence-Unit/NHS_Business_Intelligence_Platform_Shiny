@@ -36,51 +36,30 @@ server <- function(input,output,session){
                      control=contols)
         print("CART model end")
         
-        output$twoCARTTree <- renderPlot({
+        output$twoCARTTree <- renderVisNetwork({
 
-          node.fun1 <- function(x, labs, digits, varlen)
 
-          {
-            paste(labs, "\nn =", x$frame$n2)
-          }
+
           
-          milfun <- function(x) {ifelse(x>1e5,paste0(round(x/1e6,3),"M"),x)}
-          
-          model$frame$n2 <- sapply(model$frame$n,milfun)
-          
-        if ((sapply(rev(data)[1], class))[1] == "integer" | (sapply(rev(data)[1], class))[1] == "numeric") {  
-          
-         extras <- 100 
-        }
-          
-        else {
-          extras <- 109
-        }
-          
-        prp(model,
-            type = 1, # left and right split labels (see Figure 2)
-            clip.right.labs = FALSE, # full right split labels
-            extra = extras , # show nbr of obs and percentages (see Figure 3)
-            node.fun = node.fun1,
-            under = FALSE, # position extra info _under_ the boxes
-            under.cex = .8, # size of text under the boxes (default is .8)
-            fallen.leaves = TRUE, # put leaves at the bottom of plot
-            box.palette = "GnYlRd", # color of the boxes
-            branch = .3, # branch lines with narrow shoulders and down slopes
-            branch.type = 5,
-            branch.tweak =0.25 ,
-            faclen = 0,
-            varlen = 0,
-            #nn.font = 5,
-            round = 0, # no rounding of node corners i.e. use rectangles
-            leaf.round = 2, # round leaf nodes (for leaves, this supersedes the round arg)
-            #prefix = "ozone\n", # prepend this string to the node labels
-            tweak = 1.2,
-            xcompact = TRUE,
-            xcompact.ratio = 1,
-            cex.main = 1.5, # use big text for main title
-            branch.col = "gray", # color of branch lines
-            branch.lwd = 2)
+    visTree(model,# width = "100%", 
+            main = "classification Tree", 
+            colorVar = c("lightgreen", "yellow", "orange","red"),
+            colorY = c("green","red"),
+            rules = TRUE,
+            simplifyRules = TRUE,
+            shapeVar = "box",
+            shapeY = "square",
+            export = FALSE,
+            nodesPopSize = TRUE,
+            fallenLeaves = TRUE,
+            maxNodeSize = 30,
+            collapse = list(enabled = FALSE, fit = TRUE, resetHighlight = TRUE, clusterOptions =
+                              list(fixed = TRUE, physics = FALSE)),
+            submain = list(text = paste0("Predicitng " ,input$twoCARTVar2),
+                           style = "font-family:Arial;color:black;font-size:15px;text-align:center;"), 
+           width = "100%") %>% 
+      visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
+      visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE)
         })
          
          dat2$cartModel <<- model
