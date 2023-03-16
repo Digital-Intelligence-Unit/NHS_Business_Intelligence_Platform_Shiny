@@ -3,7 +3,6 @@ print("Loads libs server")
 #source("./app/ui.r")
 source("./data.r", local = TRUE)
 
-
 # code functions
 source("./app/code/mod_summary.r")
 #source("./app/code/show_results.R")
