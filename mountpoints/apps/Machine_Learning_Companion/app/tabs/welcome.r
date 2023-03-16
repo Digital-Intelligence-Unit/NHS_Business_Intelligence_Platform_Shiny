@@ -20,7 +20,7 @@ welcome <-tabPanel("Welcome", fluid = TRUE,
                        column(width = 9,
                           h1("Welcome to the Machine Learning Companion App.")
                        ),
-                       column(width = 5, p("For more informtation please vist the user guide here:"))
+                       column(width = 5, p("For more informtation please vist the user guide."))
                       )
 
 
