@@ -1,3 +1,5 @@
+require(visNetwork)
+
 ##Columns for UI
 decision_tree_vars = c("Age"                                      , "Sex",                                     
  "Risk Score"                               , "Risk Score Rank"  ,                       
@@ -135,14 +137,7 @@ decision_tree <- tabPanel("Decision Tree",
                               ),
                               fluidRow(
                                 box(width = 12, title = "Decision Tree",
-                                    plotOutput("twoCARTTree",
-                                               width = "100%",
-                                               height = "500px",
-                                               click = NULL,
-                                               dblclick = NULL,
-                                               hover = TRUE,
-                                               brush = NULL,
-                                               inline = FALSE),
+                                    visNetworkOutput("twoCARTTree"),
                                     column(width = 3,
                                            checkboxInput("twoCARTTreeRules", "Tick to show rules", value = FALSE),
                                     ),
