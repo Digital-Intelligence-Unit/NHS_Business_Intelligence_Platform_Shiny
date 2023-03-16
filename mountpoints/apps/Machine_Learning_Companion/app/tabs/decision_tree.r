@@ -138,8 +138,8 @@ decision_tree <- tabPanel("Decision Tree",
                               fluidRow(
                                 box(width = 12, title = "Decision Tree",
                                     visNetworkOutput("twoCARTTree"),
-                                    column(width = 3,
-                                           checkboxInput("twoCARTTreeRules", "Tick to show rules", value = FALSE),
+                                    column(width = 3#,
+                                          # checkboxInput("twoCARTTreeRules", "Tick to show rules", value = FALSE),
                                     ),
                                     
                                     column(width = 3,
