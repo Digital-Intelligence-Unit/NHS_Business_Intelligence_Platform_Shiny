@@ -79,6 +79,7 @@ RUN R -e "install.packages(\
     'rpart',\
     'plot',\
     'rattle',\
+    'sparkline',\
     'forcats'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
