@@ -24,8 +24,7 @@ server <- function(input,output,session){
         }
         
         data <- as.data.frame(Query %>% select_at(c(unique(input$twoCARTVar1), input$twoCARTVar2)))
-        data[ltc] <- sapply(data[ltc],as.numeric)
-       
+              
         contols <- rpart.control(minbucket=input$twoCARTminbucket,
                                   maxdepth=input$twoCARTmaxdepth,
                                   cp=input$twoCARTcp)
