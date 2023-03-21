@@ -142,14 +142,14 @@ decision_tree <- tabPanel("Decision Tree",
                                           # checkboxInput("twoCARTTreeRules", "Tick to show rules", value = FALSE),
                                     #),
                                     
-                                    column(width = 3,
-                                           checkboxInput("twoCARTTreeVARIMP", "Tick to show variable importance", value = FALSE),
-                                    ),
+                                    #column(width = 3,
+                                    #       checkboxInput("twoCARTTreeVARIMP", "Tick to show variable importance", value = FALSE),
+                                    #),
                                    
                                     uiOutput("twoCARTTreeRulesTableUI"),
                                     textOutput("eCART")),
                                 
-                                uiOutput("twoCARTTreeRulesTableUIVARIMP"),                                
+                                #uiOutput("twoCARTTreeRulesTableUIVARIMP"),                                
                               ),
                        ),
                        column(width = 5,
