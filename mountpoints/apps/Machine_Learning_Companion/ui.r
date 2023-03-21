@@ -44,6 +44,31 @@ ui <- fluidPage(
   tags$head(
     #Css styling
     tags$style(HTML("
+
+
+                   .navbar {
+                  padding-bottom: 20px;
+                }
+                .welcome-text {
+                  position: absolute;
+                  padding: 20px;
+                  background-color: rgba(255, 255, 255, 0.8);
+                  border-radius: 10px;
+                }
+                .welcome-image {
+                  position: relative;
+                  height: 200px;
+                  margin-bottom: 20px;
+                  border-radius: 10px;
+                }
+                .welcome-image img {
+                  height: 100%;
+                  width: 100%;
+                  object-fit: cover;
+                  border-radius: 10px;
+                }
+
+
                   .vis-network {
                   height: 100%
                   }
