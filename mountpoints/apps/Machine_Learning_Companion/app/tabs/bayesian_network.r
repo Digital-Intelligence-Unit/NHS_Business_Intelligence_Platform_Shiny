@@ -1,3 +1,4 @@
+
 Bayesian_cols = c("Asthma"                               ,  "Coronary Artery Disease" ,             
 "Congestive Heart Failure"             ,  "Cancer",                               
 "Chronic obstructive pulmonary disease",  "Persistent depressive disorder" ,      
@@ -12,10 +13,12 @@ Bayesian_cols = c("Asthma"                               ,  "Coronary Artery Dis
 "age 65 and over"                      ,  "age 75 and over" ,                     
 "age Children"                         ,  "age 17-54")
 
+
+
 bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                      mainPanel(
                        fluidRow(
-                         column(width = 9,
+                         column(width = 7,
                                 fluidRow(
                                   box(width = 12, title = "Variable Setup",
                                       column(width = 6,
@@ -53,28 +56,58 @@ bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                                    )
                                    
                                    ,uiOutput(outputId = "TABLE")
-                                   ,br()
-                                   ,verbatimTextOutput("bntext")
+                                   
                                    
                                    )))),
-                         column(width = 3,
-                                fluidRow(
-                                  div(
-                                    box(width = 12, id = "bnInfo",style = "overflow-y: scroll;", title = "Bayesian network",
-                                        column(width = 12,
-                                               fluidRow(
-                                                 p("A Bayesian network is a probabilistic graphical model that represents a set of variables and their conditional dependencies via a directed acyclic graph."),
-                                                 p("See ", a("Bayesian network", href="https://en.wikipedia.org/wiki/Bayesian_network"), " for more information."),
-                                                 p("Why use BN's?"),
-                                                 p("Bayesian networks are a type of Probabilistic Graphical Model that can be used to build models from data and/or expert opinion.
-They can be used for a wide range of tasks including diagnostics, reasoning, causal modeling, decision making under uncertainty, anomaly detection, automated insight and prediction."),
-                                                p("See ", a("Bayesian networks - an introduction", href="https://www.bayesserver.com/docs/introduction/bayesian-networks/#:~:text=Bayesian%20networks%20are%20a%20type,detection%2C%20automated%20insight%20and%20prediction."), " for more information."),
+
+
+           column(width = 5,
+       fluidRow(
+         column(width = 12,
+                div(
+                  style = "width: 100%; height: 100%;",
+                  br(),
+                  br(),
+                 verbatimTextOutput("bntext")
+                )
+         )
+       )
+)
+                ) # added closing parenthesis here
+         )
+) 
+#)
+
+
+
+#                          column(width = 6,
+#                                 fluidRow(
+#                                    #div(
+#                                     box(width = 12, id = "bnInfo",#,style = "overflow-y: scroll;", title = "Bayesian network",
+#                                          column(width = 12,
+#                                                 fluidRow(
+
+#                                                 # , fluidRow(
+#                             #br()
+                                   
+                                   
+#                                    )
+# #                                                  p("A Bayesian network is a probabilistic graphical model that represents a set of variables and their conditional dependencies via a directed acyclic graph."),
+# #                                                  p("See ", a("Bayesian network", href="https://en.wikipedia.org/wiki/Bayesian_network"), " for more information."),
+# #                                                  p("Why use BN's?"),
+# #                                                  p("Bayesian networks are a type of Probabilistic Graphical Model that can be used to build models from data and/or expert opinion.
+# # They can be used for a wide range of tasks including diagnostics, reasoning, causal modeling, decision making under uncertainty, anomaly detection, automated insight and prediction."),
+# #                                                 p("See ", a("Bayesian networks - an introduction", href="https://www.bayesserver.com/docs/introduction/bayesian-networks/#:~:text=Bayesian%20networks%20are%20a%20type,detection%2C%20automated%20insight%20and%20prediction."), " for more information."),
                                                  
-                                               )
-                                        )
-                                    ), style = "position:fixed;  width:inherit;")
-                                )
-                         )
-                         )
-                     )
-            )
+#                                                 )
+#                                          )
+#                                     )#, style = "position:fixed;  width:inherit;")
+#                                 )
+                                  
+
+                         
+
+#                          )
+#                          )
+#                      )
+#             #)
