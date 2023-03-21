@@ -166,4 +166,4 @@ decision_tree <- tabPanel("Decision Tree",
        )
 )
                 ) # added closing parenthesis here
-         )
+        )
