@@ -71,7 +71,7 @@ decision_tree <- tabPanel("Decision Tree",
                        ),
                      ),
                      fluidRow(
-                       column(width = 9,
+                       column(width = 7,
                               fluidRow(
                                 box(width = 12, title = "Variable Setup",
                                     column(width = 6,
@@ -152,20 +152,18 @@ decision_tree <- tabPanel("Decision Tree",
                                 uiOutput("twoCARTTreeRulesTableUIVARIMP"),                                
                               ),
                        ),
-                       column(width = 3,
-                              fluidRow(
-                                div(
-                                  box(width = 12, id = "CARTInfo",style = "overflow-y: scroll;", title = "CART Info",
-                                      column(width = 12,
-                                             fluidRow(
-                                               p("Classification and Regression Tree (CART), referred to as 'Decision Trees' on this page, is a data-driven regression technique."),
-                                               p("See ", a("Tree-Based Models", href="https://blog.dataiku.com/tree-based-models-how-they-work-in-plain-english"), " for how regression trees work."),
-                                               p(""),
-                                               p("Use decision trees either to segment the population, or to discover what attributes are most statictically significant in explaining differences (of the selected target variable)."),
-                                               )
-                                      )
-                                  ), style = "position:fixed;  width:inherit;")
-                             )
-                       )
-                     ),
-            )
+                       column(width = 5,
+       fluidRow(
+         column(width = 12,
+                div(
+                  style = "width: 100%; height: 100%;",
+                  br(),
+                  br(),
+                 checkboxInput("twoCARTTreeVARIMP", "Tick to show variable importance", value = FALSE),
+                 uiOutput("twoCARTTreeRulesTableUIVARIMP")
+                )
+         )
+       )
+)
+                ) # added closing parenthesis here
+         )
