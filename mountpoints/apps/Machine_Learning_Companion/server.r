@@ -45,6 +45,7 @@ server <- function(input,output,session){
         }
         
         data <- as.data.frame(Query %>% select_at(c(unique(input$twoCARTVar1), input$twoCARTVar2)))
+        data <- data %>% mutate_if(function(x) is.factor(x) && length(levels(x)) == 2 && all(grepl("^\\d*\\.?\\d*$", levels(x))), as.numeric)
               
         contols <- rpart.control(minbucket=input$twoCARTminbucket,
                                   maxdepth=input$twoCARTmaxdepth,
