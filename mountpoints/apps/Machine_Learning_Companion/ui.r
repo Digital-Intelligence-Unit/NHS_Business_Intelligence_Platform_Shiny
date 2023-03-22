@@ -45,19 +45,20 @@ ui <- fluidPage(
     #Css styling
     tags$style(HTML("
 
-
-                   .navbar {
+   .navbar {
                   padding-bottom: 20px;
                 }
                 .welcome-text {
-                  position: absolute;
-                  padding: 20px;
-                  background-color: rgba(255, 255, 255, 0.8);
-                  border-radius: 10px;
-                }
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0.8);
+                border-radius: 10px;
+              }
                 .welcome-image {
                   position: relative;
-                  height: 20px;
+                  height: 200px;
                   margin-bottom: 20px;
                   border-radius: 10px;
                 }
@@ -66,6 +67,19 @@ ui <- fluidPage(
                   width: 100%;
                   object-fit: cover;
                   border-radius: 10px;
+                }
+
+
+                        .btn-header {
+                  background-color: transparent;
+                  color: #555555;
+                  font-size: 20px;
+                  font-weight: bold;
+                  border: none;
+                  border-bottom: 3px solid transparent;
+                  padding: 10px 20px;
+                  margin-right: 10px;
+                  cursor: pointer;
                 }
 
 
@@ -109,6 +123,7 @@ ui <- fluidPage(
   ),
   # Welcome page
 tabsetPanel(
+  id = "my_tabs",
       welcome,
       decision_tree,
       glm,
