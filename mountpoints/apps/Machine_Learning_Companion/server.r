@@ -7,6 +7,27 @@ source("./data.r", local = TRUE)
 source("./app/code/mod_summary.r")
 #source("./app/code/show_results.R")
 server <- function(input,output,session){
+  
+ observeEvent(input$tab1_button1, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "Decision Tree")
+    })
+
+    observeEvent(input$tab2_button2, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "GLM")
+    })
+
+
+    observeEvent(input$tab3_button3, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "Bayesian network")
+    })
+
+    observeEvent(input$tab4_button4, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "Clustering")
+    })
 
  #Cart
   observeEvent(input$twoCARTgo, {
