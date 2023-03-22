@@ -28,6 +28,27 @@ server <- function(input,output,session){
         updateTabsetPanel(session, "my_tabs",
                           selected = "Clustering")
     })
+  
+  observeEvent(input$tab1_button12, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "Decision Tree")
+    })
+
+    observeEvent(input$tab2_button22, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "GLM")
+    })
+
+
+    observeEvent(input$tab3_button32, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "Bayesian network")
+    })
+
+    observeEvent(input$tab4_button42, {
+        updateTabsetPanel(session, "my_tabs",
+                          selected = "clustering")
+    })
 
  #Cart
   observeEvent(input$twoCARTgo, {
@@ -45,7 +66,11 @@ server <- function(input,output,session){
         }
         
         data <- as.data.frame(Query %>% select_at(c(unique(input$twoCARTVar1), input$twoCARTVar2)))
-        data <- data %>% mutate_if(function(x) is.factor(x) && length(levels(x)) == 2 && all(grepl("^\\d*\\.?\\d*$", levels(x))), as.numeric)
+        data <- data %>% 
+        mutate_if(
+          function(x) is.factor(x) && length(levels(x)) == 2 && all(grepl("^\\d*\\.?\\d*$", levels(x))),
+          function(x) as.numeric(as.character(x))
+        )
               
         contols <- rpart.control(minbucket=input$twoCARTminbucket,
                                   maxdepth=input$twoCARTmaxdepth,
@@ -98,32 +123,32 @@ server <- function(input,output,session){
     }
   })
 #show_results
-  output$twoCARTTreeRulesTableUI <- renderUI({
-    if(input$twoCARTTreeRules) {
-      column(width = 12,
-             tableOutput("twoCARTTreeRulesTable"),style = "overflow-y: scroll;overflow-x: scroll;",
-      )
-    } else {
-      uiOutput("twoCARTTreeRulesTableUIBlank")
-    }
-  })
+#   output$twoCARTTreeRulesTableUI <- renderUI({
+#     if(input$twoCARTTreeRules) {
+#       column(width = 12,
+#              tableOutput("twoCARTTreeRulesTable"),style = "overflow-y: scroll;overflow-x: scroll;",
+#       )
+#     } else {
+#       uiOutput("twoCARTTreeRulesTableUIBlank")
+#     }
+#   })
  
-  try({
-  observeEvent(input$twoCARTTreeRules, ignoreInit = T, {
-    if(!is.na(dat2$cartModel)) {
-      output$twoCARTTreeRulesTable <- renderTable({
-        rules <- rpart.rules(dat2$cartModel, nn = TRUE)
-        newIDs <- 1:nrow(rules)
-        names(newIDs) <- sort(as.integer(rules$nn))
-        newSeg <- newIDs[as.character(rules$nn)]
-        rules <- rules[,-1]
-        colnames(rules)[1:2] <- c(colnames(rules)[1], "Rule")
-        colnames(rules)[3:ncol(rules)] <- " "
-        cbind("Segment" = paste0("Segment ", newSeg), rules)
-      })
-    }
-   })
-  })
+#   try({
+#   observeEvent(input$twoCARTTreeRules, ignoreInit = T, {
+#     if(!is.na(dat2$cartModel)) {
+#       output$twoCARTTreeRulesTable <- renderTable({
+#         rules <- rpart.rules(dat2$cartModel, nn = TRUE)
+#         newIDs <- 1:nrow(rules)
+#         names(newIDs) <- sort(as.integer(rules$nn))
+#         newSeg <- newIDs[as.character(rules$nn)]
+#         rules <- rules[,-1]
+#         colnames(rules)[1:2] <- c(colnames(rules)[1], "Rule")
+#         colnames(rules)[3:ncol(rules)] <- " "
+#         cbind("Segment" = paste0("Segment ", newSeg), rules)
+#       })
+#     }
+#    })
+#   })
 
   output$twoCARTTreeRulesTableUIVARIMP <- renderUI({
     if(input$twoCARTTreeVARIMP) {
