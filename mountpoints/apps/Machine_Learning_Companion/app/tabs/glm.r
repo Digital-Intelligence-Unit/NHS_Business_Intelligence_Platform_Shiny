@@ -47,7 +47,7 @@ glm_targets = c("Age"                                    ,  "Sex" ,
 glm <-tabPanel("GLM", fluid = TRUE,
          mainPanel(
            fluidRow(
-             column(width = 7,
+             column(width = 6,
                     fluidRow(
                       box(width = 12, title = "Variable Setup",
                           column(width = 6,
@@ -89,7 +89,7 @@ glm <-tabPanel("GLM", fluid = TRUE,
 
              ),
 
-           column(width = 5,
+           column(width = 6,
        fluidRow(
          column(width = 12,
                 div(
