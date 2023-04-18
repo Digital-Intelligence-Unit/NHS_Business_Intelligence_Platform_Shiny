@@ -13,7 +13,6 @@ get_query <- function(query) {
   config <- get()
 
   print("Testing connection to database...")
-  print(config$sql_credentials$database)
   postgres <- dbConnect(
     RPostgreSQL::PostgreSQL(),
     dbname = config$sql_credentials$database,

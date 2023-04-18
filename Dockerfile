@@ -1,4 +1,4 @@
-FROM rocker/shiny:4.0.5
+FROM rocker/shiny
 
 ARG PGDATABASE
 ENV PGDATABASE ${PGDATABASE}
@@ -40,7 +40,6 @@ RUN R -e "install.packages(\
   c(\
     'shiny',\
     'rmarkdown',\
-    'tidyverse',\
     'ggplot2',\
     'plotly',\
     'dplyr',\
@@ -51,13 +50,37 @@ RUN R -e "install.packages(\
     'selectr',\
     'caTools',\
     'config',\
-    'lubridate',\
     'RPostgreSQL',\
     'DT',\
     'readxl',\
     'shinyWidgets',\
     'shinyjs',\
-    'BiocManager'\
+    'BiocManager',\
+    'DBI',\
+    'odbc',\
+    'shinydashboard',\
+    'shinyBS',\
+    'treemap',\
+    'RColorBrewer',\
+    'shinyTree',\
+    'scales',\
+    'cluster',\
+    'FactoMineR',\
+    'table',\
+    'epiDisplay',\
+    'bnlearn',\
+    'bnviewer',\
+    'fastcluster',\
+    'gridExtra',\
+    'factoextra',\
+    'kmed',\
+    'Rtsne',\
+    'umap',\
+    'rpart',\
+    'plot',\
+    'rattle',\
+    'sparkline',\
+    'forcats'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
 )" && \
@@ -66,10 +89,13 @@ RUN R -e "install.packages(\
 
 COPY mountpoints/apps/ /srv/shiny-server/
 
+ENV SHINY_LOG_STDERR=1
+ENV SHINY_LOG_LEVEL=TRACE
+
 EXPOSE 3838
 
 COPY shiny-server.sh /usr/bin/shiny-server.sh
-
 RUN ["chmod", "+x", "/usr/bin/shiny-server.sh"]
-
 ENTRYPOINT ["sh", "/usr/bin/shiny-server.sh"]
+
+
