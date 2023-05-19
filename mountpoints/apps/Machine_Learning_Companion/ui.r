@@ -42,6 +42,23 @@ print("Making UI")
 
 ui <- fluidPage(
   tags$head(
+
+    tags$script(HTML(
+    '
+              document.addEventListener("DOMContentLoaded", () => {
+              
+                alert("Hello World!");
+
+                if (typeof window.parent.setUpFrame !== "undefined") {
+                  console.log(window.parent.setUpFrame());
+                }  
+                console.log(window.parent);
+                return true;
+
+              });'
+  )),
+
+
     #Css styling
     tags$style(HTML("
 
