@@ -38,7 +38,7 @@ clustering_cols = c("Risk Score"                              , "Risk Score Rank
 
 
 
-clustering <- tabPanel("Clustering", fluid = TRUE,
+clustering <- tabPanel("Clustering", value = 'clustering',fluid = TRUE,
                      mainPanel(
                        fluidRow(
                          column(width = 7,

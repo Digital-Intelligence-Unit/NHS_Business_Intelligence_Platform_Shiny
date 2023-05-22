@@ -18,7 +18,7 @@ Bayesian_cols = c("Asthma"                               ,  "Coronary Artery Dis
 bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                      mainPanel(
                        fluidRow(
-                         column(width = 7,
+                         column(width = 5,
                                 fluidRow(
                                   box(width = 12, title = "Variable Setup",
                                       column(width = 6,
@@ -61,7 +61,7 @@ bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                                    )))),
 
 
-           column(width = 5,
+           column(width = 7,
        fluidRow(
          column(width = 12,
                 div(

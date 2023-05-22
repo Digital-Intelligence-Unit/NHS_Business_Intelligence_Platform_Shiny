@@ -5,9 +5,9 @@ library(RPostgreSQL)
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
-library(plotly)
+#library(plotly)
 library(treemap)
-library(RColorBrewer)
+#library(RColorBrewer)
 library(shinyTree)
 library(ggplot2)
 library(shinyWidgets)
@@ -26,26 +26,48 @@ library(Rtsne)
 library(umap)
 library(rpart)
 library(rpart.plot)
-library(forcats)
-library(stringr)
 
-print("Sources to load ui")
+source("./app/tabs/welcome.R")
+source("./app/tabs/decision_tree.R")
+source("./app/tabs/glm.R")
+source("./app/tabs/bayesian_network.R")
+source("./app/tabs/clustering.R")
 
-source("./app/tabs/welcome.r", local = TRUE)
-source("./app/tabs/decision_tree.r", local = TRUE)
-source("./app/tabs/glm.r", local = TRUE)
-source("./app/tabs/bayesian_network.r", local = TRUE)
-source("./app/tabs/clustering.r", local = TRUE)
-#source("./data.r")
-
-print("Making UI")
+#server_ready <- reactiveVal(FALSE)
 
 ui <- fluidPage(
+
+  
+
+  # Use a button that is disabled until the server is ready
+  
+#)
+
+# Define the wait message UI element using a reactive expression
+
+
+
   tags$head(
     #Css styling
+
+tags$script(HTML(
+    '
+         if (window.addEventListener) {
+        window.addEventListener("message", (e) => {
+        console.log(e);
+        }, false);
+        }'
+  )),
+
     tags$style(HTML("
 
-   .navbar {
+              
+            li.dropdown-header.optgroup-1 > span.text,
+            li.dropdown-header.optgroup-2 > span.text  {
+              font-size: 20px;
+              font-weight: bold;
+            }
+                     .navbar {
                   padding-bottom: 20px;
                 }
                 .welcome-text {
@@ -81,6 +103,7 @@ ui <- fluidPage(
                   margin-right: 10px;
                   cursor: pointer;
                 }
+
 
 
                   .vis-network {
@@ -123,7 +146,7 @@ ui <- fluidPage(
   ),
   # Welcome page
 tabsetPanel(
-  id = "my_tabs",
+    id = "my_tabs",
       welcome,
       decision_tree,
       glm,
