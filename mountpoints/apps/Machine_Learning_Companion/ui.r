@@ -28,11 +28,11 @@ library(rpart)
 library(rpart.plot)
 library(shinyjs)
 
-source("./app/tabs/welcome.R")
-source("./app/tabs/decision_tree.R")
-source("./app/tabs/glm.R")
-source("./app/tabs/bayesian_network.R")
-source("./app/tabs/clustering.R")
+source("./app/tabs/welcome.r")
+source("./app/tabs/decision_tree.r")
+source("./app/tabs/glm.r")
+source("./app/tabs/bayesian_network.r")
+source("./app/tabs/clustering.r")
 
 #server_ready <- reactiveVal(FALSE)
 
