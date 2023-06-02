@@ -1,8 +1,14 @@
+# library(rpart)
+# library(rpart.plot)
+# library(plotly)
+# library(shiny)
+# library(shinyjs)
 require(visNetwork)
 
 ##Columns for UI
 decision_tree_vars = c("Age"                                      , "Sex",                                     
- "Risk Score"                               , "Risk Score Rank"  ,                       
+ #"Risk Score"                               , 
+ "Risk Score Rank"  ,                       
  "Risk Score Trend"                         , "Risk Score Group",                        
  "Risk Score Int"                           , "Risk Segment" ,                           
  "IP Admissions in Last 12 Months"          , "IP Elective Admissions in Last 12 Months",
@@ -18,25 +24,28 @@ decision_tree_vars = c("Age"                                      , "Sex",
  "Peripheral artery disease"                , "Rheumatoid arthritis",                    
  "palliative care flag"                     , "Stroke",                                  
  "smoker"                                   , "substance misuse",                        
- "psychotic disorder flag"                  , "cdiff flag",                              
+ "psychotic disorder flag"                  ,# "cdiff flag",                              
  "oxygen flag"                              , "mosaic label",                            
  "average ip admission in following year"   , "average nel costs in following year" ,    
- "community matron status"                  , "community matron status-type",            
- "wardcode"                                 , "wardname",                                
- "age markers"                              , "age 55 and over",                         
- "age 65 and over"                          , "age 75 and over",                         
- "age Children"                             , "age 17-54",                               
+ #"community matron status"                  , "community matron status-type",            
+ #"wardcode"                                 , "wardname",                                
+ #"age markers"                              , #"age 55 and over",                         
+ #"age 65 and over"                          , "age 75 and over",                         
+ #"age Children"                             , "age 17-54",                               
  "age band narrow"                          , "age band broad",                          
- "chronic condition count"                  , "taxonomy" ,                               
- "area"                                     , "top 20 percent deprived" ,                
- "deprivation decile"                       , "gp data feed" ,                           
- "fcvanguard"                               , "data date",                               
- "cpm risk score"                           , "lsoa" ,                                   
- "msoa"                                     , "household category" ,                     
+ "chronic condition count"                  ,# "taxonomy" ,                               
+ #"area"                                     
+ "top 20 percent deprived" ,                
+ "deprivation decile"                       , #"gp data feed" ,                           
+ #"fcvanguard"                               , "data date",                               
+ #"cpm risk score"                           , "lsoa" ,                                   
+ #"msoa"                                     
+ "household category" ,                     
  "household group"                          , "household type" ,                         
  "household description"                    , "wellbeing acorn group" ,                  
  "wellbeing acorn type"                     , "wellbeing acorn description",             
- "ethniccategory"                           , "du",                                      
+ #"ethniccategory"                           , 
+ "du",                                      
  "electoral ward or division" )
  
  
@@ -75,14 +84,56 @@ decision_tree <- tabPanel("Decision Tree",
                               fluidRow(
                                 box(width = 12, title = "Variable Setup",
                                     column(width = 6,
-                                           pickerInput(
-                                             inputId = "twoCARTVar1",
-                                             label = "Select Fields (to use to build the tree)",
-                                             choices =decision_tree_vars,
-                                             selected = 1,
-                                             multiple = TRUE,
-                                             options = list(`actions-box` = TRUE, size = 12, noneSelectedText = "Please select at least 1 option")
-                                           ),
+
+ pickerInput("twoCARTVar1", 
+              "Select Fields (to use to build the tree)", 
+              choices = list(
+                "Columns with dimension" = c("Age"                                 ,  "Sex"                                  ,
+                                          "Risk Score Int"                      ,  "mosaic label"                         ,
+                                          "deprivation decile"                  ,  "household type"                       ,
+                                          "electoral ward or division"          ,  "Asthma"                               ,
+                                          "Coronary Artery Disease"             ,  "Congestive Heart Failure"             ,
+                                          "Cancer"                              ,  "Chronic obstructive pulmonary disease",
+                                          "Persistent depressive disorder"      ,  "Diabetes"                             ,
+                                          "Hypertension"                        ,  "Atrial fibrillation"                  ,
+                                          "Chronic kidney disease"              ,  "Dementia"                             ,
+                                          "Epilepsy"                            ,  "Hypothyroid"                          ,
+                                          "Mental health"                       ,  "Learning disability"                  ,
+                                          "Osteoporosis"                        ,  "Peripheral artery disease"            ,
+                                          "Rheumatoid arthritis"                ,  
+                                          "Risk Score Group"                    ,  "top 20 percent deprived"              ,
+                                          "age band narrow"                     ,  "age band broad"                       ,
+                                          "age markers"                         ),
+                "Columns without dimension" = setdiff(decision_tree_vars, c("Age"                                 ,  "Sex"                                  ,
+                                          "Risk Score Int"                      ,  "mosaic label"                         ,
+                                          "deprivation decile"                  ,  "household type"                       ,
+                                          "electoral ward or division"          ,  "Asthma"                               ,
+                                          "Coronary Artery Disease"             ,  "Congestive Heart Failure"             ,
+                                          "Cancer"                              ,  "Chronic obstructive pulmonary disease",
+                                          "Persistent depressive disorder"      ,  "Diabetes"                             ,
+                                          "Hypertension"                        ,  "Atrial fibrillation"                  ,
+                                          "Chronic kidney disease"              ,  "Dementia"                             ,
+                                          "Epilepsy"                            ,  "Hypothyroid"                          ,
+                                          "Mental health"                       ,  "Learning disability"                  ,
+                                          "Osteoporosis"                        ,  "Peripheral artery disease"            ,
+                                          "Rheumatoid arthritis"                ,  
+                                          "Risk Score Group"                    ,  "top 20 percent deprived"              ,
+                                          "age band narrow"                     ,  "age band broad"                       ,
+                                          "age markers"                          ))
+              ),
+              options = list(`actions-box` = TRUE, size = 12, noneSelectedText = "Please select at least 1 option"),
+              selected = 1,                             
+              multiple = TRUE),
+
+
+                                          #  pickerInput(
+                                          #    inputId = "twoCARTVar1",
+                                          #    label = "Select Fields (to use to build the tree)",
+                                          #    choices =decision_tree_vars,
+                                          #    selected = 1,
+                                          #    multiple = TRUE,
+                                          #    options = list(`actions-box` = TRUE, size = 12, noneSelectedText = "Please select at least 1 option")
+                                          #  ),
                                     ),
                                     column(width = 6,
                                            pickerInput(
