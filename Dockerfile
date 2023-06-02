@@ -80,6 +80,9 @@ RUN R -e "install.packages(\
     'plot',\
     'rattle',\
     'sparkline',\
+    'rvest',\
+    'visNetwork',\
+    'jsonlite',\
     'forcats'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
