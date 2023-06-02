@@ -26,6 +26,7 @@ library(Rtsne)
 library(umap)
 library(rpart)
 library(rpart.plot)
+library(shinyjs)
 
 source("./app/tabs/welcome.R")
 source("./app/tabs/decision_tree.R")
@@ -35,9 +36,30 @@ source("./app/tabs/clustering.R")
 
 #server_ready <- reactiveVal(FALSE)
 
+jsCode <- '
+Shiny.addCustomMessageHandler("addCohort", function(data) {
+  const dataString = JSON.stringify(data[0]);
+  const userID = data[2];
+  const referrer = data[3];
+  const APIData = {
+    function:"createCVICohort",
+    payload:{data:dataString,created: new Date(),name:data[1]},
+    missing:["username"],
+    validation:{"username":userID}
+  }
+  if(document.referrer.includes(referrer)){
+    window.parent.postMessage(APIData,document.referrer);
+  } else {
+    console.log("incorrect referrer");
+  }
+});
+'
 ui <- fluidPage(
 
-  
+
+ verbatimTextOutput("queryOutput"),
+  useShinyjs(),
+  extendShinyjs(text = jsCode, functions = c("addCohort")),
 
   # Use a button that is disabled until the server is ready
   
@@ -47,109 +69,83 @@ ui <- fluidPage(
 
 
 
-  tags$head(
-    #Css styling
-
-tags$script(HTML(
-    '
-         if (window.addEventListener) {
-        window.addEventListener("message", (e) => {
-        console.log(e);
-        }, false);
-        }'
-  )),
-
-    tags$style(HTML("
-
-              
-            li.dropdown-header.optgroup-1 > span.text,
-            li.dropdown-header.optgroup-2 > span.text  {
-              font-size: 20px;
-              font-weight: bold;
-            }
-                     .navbar {
-                  padding-bottom: 20px;
-                }
-                .welcome-text {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding: 20px;
-                background-color: rgba(255, 255, 255, 0.8);
-                border-radius: 10px;
-              }
-                .welcome-image {
-                  position: relative;
-                  height: 200px;
-                  margin-bottom: 20px;
-                  border-radius: 10px;
-                }
-                .welcome-image img {
-                  height: 100%;
-                  width: 100%;
-                  object-fit: cover;
-                  border-radius: 10px;
-                }
-
-
-                        .btn-header {
-                  background-color: transparent;
-                  color: #555555;
-                  font-size: 20px;
-                  font-weight: bold;
-                  border: none;
-                  border-bottom: 3px solid transparent;
-                  padding: 10px 20px;
-                  margin-right: 10px;
-                  cursor: pointer;
-                }
-
-
-
-                  .vis-network {
-                  height: 100%
-                  }
-                  #bntext {
-                    height:500px;
-                    width: auto;
-                    background-color: white
-                    
-                  }
-
-                  #glmTable {
-                    height:500px;
-                    width: auto;
-                    background-color: white;
-                    overflow-y: auto
-                  }
-                  
-                  #plot11{
-                  margin:35px
-                  }
-
-                  #TABLE {
-                    margin-top: 50px;
-                    
-                  }
-
-                  #textbox_ui{
-                    width: 100%;
-
-                  }
-
-                  #textbox_ui2{
-                    width: 100%;
-
-                  }
-
-                  ")),
-  ),
-  # Welcome page
+tags$head(
+  #Css styling
+  tags$style(HTML("       
+    li.dropdown-header.optgroup-1 > span.text,
+    li.dropdown-header.optgroup-2 > span.text  {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .navbar {
+      padding-bottom: 20px;
+    }
+    .welcome-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+    }
+    .welcome-image {
+      position: relative;
+      height: 200px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+    .welcome-image img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .btn-header {
+      background-color: transparent;
+      color: #555555;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 10px 20px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .vis-network {
+      height: 100%
+    }
+    #bntext {
+      height:500px;
+      width: auto;
+      background-color: white
+      
+    }
+    #glmTable {
+      height:500px;
+      width: auto;
+      background-color: white;
+      overflow-y: auto
+    }
+    #plot11{
+      margin:35px
+    }
+    #TABLE {
+      margin-top: 50px;
+    }
+    #textbox_ui{
+      width: 100%;
+    }
+    #textbox_ui2{
+      width: 100%;
+    }
+  ")),
+),
+# Welcome page
 tabsetPanel(
-    id = "my_tabs",
-      welcome,
-      decision_tree,
-      glm,
-      bayesian_network,
-      clustering                     
-        ))
+  id = "my_tabs",
+  welcome,
+  decision_tree,
+  glm,
+  bayesian_network,
+  clustering                     
+))
