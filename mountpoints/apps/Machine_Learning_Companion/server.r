@@ -1,7 +1,7 @@
-source("./data.R",local=TRUE)
+source("./data.r",local=TRUE)
 
 # code functions
-source("./app/code/mod_summary.R",local = TRUE)
+source("./app/code/mod_summary.r",local = TRUE)
 
 require(shiny)
 require(visNetwork)
