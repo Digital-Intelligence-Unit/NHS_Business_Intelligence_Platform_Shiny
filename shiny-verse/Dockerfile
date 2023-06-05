@@ -10,6 +10,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libssl-dev \
   libcurl4-openssl-dev \
   libssh2-1-dev \
+  libxml2-dev \
   unixodbc-dev
 
 RUN install2.r --error  --skipinstalled \
