@@ -80,6 +80,7 @@ RUN R -e "install.packages(\
     'plot',\
     'rattle',\
     'sparkline',\
+    'xml2',\
     'rvest',\
     'visNetwork',\
     'jsonlite',\

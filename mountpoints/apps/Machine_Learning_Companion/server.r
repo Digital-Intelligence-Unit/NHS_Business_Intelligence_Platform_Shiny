@@ -6,6 +6,7 @@ source("./app/code/mod_summary.r",local = TRUE)
 require(shiny)
 require(visNetwork)
 library(rpart)
+library(xml2)
 library(rvest)
 library(jsonlite)
 

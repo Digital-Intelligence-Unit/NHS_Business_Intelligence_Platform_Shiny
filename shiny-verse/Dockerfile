@@ -56,6 +56,7 @@ RUN install2.r --error  --skipinstalled \
     rpart\
     plot\
     rattle\
+    xml2\
     rvest\
     visNetwork\
     jsonlite\
