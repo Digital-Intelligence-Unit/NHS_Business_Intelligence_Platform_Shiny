@@ -276,6 +276,7 @@ server <- function(input,output,session){
             nodesPopSize = TRUE,
             fallenLeaves = TRUE,
             maxNodeSize = 30,
+            tooltipDelay = 500000000,
             collapse = list(
               enabled = FALSE,
               fit = TRUE,
@@ -340,6 +341,7 @@ server <- function(input,output,session){
         
         observeEvent(input$clicked_nodeId,{
           node <-read_html(gsub('^.*Rules\\s*|\\s*\\$.*$', '', input$clicked_nodeId)) %>% html_text
+          other_rules <<- gsub("([A-Za-z]+\\s:)", "<br>\\1",gsub("([^ ]):([^ ])", "\\1 : \\2", read_html(gsub('Rules.*$', '', input$clicked_nodeId)) %>% html_text))
           filter_obj <- convert_to_json(node,colnames(data))
           append_to_col_lookup <- function(col_lookup, new_columns) {
               for (col in new_columns) {
@@ -612,6 +614,7 @@ server <- function(input,output,session){
             } else {
               if (length(selected_group_cols) > 0) {
                 modified_json_list[["LTCs2Dimension"]] <- unname(selected_group_cols)
+                modified_json_list[["NumSelectedLtcs"]] <- length(selected_group_cols)
               } else {
                 modified_json_list[["LTCs2Dimension"]] <- setdiff(c(group_cols, "None"), names(json_list[!group_col_values])) 
                 modified_json_list[["NumSelectedLtcs"]] <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
@@ -701,10 +704,15 @@ server <- function(input,output,session){
             return(json_string)
           }
           if ("AgeDimension" %in% names(fromJSON(filtered_json_str))){
-            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")
+            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")           
           }
           if ("RskDimension" %in% names(fromJSON(filtered_json_str))){
             filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"RskDimension")
+            # Flatten the list of lists
+            r_obj <- fromJSON(filtered_json_str)
+            r_obj$RskDimension <- unlist(r_obj$RskDimension)[1,]
+            # Convert back to JSON string
+            filtered_json_str <- toJSON(r_obj, auto_unbox = TRUE)
           }
           # Process JSON and print result
           if (any(group_cols %in% names(fromJSON(filtered_json_str)))){
@@ -729,7 +737,7 @@ server <- function(input,output,session){
           # Check and create the D vector
           if ("DDimension" %in% names(json_list)){
             d_vector <- as.integer(json_list$DDimension)
-            output_string <- paste(output_string, paste("Deprivation =", paste(d_vector, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("Deprivation =", paste(d_vector, collapse = ", ")), sep = "<br>")
           }
 
           # Check and create the Risk range
@@ -741,38 +749,38 @@ server <- function(input,output,session){
           # Check and create the Sex vector
           if ("SexDimension" %in% names(json_list)){
             s_vector <- as.character(json_list$SexDimension)
-            output_string <- paste(output_string, paste("Sex =", paste(s_vector, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("Sex =", paste(s_vector, collapse = ", ")), sep = "<br>")
           }
 
           # Check and create the Mosiac vector
           if ("MDimension" %in% names(json_list)){
             m_vector <- as.character(json_list$MDimension)
-            output_string <- paste(output_string, paste("Mosiac =", paste(m_vector, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("Mosiac =", paste(m_vector, collapse = ", ")), sep = "<br>")
           }
 
           # Check and create the Acorn vector
           if ("ADimension" %in% names(json_list)){
             a_vector <- as.character(json_list$ADimension)
-            output_string <- paste(output_string, paste("Acorn =", paste(a_vector, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("Acorn =", paste(a_vector, collapse = ", ")), sep = "<br>")
           }
 
-          if ("NumSelectedLtcs" %in% names(json_list) && "LTCs2Dimension" %in% names(json_list)){
+          if ("LTCs2Dimension" %in% names(json_list) && length(json_list$NumSelectedLtcs)> 1){
             not_selected_ltcs <- as.character(json_list$LTCs2Dimension)
             not_selected_ltcs <- setdiff(group_cols, not_selected_ltcs)
-            output_string <- paste(output_string, paste("LTCs not selected", paste(not_selected_ltcs, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("LTCs not selected", paste(not_selected_ltcs, collapse = ", ")), sep = "<br>")
               
           }
 
           # case where only "LTCs2Dimension" is present
-          else if ("LTCs2Dimension" %in% names(json_list)){
+          else if ("LTCs2Dimension" %in% names(json_list) && length(json_list$NumSelectedLtcs)== 1){
             selected_ltcs <- as.character(json_list$LTCs2Dimension)
-            output_string <- paste(output_string, paste("LTCs selected", paste(selected_ltcs, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("LTCs selected", paste(selected_ltcs, collapse = ", ")), sep = "<br>")
             
           }
 
           if ("WDimension" %in% names(json_list)){
             w_vector <- as.character(json_list$WDimension)
-            output_string <- paste(output_string, paste("Wards selected", paste(w_vector, collapse = ",")), sep = "<br>")
+            output_string <- paste(output_string, paste("Wards selected", paste(w_vector, collapse = ", ")), sep = "<br>")
           }
           # Print the output
           output_string <<- output_string
@@ -790,7 +798,7 @@ server <- function(input,output,session){
 
             showModal(modalDialog(
               title = "Do you want to apply these rules to PHI?",
-              HTML(paste0("These are the rules from the leaf node selected: <br>",rules_df %>% filter(node_id == input$clicked_nodeId_leaf) %>% select(rules) %>% pull()),
+              HTML(paste0("<b>", other_rules,"</b>"," <br> <br> <h3> These are the rules from the leaf node selected: </h3> <br>",rules_df %>% filter(node_id == input$clicked_nodeId_leaf) %>% select(rules) %>% pull()),
                 "<br> <br> <b> However, PHI can only use these following parts of the rules. </b> <br>",
                 output_string  
               ), 
@@ -824,6 +832,7 @@ server <- function(input,output,session){
                 print(paste("You entered:", input$cohortName))
 
                 session$sendCustomMessage(type = 'addCohort', message = c(list(modified_json_str,input$cohortName,queryParam()$user_id,queryParam()$referrer)))
+                updateTextInput(session, "cohortName", value = "")
 
                 removeModal()
               }
