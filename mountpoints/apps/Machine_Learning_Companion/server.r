@@ -703,12 +703,7 @@ server <- function(input,output,session){
             return(json_string)
           }
           if ("AgeDimension" %in% names(fromJSON(filtered_json_str))){
-            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")
-            # Flatten the list of lists
-            r_obj <- fromJSON(filtered_json_str)
-            r_obj$AgeDimension <- unlist(r_obj$AgeDimension)[1,]
-            # Convert back to JSON string
-            filtered_json_str <- toJSON(r_obj, auto_unbox = TRUE)
+            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")           
           }
           if ("RskDimension" %in% names(fromJSON(filtered_json_str))){
             filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"RskDimension")
