@@ -90,7 +90,7 @@ convert_to_json <- function(filter_string, column_names) {
       lower_bound <- round(as.numeric(gsub("^.*>=\\s*", "", line)),0)
       
       # Store the lower bound in the list
-      filters[[column_name]] <- list(c(lower_bound,120))
+      filters[[column_name]] <- list(c(lower_bound,123))
     } else if (grepl(" or ", line)) {
       # where condition is contains or
       matching_col <- column_names[sapply(column_names, function(x) grepl(x, line))]
@@ -259,6 +259,7 @@ server <- function(input,output,session){
         #rules_df$rules <- gsub(" <", " ≤ ", rules_df$rules)
         #rules_df$rules <- gsub(" >", " ≥ ", rules_df$rules)
         rules_df$rules <- gsub(" & ", "\n <br>", rules_df$rules)
+        rules_df <<- rules_df
         
         output$twoCARTTree <- renderVisNetwork({
           tree <- visTree(
@@ -473,7 +474,7 @@ server <- function(input,output,session){
               } else if (json_list$`age markers`[[1]] == "65 and over") {
                 json_list$`age markers` <-  list(c(65, 74))
               } else if (json_list$`age markers`[[1]] == "75 and over") {
-                json_list$`age markers` <-  list(c(75, 120))
+                json_list$`age markers` <-  list(c(75, 123))
               }
               # Convert the modified list back into a JSON string
               modified_json_string <- toJSON(json_list)
@@ -491,7 +492,7 @@ server <- function(input,output,session){
               if (json_list$`age 55 and over`[[1]] == "1") {
                 json_list$`age 55 and over` <- list(c("55", "64"))
               } else if (json_list$`age 55 and over`[[1]] == "0") {
-                json_list$`age 55 and over` <-  list(c("65","120"),c("0", "54"))
+                json_list$`age 55 and over` <-  list(c("65","123"),c("0", "54"))
               }
               # Convert the modified list back into a JSON string
               modified_json_string <- toJSON(json_list)
@@ -509,7 +510,7 @@ server <- function(input,output,session){
               if (json_list$`age Children`[[1]] == "1") {
                 json_list$`age Children` <- list(c("0", "16"))
               } else if (json_list$`age Children`[[1]] == "0") {
-                json_list$`age Children` <-   list(c("17","120"))
+                json_list$`age Children` <-   list(c("17","123"))
               }
               # Convert the modified list back into a JSON string
               modified_json_string <- toJSON(json_list)
@@ -528,7 +529,7 @@ server <- function(input,output,session){
               if (json_list$`age 65 and over`[[1]] == "1") {
                 json_list$`age 65 and over` <- list(c("65", "74"))
               } else if (json_list$`age 65 and over`[[1]] == "0") {
-                json_list$`age 65 and over` <-   list(c("0","64"),c("75","120"))
+                json_list$`age 65 and over` <-   list(c("0","64"),c("75","123"))
               }
               # Convert the modified list back into a JSON string
               modified_json_string <- toJSON(json_list)
@@ -545,7 +546,7 @@ server <- function(input,output,session){
               json_list <- fromJSON(json_string) 
               # Replace the "top 20" value with the desired list
               if (json_list$`age 75 and over`[[1]] == "1") {
-                json_list$`age 75 and over` <- list(c("75", "120"))
+                json_list$`age 75 and over` <- list(c("75", "123"))
               } else if (json_list$`age 75 and over`[[1]] == "0") {
                 json_list$`age 75 and over` <-   list(c("0","74"))
               }
@@ -565,7 +566,7 @@ server <- function(input,output,session){
               if (json_list$`age 17-54`[[1]] == "1") {
                 json_list$`age 17-54` <- list(c("17", "54"))
               } else if (json_list$`age 17-54`[[1]] == "0") {
-                json_list$`age 17-54` <-   list(c("0","16"),c("55","120"))
+                json_list$`age 17-54` <-   list(c("0","16"),c("55","123"))
               }
               # Convert the modified list back into a JSON string
               modified_json_string <- toJSON(json_list)
@@ -613,10 +614,10 @@ server <- function(input,output,session){
             } else {
               if (length(selected_group_cols) > 0) {
                 modified_json_list[["LTCs2Dimension"]] <- unname(selected_group_cols)
-                modified_json_list[["NumSelectedLtcs"]] <- length(selected_group_cols)
+                modified_json_list[["numberSelLtc"]] <- length(selected_group_cols)
               } else {
                 modified_json_list[["LTCs2Dimension"]] <- setdiff(c(group_cols, "None"), names(json_list[!group_col_values])) 
-                modified_json_list[["NumSelectedLtcs"]] <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
+                modified_json_list[["numberSelLtc"]] <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
               }
             }
             # Convert the modified JSON list back to a JSON string
@@ -710,6 +711,8 @@ server <- function(input,output,session){
             # Flatten the list of lists
             r_obj <- fromJSON(filtered_json_str)
             r_obj$RskDimension <- unlist(r_obj$RskDimension)[1,]
+
+            r_obj$RskDimension[r_obj$RskDimension == 123] <- 99
             # Convert back to JSON string
             filtered_json_str <- toJSON(r_obj, auto_unbox = TRUE)
           }
@@ -763,7 +766,7 @@ server <- function(input,output,session){
             output_string <- paste(output_string, paste("Acorn =", paste(a_vector, collapse = ", ")), sep = "<br>")
           }
 
-          if ("LTCs2Dimension" %in% names(json_list) && length(json_list$NumSelectedLtcs)> 1){
+          if ("LTCs2Dimension" %in% names(json_list) && length(json_list$numberSelLtc)> 1){
             not_selected_ltcs <- as.character(json_list$LTCs2Dimension)
             not_selected_ltcs <- setdiff(group_cols, not_selected_ltcs)
             output_string <- paste(output_string, paste("LTCs not selected", paste(not_selected_ltcs, collapse = ", ")), sep = "<br>")
@@ -771,7 +774,7 @@ server <- function(input,output,session){
           }
 
           # case where only "LTCs2Dimension" is present
-          else if ("LTCs2Dimension" %in% names(json_list) && length(json_list$NumSelectedLtcs)== 1){
+          else if ("LTCs2Dimension" %in% names(json_list) && length(json_list$numberSelLtc)== 1){
             selected_ltcs <- as.character(json_list$LTCs2Dimension)
             output_string <- paste(output_string, paste("LTCs selected", paste(selected_ltcs, collapse = ", ")), sep = "<br>")
             
@@ -785,59 +788,7 @@ server <- function(input,output,session){
           output_string <<- output_string
           modified_json_str
         })
-
-        observeEvent(input$clicked_nodeId_leaf, {
-          check_ids <- tester_tree %>% filter(level ==max(tester_tree$level)) %>% dplyr::select(id) %>% unlist
-          #print(tester_tree$x$nodes)
-          if (input$clicked_nodeId_leaf %in%  check_ids && input$clicked_nodeId_leaf %in% rules_df$node_id) {
-            footer_elements <- list(modalButton("Close"))
-            if (nchar(output_string) > 0) {
-              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Apply")))
-            }
-
-            showModal(modalDialog(
-              title = "Do you want to apply these rules to PHI?",
-              HTML(paste0("<b>", other_rules,"</b>"," <br> <br> <h3> These are the rules from the leaf node selected: </h3> <br>",rules_df %>% filter(node_id == input$clicked_nodeId_leaf) %>% select(rules) %>% pull()),
-                "<br> <br> <b> However, PHI can only use these following parts of the rules. </b> <br>",
-                output_string  
-              ), 
-              footer = tagList(footer_elements),
-              easyClose = TRUE
-            ))
-
-            observeEvent(input$ApplyRules, {
-              # Remove the first modal before opening the second one
-              removeModal()
-              
-              showModal(modalDialog(
-                title = "Apply Cohort",
-                textInput("cohortName", "Enter cohort name:"),
-                actionButton("cohortSubmit", "Submit"),
-                footer = NULL,
-                easyClose = FALSE
-              ))
-            })
-  
-            observeEvent(input$cohortSubmit, {
-              if(input$cohortName == "") {
-                showModal(modalDialog(
-                  title = "Error",
-                  "Please enter a cohort name.",
-                  easyClose = TRUE,
-                  footer = NULL
-                ))
-              } else {
-                # User input is valid, you can continue your operations here
-                print(paste("You entered:", input$cohortName))
-
-                session$sendCustomMessage(type = 'addCohort', message = c(list(modified_json_str,input$cohortName,queryParam()$user_id,queryParam()$referrer)))
-                updateTextInput(session, "cohortName", value = "")
-
-                removeModal()
-              }
-            })
-          }
-        })
+       
 
         dat2$cartModel <<- model
           ids <- sort(unique(dat2$cartModel$where))
@@ -849,6 +800,59 @@ server <- function(input,output,session){
             updateCheckboxInput(session, "twoCARTTreeRules", value = FALSE)
             updateCheckboxInput(session, "twoCARTTreeVARIMP", value = FALSE)
           })
+          removeModal()
+        }
+      })
+
+      observeEvent(input$clicked_nodeId_leaf, {
+          check_ids <- tester_tree %>% filter(level ==max(tester_tree$level)) %>% dplyr::select(id) %>% unlist
+          #print(tester_tree$x$nodes)
+          if (input$clicked_nodeId_leaf %in%  check_ids && input$clicked_nodeId_leaf %in% rules_df$node_id) {
+            footer_elements <- list(modalButton("Close"))
+            if (nchar(output_string) > 0) {
+              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),actionButton("PopSelect","View in population selector")))
+            }
+
+            showModal(modalDialog(
+              title = "Do you want to save these rules to PHI?",
+              HTML(paste0("<b>", other_rules,"</b>"," <br> <br> <h3> These are the rules from the leaf node selected: </h3> <br>",rules_df %>% filter(node_id == input$clicked_nodeId_leaf) %>% select(rules) %>% pull()),
+                "<br> <br> <b>Caution: Due to missing data, numbers may not align with PHI. PHI can utilise the following rules </b> <br>",
+                output_string  
+              ), 
+              footer = tagList(footer_elements),
+              easyClose = TRUE
+            ))
+          }
+      })
+
+      observeEvent(input$ApplyRules, {
+        # Remove the first modal before opening the second one
+        removeModal()
+        
+        showModal(modalDialog(
+          title = "Save cohort",
+          textInput("cohortName", "Enter cohort name:"),
+          actionButton("cohortSubmit", "Submit"),
+          footer = NULL,
+          easyClose = FALSE
+        ))
+      })
+  
+      observeEvent(input$cohortSubmit, {
+        if(input$cohortName == "") {
+          showModal(modalDialog(
+            title = "Error",
+            "Please enter a cohort name.",
+            easyClose = TRUE,
+            footer = NULL
+          ))
+        } else {
+          # User input is valid, you can continue your operations here
+          print(paste("You entered:", input$cohortName))
+
+          session$sendCustomMessage(type = 'addCohort', message = c(list(modified_json_str,input$cohortName,queryParam()$user_id,queryParam()$referrer)))
+          updateTextInput(session, "cohortName", value = "")
+
           removeModal()
         }
       })
