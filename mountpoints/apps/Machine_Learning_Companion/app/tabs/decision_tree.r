@@ -4,15 +4,15 @@
 # library(shiny)
 # library(shinyjs)
 require(visNetwork)
+library(stringr)
 
 ##Columns for UI
-decision_tree_vars = c("Age"                                      , "Sex",                                     
+decision_tree_vars = append(str_to_sentence(c("Age"                                      , "Sex",                                     
  #"Risk Score"                               , 
  "Risk Score Rank"  ,                       
  "Risk Score Trend"                         , "Risk Score Group",                        
  "Risk Score Int"                           , "Risk Segment" ,                           
- "IP Admissions in Last 12 Months"          , "IP Elective Admissions in Last 12 Months",
- "OP Appointments in Last 12 Months"        , "AE Attendances in Last 12 Months",        
+         
  "Asthma"                                   , "Coronary Artery Disease",                 
  "Congestive Heart Failure"                 , "Cancer",                                  
  "Chronic obstructive pulmonary disease"    , "Persistent depressive disorder" ,         
@@ -32,7 +32,7 @@ decision_tree_vars = c("Age"                                      , "Sex",
  #"age markers"                              , #"age 55 and over",                         
  #"age 65 and over"                          , "age 75 and over",                         
  #"age Children"                             , "age 17-54",                               
- "age band narrow"                          , "age band broad",                          
+"age band broad",                          
  "chronic condition count"                  ,# "taxonomy" ,                               
  #"area"                                     
  "top 20 percent deprived" ,                
@@ -46,15 +46,15 @@ decision_tree_vars = c("Age"                                      , "Sex",
  "wellbeing acorn type"                     , "wellbeing acorn description",             
  #"ethniccategory"                           , 
  "du",                                      
- "electoral ward or division" )
+ "electoral ward or division" )),c("IP admissions in last 12 months"          , "IP elective admissions in last 12 months",
+ "OP appointments in last 12 months"        , "AE attendances in last 12 months"))
  
  
-decision_tree_targets = c("Age"                                     , "Sex" ,                                    
+decision_tree_targets = append(str_to_sentence(c("Age"                                     , "Sex" ,                                    
 "Risk Score"                              , "Risk Score Rank",                         
 "Risk Score Trend"                        , "Risk Score Group" ,                       
 "Risk Score Int"                          , "Risk Segment" ,                           
-"IP Admissions in Last 12 Months"         , "IP Elective Admissions in Last 12 Months",
-"OP Appointments in Last 12 Months"       , "AE Attendances in Last 12 Months",        
+       
 "Asthma"                                  , "Coronary Artery Disease",                 
 "Congestive Heart Failure"                , "Cancer",                                  
 "Chronic obstructive pulmonary disease"   , "Persistent depressive disorder" ,         
@@ -67,18 +67,11 @@ decision_tree_targets = c("Age"                                     , "Sex" ,
 "palliative care flag"                    , "Stroke" ,                                 
 "smoker"                                  , "substance misuse"  ,                      
 "psychotic disorder flag"                 , "cdiff flag" ,                             
-"oxygen flag"                             , "deprivation decile" ,                     
-"age band broad"                          , "age band narrow") 
+"oxygen flag"                             , "deprivation decile" )),
+c("IP admissions in last 12 months"          , "IP elective admissions in last 12 months",
+ "OP appointments in last 12 months"        , "AE attendances in last 12 months"))
 
 decision_tree <- tabPanel("Decision Tree",
-                     fluidRow(
-                       box(background = "green",width = 4,
-                           uiOutput("oneCoverBoxs9"),
-                       ),
-                       box(background = "green", width = 4,
-                           uiOutput("oneCoverBoxDate10")
-                       ),
-                     ),
                      fluidRow(
                        column(width = 7,
                               fluidRow(
@@ -88,7 +81,23 @@ decision_tree <- tabPanel("Decision Tree",
  pickerInput("twoCARTVar1", 
               "Select Fields (to use to build the tree)", 
               choices = list(
-                "Columns with dimension" = c("Age"                                 ,  "Sex"                                  ,
+                "Columns with dimension" = str_to_sentence(c("Age"                                 ,  "Sex"                                  ,
+                                          "Risk Score Int"                      ,  "mosaic label"                         ,
+                                          "deprivation decile"                  ,  "household type"                       ,
+                                          "electoral ward or division"          ,  "Asthma"                               ,
+                                          "Coronary Artery Disease"             ,  "Congestive Heart Failure"             ,
+                                          "Cancer"                              ,  "Chronic obstructive pulmonary disease",
+                                          "Persistent depressive disorder"      ,  "Diabetes"                             ,
+                                          "Hypertension"                        ,  "Atrial fibrillation"                  ,
+                                          "Chronic kidney disease"              ,  "Dementia"                             ,
+                                          "Epilepsy"                            ,  "Hypothyroid"                          ,
+                                          "Mental health"                       ,  "Learning disability"                  ,
+                                          "Osteoporosis"                        ,  "Peripheral artery disease"            ,
+                                          "Rheumatoid arthritis"                ,  
+                                          "top 20 percent deprived"             ,
+                                          #"age band narrow"                     ,
+                                          "age band broad"                       )),
+                "Columns without dimension" = setdiff(decision_tree_vars, str_to_sentence(c("Age"                                 ,  "Sex"                                  ,
                                           "Risk Score Int"                      ,  "mosaic label"                         ,
                                           "deprivation decile"                  ,  "household type"                       ,
                                           "electoral ward or division"          ,  "Asthma"                               ,
@@ -102,24 +111,8 @@ decision_tree <- tabPanel("Decision Tree",
                                           "Osteoporosis"                        ,  "Peripheral artery disease"            ,
                                           "Rheumatoid arthritis"                ,  
                                           "Risk Score Group"                    ,  "top 20 percent deprived"              ,
-                                          "age band narrow"                     ,  "age band broad"                       ,
-                                          "age markers"                         ),
-                "Columns without dimension" = setdiff(decision_tree_vars, c("Age"                                 ,  "Sex"                                  ,
-                                          "Risk Score Int"                      ,  "mosaic label"                         ,
-                                          "deprivation decile"                  ,  "household type"                       ,
-                                          "electoral ward or division"          ,  "Asthma"                               ,
-                                          "Coronary Artery Disease"             ,  "Congestive Heart Failure"             ,
-                                          "Cancer"                              ,  "Chronic obstructive pulmonary disease",
-                                          "Persistent depressive disorder"      ,  "Diabetes"                             ,
-                                          "Hypertension"                        ,  "Atrial fibrillation"                  ,
-                                          "Chronic kidney disease"              ,  "Dementia"                             ,
-                                          "Epilepsy"                            ,  "Hypothyroid"                          ,
-                                          "Mental health"                       ,  "Learning disability"                  ,
-                                          "Osteoporosis"                        ,  "Peripheral artery disease"            ,
-                                          "Rheumatoid arthritis"                ,  
-                                          "Risk Score Group"                    ,  "top 20 percent deprived"              ,
-                                          "age band narrow"                     ,  "age band broad"                       ,
-                                          "age markers"                          ))
+                                          #"age band narrow"                     ,  
+                                          "age band broad" )))
               ),
               options = list(`actions-box` = TRUE, size = 12, noneSelectedText = "Please select at least 1 option"),
               selected = 1,                             

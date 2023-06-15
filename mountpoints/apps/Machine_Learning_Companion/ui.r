@@ -59,7 +59,11 @@ ui <- fluidPage(
   extendShinyjs(text = jsCode, functions = c("addCohort")),
   tags$head(
     #Css styling
-    tags$style(HTML("       
+    tags$style(HTML("
+      #PopSelect {
+        background-color:blue;
+        color:white
+      }
       li.dropdown-header.optgroup-1 > span.text,
       li.dropdown-header.optgroup-2 > span.text  {
         font-size: 20px;
