@@ -210,10 +210,7 @@ Query <- dbGetQuery(con, "SELECT
  --lcnt, 
  --fcnt
 	FROM public.population_master
-  where \"deprivation_decile\" <> 0
-    --and \"sex\" <> 'I'
-
-    ")
+  WHERE \"deprivation_decile\" <> 0")
 dbDisconnect(con)
 
 ## Welcome page stuff

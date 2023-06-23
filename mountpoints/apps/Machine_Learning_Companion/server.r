@@ -707,8 +707,10 @@ server <- function(input,output,session){
             }
             return(json_string)
           }
+          print(filtered_json_str)
           if ("AgeDimension" %in% names(fromJSON(filtered_json_str))){
-            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")           
+            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")   
+            print(filtered_json_str)        
           }
           if ("RskDimension" %in% names(fromJSON(filtered_json_str))){
             filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"RskDimension")
@@ -827,7 +829,7 @@ server <- function(input,output,session){
           if (input$clicked_nodeId_leaf %in%  check_ids && input$clicked_nodeId_leaf %in% rules_df$node_id) {
             footer_elements <- list(modalButton("Close"))
             if (nchar(output_string) > 0) {
-              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),a(class="btn btn-default",id = "PopSelect","View in population selector", href="https://google.com", target="_blank")))
+              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),a(class="btn btn-default",id = "PopSelect","View in population selector", href=paste0("http://localhost:4200/apps/phm/populationselect/?filters=",modified_json_str,"&excludeFilters=",exclude_json), target="_blank")))
             }
 
             showModal(modalDialog(

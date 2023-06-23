@@ -50,11 +50,7 @@ decision_tree_vars = append(str_to_sentence(c("Age"                             
  "OP appointments in last 12 months"        , "AE attendances in last 12 months"))
  
  
-decision_tree_targets = append(str_to_sentence(c("Age"                                     , "Sex" ,                                    
-"Risk Score"                              , "Risk Score Rank",                         
-"Risk Score Trend"                        , "Risk Score Group" ,                       
-"Risk Score Int"                          , "Risk Segment" ,                           
-       
+decision_tree_targets = append(str_to_sentence(c(                      
 "Asthma"                                  , "Coronary Artery Disease",                 
 "Congestive Heart Failure"                , "Cancer",                                  
 "Chronic obstructive pulmonary disease"   , "Persistent depressive disorder" ,         
@@ -67,7 +63,7 @@ decision_tree_targets = append(str_to_sentence(c("Age"                          
 "palliative care flag"                    , "Stroke" ,                                 
 "smoker"                                  , "substance misuse"  ,                      
 "psychotic disorder flag"                 , "cdiff flag" ,                             
-"oxygen flag"                             , "deprivation decile" )),
+"oxygen flag"                             )),
 c("IP admissions in last 12 months"          , "IP elective admissions in last 12 months",
  "OP appointments in last 12 months"        , "AE attendances in last 12 months"))
 
