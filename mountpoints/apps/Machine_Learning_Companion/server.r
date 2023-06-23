@@ -611,14 +611,17 @@ server <- function(input,output,session){
             selected_group_cols <-names(which(unlist(group_col_values)))
             # Check if vector contains both 1 and 0
             if (any(group_col_values == 1) && any(group_col_values == 0)) {
-              UpdatedRulesPHI <<- "Sorry but we cant filter by LTCs at this time."
+              #UpdatedRulesPHI <<- "Sorry but we cant filter by LTCs at this time."
+              modified_json_list[["LTCs2Dimension"]] <- unname(selected_group_cols)
+              modified_json_list[["numberSelLtc"]] <- as.character(length(selected_group_cols))
+              modified_json_list[["EXCLUDELTCs2Dimension"]] <- names(group_col_values)[!group_col_values]
             } else {
               if (length(selected_group_cols) > 0) {
                 modified_json_list[["LTCs2Dimension"]] <- unname(selected_group_cols)
-                modified_json_list[["numberSelLtc"]] <- length(selected_group_cols)
+                modified_json_list[["numberSelLtc"]] <- as.character(length(selected_group_cols))
               } else {
-                modified_json_list[["LTCs2Dimension"]] <- setdiff(c(group_cols, "None"), names(json_list[!group_col_values])) 
-                modified_json_list[["numberSelLtc"]] <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
+                modified_json_list[["EXCLUDELTCs2Dimension"]] <- names(group_col_values)[!group_col_values]
+                #modified_json_list[["numberSelLtc"]] <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14")
               }
             }
             # Convert the modified JSON list back to a JSON string
@@ -767,16 +770,16 @@ server <- function(input,output,session){
             output_string <- paste(output_string, paste("Acorn =", paste(a_vector, collapse = ", ")), sep = "<br>")
           }
 
-          if ("LTCs2Dimension" %in% names(json_list) && length(json_list$numberSelLtc)> 1){
-            not_selected_ltcs <- as.character(json_list$LTCs2Dimension)
-            not_selected_ltcs <- setdiff(group_cols, not_selected_ltcs)
+          if ("EXCLUDELTCs2Dimension" %in% names(json_list)){
+            not_selected_ltcs <- as.character(json_list$EXCLUDELTCs2Dimension)
+            #not_selected_ltcs <- setdiff(group_cols, not_selected_ltcs)
             not_selected_ltcs <- setNames(names(col_lookup), col_lookup)[not_selected_ltcs]
             output_string <- paste(output_string, paste("LTCs not selected:", paste(not_selected_ltcs, collapse = ", ")), sep = "<br>")
               
           }
 
           # case where only "LTCs2Dimension" is present
-          else if ("LTCs2Dimension" %in% names(json_list) && length(json_list$numberSelLtc)== 1){
+          if ("LTCs2Dimension" %in% names(json_list)){
             selected_ltcs <- as.character(json_list$LTCs2Dimension)
             selected_ltcs <- setNames(names(col_lookup), col_lookup)[selected_ltcs]
             output_string <- paste(output_string, paste("LTCs selected:", paste(selected_ltcs, collapse = ", ")), sep = "<br>")
@@ -789,7 +792,17 @@ server <- function(input,output,session){
           }
           # Print the output
           output_string <<- output_string
-          modified_json_str
+          
+          json_list <- fromJSON(modified_json_str)
+          
+          # Extract the EXCLUDEDimension and convert it to a JSON string
+          exclude_json <<- toJSON(list(LTCs2Dimension = json_list$EXCLUDELTCs2Dimension))
+          
+          # Remove the EXCLUDEDimension from the original list
+          json_list$EXCLUDELTCs2Dimension <- NULL
+          
+          # Convert what remains back to a JSON string
+          modified_json_str <<- toJSON(json_list)
           }, silent = TRUE)
         })
        
@@ -814,7 +827,7 @@ server <- function(input,output,session){
           if (input$clicked_nodeId_leaf %in%  check_ids && input$clicked_nodeId_leaf %in% rules_df$node_id) {
             footer_elements <- list(modalButton("Close"))
             if (nchar(output_string) > 0) {
-              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),actionButton("PopSelect","View in population selector")))
+              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),a(class="btn btn-default",id = "PopSelect","View in population selector", href="https://google.com", target="_blank")))
             }
 
             showModal(modalDialog(
