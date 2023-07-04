@@ -210,10 +210,7 @@ Query <- dbGetQuery(con, "SELECT
  --lcnt, 
  --fcnt
 	FROM public.population_master
-  where \"deprivation_decile\" <> 0
-    --and \"sex\" <> 'I'
-
-    ")
+  WHERE \"deprivation_decile\" <> 0")
 dbDisconnect(con)
 
 ## Welcome page stuff
@@ -316,6 +313,7 @@ DATA2 <- Query[ , names(Query) %in% modeltype$lookup]
 
 DATA2 <- DATA2 %>% mutate(Sex = if_else(Sex == 'M',1,0))
 
+Query  <- Query %>% mutate(Sex = if_else(Sex == 'M',"Male",if_else(Sex == 'F',"Female",'I')))
 ##Columns for UI
 decision_tree_vars = colnames(Query %>% select(3:length(Query)))
 decision_tree_targets = colnames(Query %>% select (c(3:39,`deprivation decile`,`age band broad`,`age band narrow`)))
