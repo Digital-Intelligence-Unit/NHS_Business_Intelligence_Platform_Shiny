@@ -709,7 +709,22 @@ server <- function(input,output,session){
           }
           print(filtered_json_str)
           if ("AgeDimension" %in% names(fromJSON(filtered_json_str))){
-            filtered_json_str <- check_overlap_remove_dimension(filtered_json_str,"AgeDimension")   
+            filtered_json_str <- tryCatch({
+                check_overlap_remove_dimension(filtered_json_str,"AgeDimension") 
+            },
+            error = function(e) {
+                message("There was an error: ", e)
+                
+                # Convert JSON string to list
+                json_list <- jsonlite::fromJSON(filtered_json_str, simplifyVector = TRUE)
+                
+                # Remove 'AgeDimension' from list
+                json_list$AgeDimension <- NULL
+                
+                # Convert list back to JSON string
+                filtered_json_str <- jsonlite::toJSON(json_list, auto_unbox = TRUE)
+                return(filtered_json_str)
+            })     
             print(filtered_json_str)        
           }
           if ("RskDimension" %in% names(fromJSON(filtered_json_str))){
