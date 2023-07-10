@@ -845,7 +845,7 @@ server <- function(input,output,session){
           if (input$clicked_nodeId_leaf %in%  check_ids && input$clicked_nodeId_leaf %in% rules_df$node_id) {
             footer_elements <- list(modalButton("Close"))
             if (nchar(output_string) > 0) {
-              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),a(class="btn btn-default",id = "PopSelect","View in population selector", href=paste0(queryParam()$referrer,"/apps/phm/populationselect/?filters=",modified_json_str,"&excludeFilters=",exclude_json), target="_blank")))
+              footer_elements <- append(footer_elements, list(actionButton("ApplyRules", "Save cohort"),a(class="btn btn-default",id = "PopSelect","View in population selector", href=paste0("https://",queryParam()$referrer,"/apps/phm/populationselect/?filters=",modified_json_str,"&excludeFilters=",exclude_json), target="_blank")))
             }
 
             showModal(modalDialog(
