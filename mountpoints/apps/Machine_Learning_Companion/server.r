@@ -940,7 +940,7 @@ server <- function(input,output,session){
           # User input is valid, you can continue your operations here
           print(paste("You entered:", input$cohortName))
 
-          session$sendCustomMessage(type = 'addCohort', message = c(list(rj$modified_json_str,input$cohortName,queryParam()$user_id,queryParam()$referrer)))
+          session$sendCustomMessage(type = 'addCohort', message = c(list(paste0(rj$modified_json_str,"&excludeFilters=",rj$exclude_json),input$cohortName,queryParam()$user_id,queryParam()$referrer)))
           updateTextInput(session, "cohortName", value = "")
 
           removeModal()
