@@ -141,6 +141,12 @@ convert_to_json <- function(filter_string, column_names) {
 
 server <- function(input,output,session){
 
+
+  #Reactive values
+  reactiveRules <- reactiveValues()
+  rj <- reactiveValues()
+  dat2 <- reactiveValues()
+
   queryParam <- reactive({
     # Get the query string
     query <- parseQueryString(session$clientData$url_search)
@@ -250,7 +256,7 @@ server <- function(input,output,session){
         
         print("CART model end")
         ##NEED TO REMOVE THIS TESTING ONLY!!
-        data2e <<- data
+        
         rules_df <- as.data.frame(rpart.plot::rpart.rules(model))
         rules_df$rules <- apply(rules_df[, -c(1)], 1, function(x) paste(x, collapse = " "))
         rules_df <- rules_df %>% select(rules) %>%
@@ -260,7 +266,8 @@ server <- function(input,output,session){
         #rules_df$rules <- gsub(" <", " ≤ ", rules_df$rules)
         #rules_df$rules <- gsub(" >", " ≥ ", rules_df$rules)
         rules_df$rules <- gsub(" & ", "\n <br>", rules_df$rules)
-        rules_df <<- rules_df
+
+        reactiveRules$rules_df <- rules_df
         
         output$twoCARTTree <- renderVisNetwork({
           tree <- visTree(
@@ -311,7 +318,7 @@ server <- function(input,output,session){
             }"
           )
           ## Rpart rules
-          
+          rules_df <- reactiveRules$rules_df
           # Modify the title of each node to include the extracted rules
           for (i in 1:nrow(rules_df)) {
             # Find the index of the node in the visTree object
@@ -336,14 +343,14 @@ server <- function(input,output,session){
           }
           
           # Return the modified visTree object
-          tester_tree <<- tree$x$nodes
+          reactiveRules$tester_tree <- tree$x$nodes
           tree
         })
         
         observeEvent(input$clicked_nodeId,{
           try({
           node <-read_html(gsub('^.*Rules\\s*|\\s*\\$.*$', '', input$clicked_nodeId)) %>% html_text
-          other_rules <<- gsub("([A-Za-z]+\\s:)", "<br>\\1",gsub("([^ ]):([^ ])", "\\1 : \\2", read_html(gsub('Rules.*$', '', input$clicked_nodeId)) %>% html_text))
+          rj$other_rules <- gsub("([A-Za-z]+\\s:)", "<br>\\1",gsub("([^ ]):([^ ])", "\\1 : \\2", read_html(gsub('Rules.*$', '', input$clicked_nodeId)) %>% html_text))
           filter_obj <- convert_to_json(node,colnames(data))
           append_to_col_lookup <- function(col_lookup, new_columns) {
               for (col in new_columns) {
@@ -589,8 +596,8 @@ server <- function(input,output,session){
           # filter the elements based on the parent key
           json_list <- json_list[!grepl("^DONTUSE", names(json_list))]
           # convert the filtered list back to a JSON object
-          filtered_json_str <<- toJSON(json_list)
-          UpdatedRulesPHI <<- paste(names(json_list))
+          filtered_json_str <- toJSON(json_list)
+          #UpdatedRulesPHI <<- paste(names(json_list))
       
           # Group columns
           group_cols <- c("Asthma", "Coronary Artery Disease", "Congestive Heart Failure", "Cancer", "COPD", "Depression", "Diabetes", "Hypertension", "Atrial Fibrillation", "Chronic Kidney Disease","Dementia", "Epilepsy", "Hypothyroid", "Mental Health", "Learning Disabilities", "Osteoporosis", "Peripheral Artery Disease", "Rheumatoid Arthritis")
@@ -740,9 +747,9 @@ server <- function(input,output,session){
           }
           # Process JSON and print result
           if (any(group_cols %in% names(fromJSON(filtered_json_str)))){
-            modified_json_str <<- modify_json(filtered_json_str, group_cols)
+            modified_json_str <- modify_json(filtered_json_str, group_cols)
           } else {
-            modified_json_str <<- filtered_json_str
+            modified_json_str <- filtered_json_str
           }
 
           ### RiskScore just use the round function to 0 dp.
@@ -809,37 +816,85 @@ server <- function(input,output,session){
             output_string <- paste(output_string, paste("Wards selected", paste(w_vector, collapse = ", ")), sep = "<br>")
           }
           # Print the output
-          output_string <<- output_string
+          rj$output_string <- output_string
           
           json_list <- fromJSON(modified_json_str)
           
           # Extract the EXCLUDEDimension and convert it to a JSON string
-          exclude_json <<- toJSON(list(LTCs2Dimension = json_list$EXCLUDELTCs2Dimension))
+          rj$exclude_json <- toJSON(list(LTCs2Dimension = json_list$EXCLUDELTCs2Dimension))
           
           # Remove the EXCLUDEDimension from the original list
           json_list$EXCLUDELTCs2Dimension <- NULL
           
           # Convert what remains back to a JSON string
-          modified_json_str <<- toJSON(json_list)
+          rj$modified_json_str <- toJSON(json_list)
           }, silent = TRUE)
         })
        
-
-        dat2$cartModel <<- model
+        
+        dat2$cartModel <- model
           ids <- sort(unique(dat2$cartModel$where))
           rules <- rpart.rules(dat2$cartModel)#cover = TRUE,
           newIDs <- 1:length(ids)
           names(newIDs) <- ids
           newSeg <- newIDs[as.character(dat2$cartModel$where)]
-          dat2$segMem[[3]] <<- newSeg
+          dat2$segMem[[3]] <- newSeg
             updateCheckboxInput(session, "twoCARTTreeRules", value = FALSE)
             updateCheckboxInput(session, "twoCARTTreeVARIMP", value = FALSE)
           })
-          removeModal()
+
+         #show_results
+      output$twoCARTTreeRulesTableUIVARIMP <- renderUI({
+        if(input$twoCARTTreeVARIMP) {
+          column(width = 12,
+            plotOutput("twoCARTTreeRulesTableVARIMP2"),style = "overflow-y: scroll;overflow-x: scroll;",
+          )
+        } else {
+          plotOutput("twoCARTTreeRulesTableUIBlankVAR")
         }
       })
 
-      observeEvent(input$clicked_nodeId_leaf, {
+      observeEvent(input$twoCARTTreeVARIMP, ignoreInit = T, {
+        if(input$twoCARTTreeVARIMP) {
+          output$twoCARTTreeRulesTableVARIMP2 <- renderPlot({
+
+            df <- data.frame(imp = dat2$cartModel$variable.importance)
+            df2 <- df %>% 
+              tibble::rownames_to_column() %>% 
+              dplyr::rename("variable" = rowname) %>% 
+              dplyr::arrange(imp) %>%
+              dplyr::mutate(variable = forcats::fct_inorder(variable))
+            
+            ggplot2::ggplot(df2) +
+              geom_segment(aes(x = variable, y = 0, xend = variable, yend = imp), 
+                          size = 1.5, alpha = 0.7) +
+              geom_point(aes(x = variable, y = imp, col = variable), 
+                        size = 4, show.legend = F) +
+              coord_flip() +
+              theme_bw()        
+            
+          })
+        }
+      })
+
+
+
+          removeModal()
+       
+      
+     
+        
+        }
+      })
+
+       observeEvent(input$clicked_nodeId_leaf, {
+          modified_json_str <- rj$modified_json_str
+          tester_tree <- reactiveRules$tester_tree
+          rules_df <- reactiveRules$rules_df
+          output_string <- rj$output_string
+          
+          exclude_json <- rj$exclude_json
+
           check_ids <- tester_tree %>% filter(level ==max(tester_tree$level)) %>% dplyr::select(id) %>% unlist
           #print(tester_tree$x$nodes)
           if (input$clicked_nodeId_leaf %in%  check_ids && input$clicked_nodeId_leaf %in% rules_df$node_id) {
@@ -850,7 +905,7 @@ server <- function(input,output,session){
 
             showModal(modalDialog(
               title = "Do you want to save these rules to PHI?",
-              HTML(paste0("<b>", other_rules,"</b>"," <br> <br> <h3> These are the rules from the leaf node selected: </h3> <br>",rules_df %>% filter(node_id == input$clicked_nodeId_leaf) %>% select(rules) %>% pull()),
+              HTML(paste0("<b>", rj$other_rules,"</b>"," <br> <br> <h3> These are the rules from the leaf node selected: </h3> <br>",rules_df %>% filter(node_id == input$clicked_nodeId_leaf) %>% select(rules) %>% pull()),
                 "<br> <br> <b>Caution: Due to missing data, numbers may not align with PHI. PHI can utilise the following rules </b> <br>",
                 output_string  
               ), 
@@ -885,46 +940,14 @@ server <- function(input,output,session){
           # User input is valid, you can continue your operations here
           print(paste("You entered:", input$cohortName))
 
-          session$sendCustomMessage(type = 'addCohort', message = c(list(modified_json_str,input$cohortName,queryParam()$user_id,queryParam()$referrer)))
+          session$sendCustomMessage(type = 'addCohort', message = c(list(rj$modified_json_str,input$cohortName,queryParam()$user_id,queryParam()$referrer)))
           updateTextInput(session, "cohortName", value = "")
 
           removeModal()
         }
       })
+
       
-      #show_results
-      output$twoCARTTreeRulesTableUIVARIMP <- renderUI({
-        if(input$twoCARTTreeVARIMP) {
-          column(width = 12,
-            plotOutput("twoCARTTreeRulesTableVARIMP2"),style = "overflow-y: scroll;overflow-x: scroll;",
-          )
-        } else {
-          plotOutput("twoCARTTreeRulesTableUIBlankVAR")
-        }
-      })
-
-      observeEvent(input$twoCARTTreeVARIMP, ignoreInit = T, {
-        if(input$twoCARTTreeVARIMP) {
-          output$twoCARTTreeRulesTableVARIMP2 <- renderPlot({
-
-            df <- data.frame(imp = dat2$cartModel$variable.importance)
-            df2 <- df %>% 
-              tibble::rownames_to_column() %>% 
-              dplyr::rename("variable" = rowname) %>% 
-              dplyr::arrange(imp) %>%
-              dplyr::mutate(variable = forcats::fct_inorder(variable))
-            
-            ggplot2::ggplot(df2) +
-              geom_segment(aes(x = variable, y = 0, xend = variable, yend = imp), 
-                          size = 1.5, alpha = 0.7) +
-              geom_point(aes(x = variable, y = imp, col = variable), 
-                        size = 4, show.legend = F) +
-              coord_flip() +
-              theme_bw()        
-            
-          })
-        }
-      })
 
       #GLMS
       observeEvent(input$glmgo, {
@@ -1015,8 +1038,9 @@ server <- function(input,output,session){
                 table
               }, 	
               include.rownames=TRUE) 
-              glm_plots$table <<- logistic.display(model, simplified=TRUE)
-              glm_plots$table <<- as.data.frame(glm_plots$table$table)   
+              glm_plots <- reactiveValues()
+              glm_plots$table <- logistic.display(model, simplified=TRUE)
+              glm_plots$table <- as.data.frame(glm_plots$table$table)   
             } else if (mtype == "poisson") {
               names(data)<-make.names(names(data))
               model.poisson <- glm(as.formula(paste("`",make.names(input$glm2Var2),"`", " ~ .", sep = "")),
@@ -1106,10 +1130,8 @@ server <- function(input,output,session){
           })
           # eCART add in error message?
           removeModal()
-        }
-      })
 
-      output$glmoddsratiosUI <- renderUI({
+          output$glmoddsratiosUI <- renderUI({
         if(input$glmoddsratios) {
           column(width = 12,
                 plotOutput("glmoddsratios2"),#,style = "overflow-y: scroll;overflow-x: scroll;",
@@ -1147,6 +1169,11 @@ server <- function(input,output,session){
           output$glmoddsratios2 <- renderPlot({})
         }
       })
+
+        }
+      })
+
+      
     
       ### BN
   

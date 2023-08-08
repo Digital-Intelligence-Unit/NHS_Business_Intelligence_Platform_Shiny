@@ -223,8 +223,8 @@ maxdate <- as.Date(max(dates, na.rm = TRUE))
 ## Renaming columns
 df_names <- c(
 Asthma	=	"Ltc_asth",
-`Coronary artery Disease`	=	"Ltc_cad",
-`Congestive heart Failure`	=	"Ltc_chf",
+`Coronary artery disease`	=	"Ltc_cad",
+`Congestive heart failure`	=	"Ltc_chf",
 Cancer	=	"Ltc_cncr",
 `Chronic obstructive pulmonary disease`	=	"Ltc_copd",
 `Persistent depressive disorder`	=	"Ltc_depr",
