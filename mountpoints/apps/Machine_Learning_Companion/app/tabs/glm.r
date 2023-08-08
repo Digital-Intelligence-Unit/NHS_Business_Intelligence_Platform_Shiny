@@ -30,7 +30,7 @@ glm_vars = str_to_sentence(c("Sex"                                   ,"Risk Scor
 "ethniccategory"                        ,"du",                                   
 "electoral ward or division" ))
 
-glm_targets = append(str_to_sentence(c("Age"                                    ,  "Sex" ,                                    
+glm_targets = append(str_to_sentence(c("Age"                                    ,                                    
 "Risk Score"                             ,  "Risk Score Int" ,                              
 "Asthma"                                 ,  "Coronary Artery Disease" ,                
 "Congestive Heart Failure"               ,  "Cancer"  ,                                
