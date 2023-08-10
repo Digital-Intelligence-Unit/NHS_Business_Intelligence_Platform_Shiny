@@ -70,29 +70,36 @@ convert_to_json <- function(filter_string, column_names) {
   # Loop through each line
   for (line in lines) {
     if (grepl(" = ", line) && grepl(" to ", line)) {
+      print(paste0("= & to : ", line))
       # Extract the column name, lower bound, and upper bound
       column_name <- trimws(gsub("=.*$", "", line))
       bounds <- strsplit(gsub("^.*= |$", "", line), " to ")[[1]]
       lower_bound <- as.numeric(trimws(bounds[1]))
       upper_bound <- as.numeric(trimws(bounds[2]))
-
+      
       # Store the range filter in the list
       filters[[column_name]] <- list(c(lower_bound, upper_bound))
+      print(paste0("= & to : ", list(c(lower_bound, upper_bound))))
     } else if (grepl("<", line)) {
       # Upper bound only
+      print(paste0("<: ", line))
       column_name <- trimws(gsub("<.*$", "", line))
       upper_bound <- round(as.numeric(gsub("^.*<|$", "", line)),0)
       
       # Store the upper bound in the list
       filters[[column_name]] <- list(c(0,upper_bound))
+      print(paste0("< : ", list(c(0,upper_bound))))
     } else if (grepl(">=", line)) {
+      print(paste0(" >= : ", line))
       # Lower bound only
       column_name <- trimws(gsub(">=.*$", "", line))
       lower_bound <- round(as.numeric(gsub("^.*>=\\s*", "", line)),0)
       
       # Store the lower bound in the list
       filters[[column_name]] <- list(c(lower_bound,123))
+      print(paste0(">= : ", list(c(lower_bound,123))))
     } else if (grepl(" or ", line)) {
+      print(paste0(" or : ", line))
       # where condition is contains or
       matching_col <- column_names[sapply(column_names, function(x) grepl(x, line))]
       
@@ -103,9 +110,10 @@ convert_to_json <- function(filter_string, column_names) {
         column_value <- column_value[column_value != " "]
         column_value <- trimws(column_value)
         filters[[matching_col]] <- (column_value)
-        
+        print(paste0(" or : ", column_value))
       }
     } else if (grepl("=", line)) {
+      print(paste0(" = : ", line))
       # Upper bound only
       column_name <- trimws(gsub("=.*$", "", line))
       column_value <- as.character(gsub("^.*=\\s*", "", line))
@@ -113,11 +121,13 @@ convert_to_json <- function(filter_string, column_names) {
       
       # Store the upper bound in the list
       filters[[column_name]] <- list(column_value)
+      print(paste0(" = : ", list(column_value)))
     } else {
       # Find the matching column name in the list of known column names
       matching_col <- column_names[sapply(column_names, function(x) grepl(x, line))]
       
       if (length(matching_col) > 0) {
+        print(paste0(" else : ", line))
         # Extract the column value, removing any "=" character that follows the column name
         column_value <- gsub(paste0(matching_col, "\\s*=\\s*"), "", line)
         
@@ -129,6 +139,7 @@ convert_to_json <- function(filter_string, column_names) {
         
         # Store the column value in the list using 'matching_col' as the index
         filters[[matching_col]] <- list(column_value)
+        print(paste0(" else : ", list(column_value)))
       }
     }
   }
