@@ -247,7 +247,8 @@ server <- function(input,output,session){
         }
         
         data <- as.data.frame(Query %>%
-        select_at(c(unique(input$twoCARTVar1), input$twoCARTVar2)))
+          select_at(c(unique(input$twoCARTVar1), input$twoCARTVar2))
+        )
         data <- data %>% 
         mutate_if(
           function(x) is.factor(x) && length(levels(x)) == 2 && all(grepl("^\\d*\\.?\\d*$", levels(x))),
@@ -317,8 +318,11 @@ server <- function(input,output,session){
             click = "function(properties) {
               var nodeId = properties.nodes[0];
               var nodeData = this.body.data.nodes.get(nodeId);
+              console.log(nodeId);
+              console.log(nodeData);
               if (nodeData && nodeData.title) {
                 var rules = nodeData.title;
+                console.log(rules);
                 /*alert('Rules: ' + rules);*/
                 
                 Shiny.setInputValue('clicked_nodeId', rules, {priority: 'event'});
@@ -367,7 +371,6 @@ server <- function(input,output,session){
             # Your debug message here
             paste0("Debug Message 1: ", node, " other rules: ",  rj$other_rules , " string input to converter: ", input$clicked_nodeId)
           })
-          
           
           filter_obj <- convert_to_json(node,colnames(data))
           append_to_col_lookup <- function(col_lookup, new_columns) {
