@@ -351,6 +351,13 @@ server <- function(input,output,session){
           try({
           node <-read_html(gsub('^.*Rules\\s*|\\s*\\$.*$', '', input$clicked_nodeId)) %>% html_text
           rj$other_rules <- gsub("([A-Za-z]+\\s:)", "<br>\\1",gsub("([^ ]):([^ ])", "\\1 : \\2", read_html(gsub('Rules.*$', '', input$clicked_nodeId)) %>% html_text))
+          
+          output$debugOutput1 <- renderText({
+            # Your debug message here
+            paste0("Debug Message 1: ", node, " other rules: ",  rj$other_rules , " string input to converter: ", input$clicked_nodeId)
+          })
+          
+          
           filter_obj <- convert_to_json(node,colnames(data))
           append_to_col_lookup <- function(col_lookup, new_columns) {
               for (col in new_columns) {
@@ -716,6 +723,10 @@ server <- function(input,output,session){
             return(json_string)
           }
           print(filtered_json_str)
+          output$debugOutput2 <- renderText({
+            # Your debug message here
+            paste0("Debug Message 2: ", filtered_json_str)
+          })
           if ("AgeDimension" %in% names(fromJSON(filtered_json_str))){
             filtered_json_str <- tryCatch({
                 check_overlap_remove_dimension(filtered_json_str,"AgeDimension") 
@@ -751,7 +762,11 @@ server <- function(input,output,session){
           } else {
             modified_json_str <- filtered_json_str
           }
-
+          
+          output$debugOutput3 <- renderText({
+            # Your debug message here
+            paste0("Debug Message 3: ", modified_json_str)
+          })
           ### RiskScore just use the round function to 0 dp.
           json_list <- fromJSON(modified_json_str)
 
