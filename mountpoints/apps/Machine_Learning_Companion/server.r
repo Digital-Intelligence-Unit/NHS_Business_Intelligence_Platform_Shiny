@@ -70,7 +70,6 @@ convert_to_json <- function(filter_string, column_names) {
   # Loop through each line
   for (line in lines) {
     if (grepl(" = ", line) && grepl(" to ", line)) {
-      print(paste0("= & to : ", line))
       # Extract the column name, lower bound, and upper bound
       column_name <- trimws(gsub("=.*$", "", line))
       bounds <- strsplit(gsub("^.*= |$", "", line), " to ")[[1]]
@@ -79,27 +78,21 @@ convert_to_json <- function(filter_string, column_names) {
       
       # Store the range filter in the list
       filters[[column_name]] <- list(c(lower_bound, upper_bound))
-      print(paste0("= & to : ", list(c(lower_bound, upper_bound))))
-    } else if (grepl("<", line)) {
+    } else if (grepl("≤", line)) {
       # Upper bound only
-      print(paste0("<: ", line))
-      column_name <- trimws(gsub("<.*$", "", line))
-      upper_bound <- round(as.numeric(gsub("^.*<|$", "", line)),0)
+      column_name <- trimws(gsub("≤.*$", "", line))
+      upper_bound <- round(as.numeric(gsub("^.*≤|$", "", line)),0)
       
       # Store the upper bound in the list
       filters[[column_name]] <- list(c(0,upper_bound))
-      print(paste0("< : ", list(c(0,upper_bound))))
     } else if (grepl(">=", line)) {
-      print(paste0(" >= : ", line))
       # Lower bound only
       column_name <- trimws(gsub(">=.*$", "", line))
       lower_bound <- round(as.numeric(gsub("^.*>=\\s*", "", line)),0)
       
       # Store the lower bound in the list
       filters[[column_name]] <- list(c(lower_bound,123))
-      print(paste0(">= : ", list(c(lower_bound,123))))
     } else if (grepl(" or ", line)) {
-      print(paste0(" or : ", line))
       # where condition is contains or
       matching_col <- column_names[sapply(column_names, function(x) grepl(x, line))]
       
@@ -110,10 +103,8 @@ convert_to_json <- function(filter_string, column_names) {
         column_value <- column_value[column_value != " "]
         column_value <- trimws(column_value)
         filters[[matching_col]] <- (column_value)
-        print(paste0(" or : ", column_value))
       }
     } else if (grepl("=", line)) {
-      print(paste0(" = : ", line))
       # Upper bound only
       column_name <- trimws(gsub("=.*$", "", line))
       column_value <- as.character(gsub("^.*=\\s*", "", line))
@@ -121,13 +112,11 @@ convert_to_json <- function(filter_string, column_names) {
       
       # Store the upper bound in the list
       filters[[column_name]] <- list(column_value)
-      print(paste0(" = : ", list(column_value)))
     } else {
       # Find the matching column name in the list of known column names
       matching_col <- column_names[sapply(column_names, function(x) grepl(x, line))]
       
       if (length(matching_col) > 0) {
-        print(paste0(" else : ", line))
         # Extract the column value, removing any "=" character that follows the column name
         column_value <- gsub(paste0(matching_col, "\\s*=\\s*"), "", line)
         
@@ -139,7 +128,6 @@ convert_to_json <- function(filter_string, column_names) {
         
         # Store the column value in the list using 'matching_col' as the index
         filters[[matching_col]] <- list(column_value)
-        print(paste0(" else : ", list(column_value)))
       }
     }
   }
@@ -275,7 +263,7 @@ server <- function(input,output,session){
           tibble::rownames_to_column(var = "node_id")
         rules_df$rules <- gsub("when", "", rules_df$rules)
         rules_df$rules <- gsub(" is ", " = ", rules_df$rules)
-        #rules_df$rules <- gsub(" <", " ≤ ", rules_df$rules)
+        rules_df$rules <- gsub(" <", " ≤ ", rules_df$rules)
         #rules_df$rules <- gsub(" >", " ≥ ", rules_df$rules)
         rules_df$rules <- gsub(" & ", "\n <br>", rules_df$rules)
 
@@ -318,11 +306,8 @@ server <- function(input,output,session){
             click = "function(properties) {
               var nodeId = properties.nodes[0];
               var nodeData = this.body.data.nodes.get(nodeId);
-              console.log(nodeId);
-              console.log(nodeData);
               if (nodeData && nodeData.title) {
                 var rules = nodeData.title;
-                console.log(rules);
                 /*alert('Rules: ' + rules);*/
                 
                 Shiny.setInputValue('clicked_nodeId', rules, {priority: 'event'});
@@ -366,11 +351,6 @@ server <- function(input,output,session){
           try({
           node <-read_html(gsub('^.*Rules\\s*|\\s*\\$.*$', '', input$clicked_nodeId)) %>% html_text
           rj$other_rules <- gsub("([A-Za-z]+\\s:)", "<br>\\1",gsub("([^ ]):([^ ])", "\\1 : \\2", read_html(gsub('Rules.*$', '', input$clicked_nodeId)) %>% html_text))
-          
-          output$debugOutput1 <- renderText({
-            # Your debug message here
-            paste0("Debug Message 1: ", node, " other rules: ",  rj$other_rules , " string input to converter: ", input$clicked_nodeId)
-          })
           
           filter_obj <- convert_to_json(node,colnames(data))
           append_to_col_lookup <- function(col_lookup, new_columns) {
@@ -737,10 +717,6 @@ server <- function(input,output,session){
             return(json_string)
           }
           print(filtered_json_str)
-          output$debugOutput2 <- renderText({
-            # Your debug message here
-            paste0("Debug Message 2: ", filtered_json_str)
-          })
           if ("AgeDimension" %in% names(fromJSON(filtered_json_str))){
             filtered_json_str <- tryCatch({
                 check_overlap_remove_dimension(filtered_json_str,"AgeDimension") 
@@ -776,11 +752,6 @@ server <- function(input,output,session){
           } else {
             modified_json_str <- filtered_json_str
           }
-          
-          output$debugOutput3 <- renderText({
-            # Your debug message here
-            paste0("Debug Message 3: ", modified_json_str)
-          })
           ### RiskScore just use the round function to 0 dp.
           json_list <- fromJSON(modified_json_str)
 

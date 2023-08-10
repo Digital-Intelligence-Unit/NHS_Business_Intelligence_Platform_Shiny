@@ -188,10 +188,7 @@ decision_tree <- tabPanel("Decision Tree",
                                    
                                     uiOutput("twoCARTTreeRulesTableUI"),
                                     textOutput("eCART")),
-                                    textOutput("debugOutput1"),
-                                    textOutput("debugOutput2"),
-                                    textOutput("debugOutput3"),
-
+                                    
                                 #uiOutput("twoCARTTreeRulesTableUIVARIMP"),                                
                               ),
                        ),
