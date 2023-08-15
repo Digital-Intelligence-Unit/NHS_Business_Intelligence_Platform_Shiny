@@ -9,6 +9,7 @@ library(rpart)
 library(xml2)
 library(rvest)
 library(jsonlite)
+library(stringr)
 
 convert_bayesian_output_to_df <- function(output_string, column_names) {
   # Split the input string by new lines
@@ -257,12 +258,62 @@ server <- function(input,output,session){
         print("CART model end")
         ##NEED TO REMOVE THIS TESTING ONLY!!
         
-        rules_df <- as.data.frame(rpart.plot::rpart.rules(model))
+        rules_df <- as.data.frame(rpart.plot::rpart.rules(model, roundint = FALSE))
         rules_df$rules <- apply(rules_df[, -c(1)], 1, function(x) paste(x, collapse = " "))
         rules_df <- rules_df %>% select(rules) %>%
           tibble::rownames_to_column(var = "node_id")
         rules_df$rules <- gsub("when", "", rules_df$rules)
         rules_df$rules <- gsub(" is ", " = ", rules_df$rules)
+
+      
+        
+
+        custom_round <- function(s) {
+        
+        # Normalize the spaces in the string for easier regex matching
+        s <- gsub("\\s+", " ", trimws(s))
+        
+        # Helper function to process individual rule
+        process_rule <- function(subs) {
+          
+          # If the string has '<'
+          subs <- str_replace(subs, "(<\\s*)([\\d\\.]+)",
+                              function(match){
+                                value <- floor(as.numeric(str_extract(match, "\\d+\\.?\\d*")))
+                                paste0("< ", value)
+                              })
+          
+          # If the string has a standalone '>='
+          subs <- str_replace(subs, "(>=\\s*)([\\d\\.]+)",
+                              function(match){
+                                value <- ceiling(as.numeric(str_extract(match, "\\d+\\.?\\d*")))
+                                paste0(">=", " ", value)
+                              })
+
+          # If the string has a range '= X to Y'
+          subs <- str_replace(subs, "(=\\s*)([\\d\\.]+)\\s*to\\s*([\\d\\.]+)",
+                              function(match){
+                                first <- ceiling(as.numeric(str_extract(match, "(?<=\\=\\s)\\d+\\.?\\d*")))
+                                second <- floor(as.numeric(str_extract(match, "(?<=to\\s)\\d+\\.?\\d*")))
+                                paste0("= ", first, " to ", second)
+                              })
+
+          return(trimws(subs))
+        }
+        
+        # Split the string on "&"
+        split_string <- unlist(str_split(s, "&"))
+        
+        # Apply the logic on each piece of the split_string
+        result_list <- sapply(split_string, process_rule)
+        
+        # Join the processed pieces back together using the "&" character
+        return(paste(result_list, collapse = " & "))
+      }
+        # Test cases
+        rules_df$rules <- sapply(rules_df$rules, custom_round)
+
+
         rules_df$rules <- gsub(" <", " ≤ ", rules_df$rules)
         #rules_df$rules <- gsub(" >", " ≥ ", rules_df$rules)
         rules_df$rules <- gsub(" & ", "\n <br>", rules_df$rules)
