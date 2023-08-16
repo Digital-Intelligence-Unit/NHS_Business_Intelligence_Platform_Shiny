@@ -25,6 +25,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libjpeg-dev \
   unixodbc-dev
 
+RUN sudo apt install -y libmariadb-dev
+
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \
     shiny\
