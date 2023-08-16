@@ -62,4 +62,12 @@ RUN install2.r --error  --skipinstalled \
     visNetwork\
     jsonlite\
     forcat\
+    shinythemes\
+    tidyverse\
+    NHSRplotthedots\
+    runcharter\
+    qicharts2\
+    forecast\
+    prophet\
+    lubridate\
     && rm -rf /tmp/downloaded_packages

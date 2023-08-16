@@ -85,7 +85,15 @@ RUN R -e "install.packages(\
     'rvest',\
     'visNetwork',\
     'jsonlite',\
-    'forcats'\
+    'forcats',\
+    'shinythemes',\
+    'tidyverse',\
+    'NHSRplotthedots',\
+    'runcharter',\
+    'qicharts2',\
+    'forecast',\
+    'prophet',\
+    'lubridate'\
   ),\
   repos = 'https://www.stats.bris.ac.uk/R/'\
 )" && \
