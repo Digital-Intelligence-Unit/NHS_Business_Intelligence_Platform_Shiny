@@ -27,7 +27,7 @@ str_to_title_nhs_vectorized <- function(x) {
 
 
 
-data <- read.csv("ENDOSCOPY_DM01_ALL_grouped_V3_15_08_23.csv", header=TRUE)
+data <- readRDS("data.rds")
 
 lookup <- data.frame(
   original = c("AUDIOLOGY_ASSESSMENTS", "BARIUM_ENEMA", "COLONOSCOPY", "CT", "CYSTOSCOPY",
@@ -50,10 +50,10 @@ lookup <- data.frame(
 
 # Use left_join to join df with lookup
 data <- data %>%
-  mutate(Diagnostic.Tests = toupper(Diagnostic.Tests)) %>%
-  left_join(lookup, by = c("Diagnostic.Tests" = "original")) %>%
-  mutate(Diagnostic.Tests = ifelse(is.na(cleaned), Diagnostic.Tests, cleaned)) %>%
-  rename_with(.fn = ~ gsub("\\.", " ", .)) %>%
+  mutate(Diagnostic.Tests = toupper(`Diagnostic Tests`)) %>%
+  left_join(lookup, by = c("Diagnostic Tests" = "original")) %>%
+  mutate(`Diagnostic Tests` = ifelse(is.na(cleaned), `Diagnostic Tests`, cleaned)) %>%
+  #rename_with(.fn = ~ gsub("\\.", " ", .)) %>%
   select(-cleaned) %>%
   filter(`Diagnostic Tests` != "TOTAL") %>%
   mutate(`Diagnostic Tests` = str_to_title_nhs_vectorized(`Diagnostic Tests`)) %>%
@@ -130,8 +130,8 @@ generate_spc_chart <- function(data, provider, test, date_range, rebase_dates, v
   
   
   spc_chart <- spc_chart + theme(axis.text.x = element_text(size = 6, angle = 45)) + ylab(value_field) + labs(
-    title = paste("Selected Providers:", paste(provider, collapse = ", "),
-                  "Selected Tests:", paste(test, collapse = ", "),
+    title = paste("Selected Providers:", add_line_breaks(paste(provider, collapse = ", "),8),
+                  "Selected Tests:", add_line_breaks(paste(test, collapse = ", "),8),
                   sep = "\n"))
   
   return(spc_chart)

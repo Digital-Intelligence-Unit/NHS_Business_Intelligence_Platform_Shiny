@@ -21,7 +21,7 @@ str_to_title_nhs_vectorized <- function(x) {
   words
 }
 
-data <- read.csv("ENDOSCOPY_DM01_ALL_grouped_V3_15_08_23.csv", header=TRUE)
+data <- readRDS("data.rds")
 
 lookup <- data.frame(
   original = c("AUDIOLOGY_ASSESSMENTS", "BARIUM_ENEMA", "COLONOSCOPY", "CT", "CYSTOSCOPY",
@@ -44,16 +44,15 @@ lookup <- data.frame(
 
 # Use left_join to join df with lookup
 data <- data %>%
-  mutate(Diagnostic.Tests = toupper(Diagnostic.Tests)) %>%
-  left_join(lookup, by = c("Diagnostic.Tests" = "original")) %>%
-  mutate(Diagnostic.Tests = ifelse(is.na(cleaned), Diagnostic.Tests, cleaned)) %>%
-  rename_with(.fn = ~ gsub("\\.", " ", .)) %>%
+  mutate(`Diagnostic Tests` = toupper(`Diagnostic Tests`)) %>%
+  left_join(lookup, by = c("Diagnostic Tests" = "original")) %>%
+  mutate(`Diagnostic Tests` = ifelse(is.na(cleaned), `Diagnostic Tests`, cleaned)) %>%
+  #rename_with(.fn = ~ gsub("\\.", " ", .)) %>%
   select(-cleaned) %>%
   filter(`Diagnostic Tests` != "TOTAL") %>%
   mutate(`Diagnostic Tests` = str_to_title_nhs_vectorized(`Diagnostic Tests`)) %>%
   mutate(`Provider Org Name` = str_to_title_nhs_vectorized(`Provider Org Name`)) %>%
-  mutate(`Provider Parent Name` = str_to_title_nhs_vectorized(`Provider Parent Name`)) 
-
+  mutate(`Provider Parent Name` = str_to_title_nhs_vectorized(`Provider Parent Name`))
 
 
 ## clean duplicated test names
