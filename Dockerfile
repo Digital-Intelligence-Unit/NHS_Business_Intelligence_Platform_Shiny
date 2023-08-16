@@ -40,7 +40,8 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libpng-dev \
     libtiff5-dev \
-    libjpeg-dev
+    libjpeg-dev \
+    unixodbc-dev
 
 RUN sudo apt install -y libmariadb-dev
 
