@@ -27,10 +27,14 @@ RUN apt-get update && apt-get install -y \
     pandoc \
     pandoc-citeproc \
     libcairo2-dev \
+    libsqlite3-dev \
+    libmariadbd-dev \
+    libmariadbclient-dev \
     libxt-dev \
     libpq-dev \
     libssl-dev \
     libcurl4-openssl-dev \
+    libssh2-1-dev \
     xtail \
     libxml2-dev \
     wget \
