@@ -21,7 +21,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libjpeg-dev \
   r-cran-rcpp \
   r-cran-inline \
-  r-cran-rcpp
+  r-cran-rcpp \
+  build-essential
   
 
 RUN install2.r --error  --skipinstalled \

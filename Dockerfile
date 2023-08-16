@@ -44,7 +44,8 @@ RUN apt-get update && apt-get install -y \
     unixodbc-dev \
     r-cran-rcpp \
     r-cran-inline \
-    r-cran-rcpp
+    r-cran-rcpp \
+    build-essential
 
 RUN sudo apt install -y libmariadb-dev
 
