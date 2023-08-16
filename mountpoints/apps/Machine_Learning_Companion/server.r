@@ -258,7 +258,7 @@ server <- function(input,output,session){
         print("CART model end")
         ##NEED TO REMOVE THIS TESTING ONLY!!
         
-        rules_df <- as.data.frame(rpart.plot::rpart.rules(model, roundint = FALSE))
+        rules_df <- as.data.frame(rpart.plot::rpart.rules(model, roundint = TRUE))
         rules_df$rules <- apply(rules_df[, -c(1)], 1, function(x) paste(x, collapse = " "))
         rules_df <- rules_df %>% select(rules) %>%
           tibble::rownames_to_column(var = "node_id")
@@ -278,10 +278,15 @@ server <- function(input,output,session){
           
           # If the string has '<'
           subs <- str_replace(subs, "(<\\s*)([\\d\\.]+)",
-                              function(match){
-                                value <- floor(as.numeric(str_extract(match, "\\d+\\.?\\d*")))
-                                paste0("< ", value)
-                              })
+                    function(match){
+                      extracted_num <- as.numeric(str_extract(match, "\\d+\\.?\\d*"))
+                      if (!is.na(extracted_num) && extracted_num > 0) {
+                        value <- extracted_num - 1
+                      } else {
+                        value <- 0
+                      }
+                      paste0("< ", value)
+                    })
           
           # If the string has a standalone '>='
           subs <- str_replace(subs, "(>=\\s*)([\\d\\.]+)",
@@ -294,7 +299,7 @@ server <- function(input,output,session){
           subs <- str_replace(subs, "(=\\s*)([\\d\\.]+)\\s*to\\s*([\\d\\.]+)",
                               function(match){
                                 first <- ceiling(as.numeric(str_extract(match, "(?<=\\=\\s)\\d+\\.?\\d*")))
-                                second <- floor(as.numeric(str_extract(match, "(?<=to\\s)\\d+\\.?\\d*")))
+                                second <- (as.numeric(str_extract(match, "(?<=to\\s)\\d+\\.?\\d*"))) - 1
                                 paste0("= ", first, " to ", second)
                               })
 
@@ -870,6 +875,10 @@ server <- function(input,output,session){
           rj$output_string <- output_string
           
           json_list <- fromJSON(modified_json_str)
+
+          ## make IMD int
+          json_list$DDimension <- as.integer(json_list$DDimension)
+
           
           # Extract the EXCLUDEDimension and convert it to a JSON string
           rj$exclude_json <- toJSON(list(LTCs2Dimension = json_list$EXCLUDELTCs2Dimension))
