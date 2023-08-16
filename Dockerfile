@@ -103,7 +103,7 @@ RUN R -e "install.packages(\
     'prophet',\
     'lubridate'\
   ),\
-  repos = 'https://www.stats.bris.ac.uk/R/'\
+  repos = 'https://cran.rstudio.com/'\
 )" && \
   cp -R /usr/local/lib/R/site-library/shiny/examples/* /srv/shiny-server/ && \
   chown shiny:shiny /var/lib/shiny-server
