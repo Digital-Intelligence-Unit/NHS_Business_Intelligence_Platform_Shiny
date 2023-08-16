@@ -18,7 +18,11 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libfreetype6-dev \
   libpng-dev \
   libtiff5-dev \
-  libjpeg-dev
+  libjpeg-dev \
+  r-cran-rcpp \
+  r-cran-inline \
+  r-cran-rcpp
+  
 
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \

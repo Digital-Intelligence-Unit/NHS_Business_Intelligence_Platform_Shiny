@@ -41,7 +41,10 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
-    unixodbc-dev
+    unixodbc-dev \
+    r-cran-rcpp \
+    r-cran-inline \
+    r-cran-rcpp
 
 RUN sudo apt install -y libmariadb-dev
 
