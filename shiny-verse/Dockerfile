@@ -11,7 +11,14 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libcurl4-openssl-dev \
   libssh2-1-dev \
   libxml2-dev \
-  unixodbc-dev
+  unixodbc-dev \
+  libfontconfig1-dev \
+  libharfbuzz-dev \ 
+  libfribidi-dev \
+  libfreetype6-dev \
+  libpng-dev \
+  libtiff5-dev \
+  libjpeg-dev
 
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \

@@ -33,7 +33,14 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     xtail \
     libxml2-dev \
-    wget
+    wget \
+    libfontconfig1-dev \
+    libharfbuzz-dev \ 
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev
 
 RUN sudo apt install -y libmariadb-dev
 
