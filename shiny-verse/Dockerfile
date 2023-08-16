@@ -1,31 +1,24 @@
 FROM rocker/shiny:4.0.2
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-  gdebi-core \
-  pandoc \
-  pandoc-citeproc \
+  libxml2-dev \
   libcairo2-dev \
   libsqlite3-dev \
   libmariadbd-dev \
   libmariadbclient-dev \
-  libxt-dev \
   libpq-dev \
   libssl-dev \
   libcurl4-openssl-dev \
   libssh2-1-dev \
-  xtail \
   libxml2-dev \
-  wget \
+  unixodbc-dev \
   libfontconfig1-dev \
   libharfbuzz-dev \ 
   libfribidi-dev \
   libfreetype6-dev \
   libpng-dev \
   libtiff5-dev \
-  libjpeg-dev \
-  unixodbc-dev
-
-RUN sudo apt install -y libmariadb-dev
+  libjpeg-dev
 
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \
