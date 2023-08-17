@@ -75,5 +75,4 @@ RUN install2.r --error  --skipinstalled \
     jsonlite\
     forcat\
     shinythemes\
-    tidyverse\
     && rm -rf /tmp/downloaded_packages
