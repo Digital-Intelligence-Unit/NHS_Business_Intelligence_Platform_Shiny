@@ -79,6 +79,5 @@ RUN install2.r --error  --skipinstalled \
     runcharter\
     qicharts2\
     forecast\
-    prophet\
     lubridate\
     && rm -rf /tmp/downloaded_packages

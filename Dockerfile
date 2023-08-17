@@ -103,7 +103,6 @@ RUN R -e "install.packages(\
     'runcharter',\
     'qicharts2',\
     'forecast',\
-    'prophet',\
     'lubridate'\
   ),\
   repos = 'https://cran.rstudio.com/'\
