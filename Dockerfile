@@ -99,7 +99,7 @@ RUN R -e "install.packages(\
     'jsonlite',\
     'forcats',\
     'shinythemes',\
-    'tidyverse',\
+    'tidyverse' \
   ),\
   repos = 'https://cran.rstudio.com/'\
 )" && \
