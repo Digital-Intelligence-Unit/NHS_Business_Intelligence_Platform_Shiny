@@ -75,4 +75,10 @@ RUN install2.r --error  --skipinstalled \
     jsonlite\
     forcat\
     shinythemes\
+    NHSRplotthedots\
+    runcharter\
+    qicharts2\
+    forecast\
+    prophet\
+    lubridate\
     && rm -rf /tmp/downloaded_packages
