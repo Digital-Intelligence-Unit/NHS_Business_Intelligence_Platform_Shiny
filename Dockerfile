@@ -100,12 +100,6 @@ RUN R -e "install.packages(\
     'forcats',\
     'shinythemes',\
     'tidyverse',\
-    'NHSRplotthedots',\
-    'runcharter',\
-    'qicharts2',\
-    'forecast',\
-    'prophet',\
-    'lubridate'\
   ),\
   repos = 'https://cran.rstudio.com/'\
 )" && \
