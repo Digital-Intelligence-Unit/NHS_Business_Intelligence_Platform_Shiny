@@ -23,7 +23,9 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   r-cran-inline \
   r-cran-rcpp \
   build-essential
-  
+
+COPY ../installer.R ./
+RUN Rscript installer.R
 
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \
@@ -81,4 +83,5 @@ RUN install2.r --error  --skipinstalled \
     qicharts2\
     forecast\
     lubridate\
+    prophet\
     && rm -rf /tmp/downloaded_packages

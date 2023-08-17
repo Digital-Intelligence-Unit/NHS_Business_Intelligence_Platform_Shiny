@@ -45,9 +45,14 @@ RUN apt-get update && apt-get install -y \
     r-cran-rcpp \
     r-cran-inline \
     r-cran-rcpp \
+    r-cran-rstan \
     build-essential
 
 RUN sudo apt install -y libmariadb-dev
+
+# Run this to install prophet package
+COPY ./installer.R ./
+RUN Rscript installer.R
 
 RUN R -e "install.packages(\
   c(\
@@ -104,6 +109,7 @@ RUN R -e "install.packages(\
     'runcharter',\
     'qicharts2',\
     'forecast',\
+    'prophet',\
     'lubridate'\
   ),\
   repos = 'https://cran.rstudio.com/'\
