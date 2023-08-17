@@ -46,7 +46,8 @@ RUN apt-get update && apt-get install -y \
     r-cran-inline \
     r-cran-rcpp \
     r-cran-rstan \
-    build-essential
+    build-essential \
+    g++ 
 
 RUN sudo apt install -y libmariadb-dev
 
@@ -56,7 +57,7 @@ RUN R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/BH/BH
 # install remotes to pull rstan from the source
 RUN R -e "install.packages('remotes', type = 'source')"
 RUN R -e "library('remotes')"
-RUN R -e "remotes::install_github('stan-dev/rstan', ref = 'develop', subdir = 'rstan/rstan', build_opts = '')"
+RUN R -e "install.packages('rstan', type = 'source')"
 # somehow prophet installs correctly (ignore all the red things)
 RUN R -e "library('rstan')"
 RUN R -e "install.packages('prophet', type='source')"
