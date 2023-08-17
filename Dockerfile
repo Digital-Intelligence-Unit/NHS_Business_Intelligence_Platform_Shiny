@@ -51,14 +51,6 @@ RUN apt-get update && apt-get install -y \
 RUN sudo apt install -y libmariadb-dev
 
 # Run this to install prophet package
-# clear up compiler.. looks like it's not working the way it should work but somehow it all works at the end
-RUN R -e "dotR <- file.path(Sys.getenv('HOME'), '.R')"
-RUN R -e "if (!file.exists(dotR)) dir.create(dotR)"
-RUN R -e "M <- file.path(dotR, 'Makevars')"
-RUN R -e "if (!file.exists(M)) file.create(M)"
-RUN R -e "cat('\nCXX14FLAGS=-O3 -march=native -mtune=native -fPIC','CXX14 = g++ -std=c++1y', file = M, sep = '\n', append = TRUE)"
-# clear environment
-RUN R -e "if (file.exists('.RData')) file.remove('.RData')"
 # install BH otherwise it would complain with the errors
 RUN R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/BH/BH_1.62.0-1.tar.gz')"
 # install remotes to pull rstan from the source
