@@ -75,6 +75,7 @@ RUN install2.r --error  --skipinstalled \
     jsonlite\
     forcat\
     shinythemes\
+    tidyverse\
     NHSRplotthedots\
     runcharter\
     qicharts2\

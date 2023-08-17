@@ -99,6 +99,7 @@ RUN R -e "install.packages(\
     'jsonlite',\
     'forcats',\
     'shinythemes',\
+    'tidyverse',\
     'NHSRplotthedots',\
     'runcharter',\
     'qicharts2',\
