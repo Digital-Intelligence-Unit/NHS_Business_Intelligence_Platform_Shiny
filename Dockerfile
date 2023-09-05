@@ -47,10 +47,9 @@ RUN apt-get update && apt-get install -y \
     r-cran-rcpp \
     r-cran-rstan \
     build-essential \
-    g++ 
-
-RUN sudo apt install -y libmariadb-dev
-RUN sudo apt-get install -y libnlopt-dev
+    g++ \
+    libnlopt-dev \
+    libmariadb-dev
 
 # Run this to install prophet package
 # install BH otherwise it would complain with the errors
