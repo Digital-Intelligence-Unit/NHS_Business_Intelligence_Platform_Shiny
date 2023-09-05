@@ -50,7 +50,7 @@ lookup <- data.frame(
 
 # Use left_join to join df with lookup
 data <- data %>%
-  mutate(Diagnostic.Tests = toupper(`Diagnostic Tests`)) %>%
+  mutate(`Diagnostic Tests` = toupper(`Diagnostic Tests`)) %>%
   left_join(lookup, by = c("Diagnostic Tests" = "original")) %>%
   mutate(`Diagnostic Tests` = ifelse(is.na(cleaned), `Diagnostic Tests`, cleaned)) %>%
   #rename_with(.fn = ~ gsub("\\.", " ", .)) %>%
@@ -125,7 +125,7 @@ generate_spc_chart <- function(data, provider, test, date_range, rebase_dates, v
     rebase_dates <- as.Date(rebase_dates, format="%Y-%m-%d")
   }
   
-  spc_chart <- ptd_spc(data2, measure, date, rebase = ptd_rebase(as.Date(rebase_dates, format="%Y-%m-%d")),improvement_direction = direction) %>% 
+  spc_chart <- ptd_spc(data2, measure, date, rebase = ptd_rebase(as.Date(rebase_dates, format="%Y-%m-%d")), improvement_direction = "increase") %>% 
     plot(fixed_y_axis_multiple = FALSE, x_axis_breaks = "3 months",point_size = 1.5)
   
   
@@ -183,7 +183,7 @@ generate_facet_spc_chart <- function(data, group_by, facet_field, date_range, re
 
     print(rebase_dates)
     
-    spc_chart <- ptd_spc(data3, Total, date, facet_field = !!as.symbol(facet_field), rebase = do.call(ptd_rebase, rebase_dates), improvement_direction = "decrease") %>%
+    spc_chart <- ptd_spc(data3, Total, date, facet_field = !!as.symbol(facet_field), rebase = do.call(ptd_rebase, rebase_dates), improvement_direction = "increase") %>%
       plot(fixed_y_axis_multiple = FALSE, x_axis_breaks = "6 months",point_size = 1.5)
     
     spc_chart$facet <- facet_grid(f ~ ., scales = "free")
@@ -193,7 +193,7 @@ generate_facet_spc_chart <- function(data, group_by, facet_field, date_range, re
   } else {
     rebase_dates <- as.Date(rebase_dates, format="%Y-%m-%d")
     
-    spc_chart <- ptd_spc(data3, Total, date, facet_field = !!as.symbol(facet_field), rebase = ptd_rebase(as.Date(rebase_dates, format="%Y-%m-%d")), improvement_direction = "decrease") %>%
+    spc_chart <- ptd_spc(data3, Total, date, facet_field = !!as.symbol(facet_field), rebase = ptd_rebase(as.Date(rebase_dates, format="%Y-%m-%d")), improvement_direction = "increase") %>%
       plot(fixed_y_axis_multiple = FALSE, x_axis_breaks = "6 months",point_size = 1.5)
     
     spc_chart$facet <- facet_grid(f ~ ., scales = "free")
@@ -211,6 +211,10 @@ generate_facet_spc_chart <- function(data, group_by, facet_field, date_range, re
 library(shinyWidgets)
 
 server <- function(input, output, session) {
+  
+  output$model_summary <- renderText({
+    "Our time series model offers predictions based on past data. However, caution is paramount. While it assumes past patterns will continue, external factors, especially major global events like the COVID-19 pandemic, can drastically influence outcomes. While these predictions are insightful, they shouldn't be the sole basis for decision-making."
+    })
   
   reactiveData <- reactiveValues()
 
@@ -296,8 +300,39 @@ server <- function(input, output, session) {
       if (!input$facet_toggle) {
         
         req(spc_chart_data())
-        ggplotly(spc_chart_data())
-        
+        p1 <- spc_chart_data()
+          
+          p1$data <- p1$data %>%
+             mutate(point_type = case_when(
+               point_type == "special_cause_concern" ~ "special cause low",
+               point_type == "special_cause_improvement" ~ "special cause high",
+               point_type == "common_cause" ~ "expected variation",
+               TRUE ~ point_type
+           ))
+          
+          
+          p1 <-(p1 +
+                 scale_color_manual(
+                 values = c(
+                       'common_cause' = '#7B7D7D', 
+                       'special_cause_concern' = '#fab428', 
+                       'special_cause_improvement' = '#289de0'
+                     ),
+                 labels = c(
+                       'common_cause' = 'expected variation', 
+                       'special_cause_concern' = 'special cause low', 
+                       'special_cause_improvement' = 'special cause high'
+                   )
+                ))
+          
+          p1 <- ggplotly( p1 + scale_color_manual(
+                         values = c(
+                                  'expected variation' = '#7B7D7D', 
+                                   'special cause low' = '#fab428', 
+                                    'special cause high' = '#289de0'
+                                      )))
+          
+       p1 
       }
     })
     
@@ -325,8 +360,38 @@ server <- function(input, output, session) {
       if (input$facet_toggle) {
        
         req(facet_spc_chart_data())
-        ggplotly(facet_spc_chart_data())
+        p1 <- facet_spc_chart_data()
         
+        p1$data <- p1$data %>%
+          mutate(point_type = case_when(
+            point_type == "special_cause_concern" ~ "special cause low",
+            point_type == "special_cause_improvement" ~ "special cause high",
+            point_type == "common_cause" ~ "expected variation",
+            TRUE ~ point_type
+          ))
+        
+        
+        p1 <-(p1 +
+                scale_color_manual(
+                  values = c(
+                    'common_cause' = '#7B7D7D', 
+                    'special_cause_concern' = '#fab428', 
+                    'special_cause_improvement' = '#289de0'
+                  ),
+                  labels = c(
+                    'common_cause' = 'expected variation', 
+                    'special_cause_concern' = 'special cause low', 
+                    'special_cause_improvement' = 'special cause high'
+                  )
+                ))
+        
+        p1 <- ggplotly( p1 + scale_color_manual(
+          values = c(
+            'expected variation' = '#7B7D7D', 
+            'special cause low' = '#fab428', 
+            'special cause high' = '#289de0'
+          )))
+        p1 
       }
     })
     output$spc_chart <- renderPlotly({NULL})
@@ -445,14 +510,20 @@ server <- function(input, output, session) {
                 
                 # Convert decomposed time series to data frame with Date column
                 decomposed_df <- data.frame(Date = historical_dates, Decomposed = as.data.frame(decomposed$time.series))
-                
+                global_min <- min(decomposed_df$Date, na.rm = TRUE)
+                print(global_min)
+                global_max <- max(decomposed_df$Date, na.rm = TRUE) + months(input$predict_months)
+                print(global_max)
                 # Create separate plots for each component
-                p1 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.seasonal, name = "Seasonal", type = "scatter", mode = "lines")
-                p2 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.trend, name = "Trend", type = "scatter", mode = "lines")
-                p3 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.remainder, name = "Remainder", type = "scatter", mode = "lines")
+                p1 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.seasonal, name = "Seasonal", type = "scatter", mode = "lines") %>% 
+                  layout(xaxis = list(range = c(global_min, global_max)), yaxis = list(title = "Seasonal"))
+                p2 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.trend, name = "Trend", type = "scatter", mode = "lines") %>% 
+                  layout(xaxis = list(range = c(global_min, global_max)), yaxis = list(title = "Trend"))
+                p3 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.remainder, name = "Remainder", type = "scatter", mode = "lines") %>% 
+                  layout(xaxis = list(range = c(global_min, global_max)), yaxis = list(title = "Remainder"))
                 
                 # Combine plots into a single plot with multiple subplots
-                subplots <- plotly::subplot(p1, p2, p3)
+                subplots <- plotly::subplot(p1, p2, p3, nrows = 3, shareX = TRUE)
                 subplots <- subplots %>% layout(title = "Decomposition Plots")
                 subplots
               } else {
@@ -521,13 +592,23 @@ server <- function(input, output, session) {
               # Convert decomposed time series to data frame with Date column
               decomposed_df <- data.frame(Date = historical_dates, Decomposed = as.data.frame(decomposed$time.series))
               
+              global_min <- min(decomposed_df$Date, na.rm = TRUE)
+              print(global_min)
+              global_max <- max(decomposed_df$Date, na.rm = TRUE) + months(input$predict_months)
+              print(global_max)
+              
               # Create separate plots for each component
-              p1 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.seasonal, name = "Seasonal", type = "scatter", mode = "lines")
-              p2 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.trend, name = "Trend", type = "scatter", mode = "lines")
-              p3 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.remainder, name = "Remainder", type = "scatter", mode = "lines")
+              # Create separate plots for each component
+              p1 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.seasonal, name = "Seasonal", type = "scatter", mode = "lines") %>% 
+                layout(xaxis = list(range = c(global_min, global_max)), yaxis = list(title = "Seasonal"))
+              p2 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.trend, name = "Trend", type = "scatter", mode = "lines") %>% 
+                layout(xaxis = list(range = c(global_min, global_max)), yaxis = list(title = "Trend"))
+              p3 <- plotly::plot_ly(data = decomposed_df, x = ~Date, y = ~Decomposed.remainder, name = "Remainder", type = "scatter", mode = "lines") %>% 
+                layout(xaxis = list(range = c(global_min, global_max)), yaxis = list(title = "Remainder"))
+              
               
               # Combine plots into a single plot with multiple subplots
-              subplots <- plotly::subplot(p1, p2, p3)
+              subplots <- plotly::subplot(p1, p2, p3, nrows = 3, shareX = TRUE)
               subplots <- subplots %>% layout(title = "Decomposition Plots")
               subplots
             } else {
