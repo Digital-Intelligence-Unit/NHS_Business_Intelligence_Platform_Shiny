@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install -y \
     g++ 
 
 RUN sudo apt install -y libmariadb-dev
-RUN sudo apt-get install libnlopt-dev
+RUN sudo apt-get install -y libnlopt-dev
 
 # Run this to install prophet package
 # install BH otherwise it would complain with the errors
