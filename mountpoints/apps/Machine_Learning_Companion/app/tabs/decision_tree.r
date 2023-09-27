@@ -136,62 +136,62 @@ decision_tree <- tabPanel("Decision Tree",
                                     ),
                                     column(width = 12,
                                            br(),
-                                           fluidRow(
-                                             column(width = 6,
+                                           fluidRow(width = 12,
+                                             column(width = 3,
                                                     div(id="AlgorithmParameters",h4("Algorithm Parameters")),
-                                             ),
+                                             #),
                                                bsTooltip("AlgorithmParameters", title = "It is recommended these settings are left as default.")
                                              
                                            ),
-                                           fluidRow(
-                                             column(width = 6,
-                                                    numericInput("twoCARTmaxdepth", label = "Maximum Depth", value = 3, min = 1, max = 50, step = 1)
-                                             ),
+                                           #fluidRow(
+                                             column(width = 3,
+                                                    numericInput("twoCARTmaxdepth", label = "Maximum Depth", value = 3, min = 1, max = 50, step = 1),
+                                             #),
                                              
                                               bsTooltip("twoCARTmaxdepth", title = "Maximum depth of tree (how many splits are allowed)"),
                     
                                            ),
-                                           fluidRow(
-                                             column(width = 6,
+                                           #fluidRow(
+                                             column(width = 3,
                                                     numericInput("twoCARTcp", label = "CP", value = 0.00001, min = 0, step = 0.00001),
-                                             ),                                             
+                                             #),                                             
                                                 bsTooltip("twoCARTcp", title = "Complexity parameter. Lower value can allow more splits."),
                                            ),
-                                           fluidRow(
-                                             column(width = 6,
+                                           #fluidRow(
+                                             column(width = 3,
                                                     numericInput("twoCARTminbucket", label = "Minbucket", value = 20, min = 1, step = 1),
                                              ),
                                                 bsTooltip("twoCARTminbucket", title = "Minimum number of individual that must be in a leaf node at the end of the algorithm."),
                                            ),
-                                           fluidRow(
-                                             column(width = 6,
-                                                    actionButton("twoCARTgo",label = "Go!")
-                                             ),
-                                             column(width = 6,
-                                                    
-                                             )
                                            )
                                     ),
                                     
                                 ),
                               ),
-                              fluidRow(
-                                box(width = 12, title = "Decision Tree",
-                                    visNetworkOutput("twoCARTTree"),
-                                    #column(width = 3#,
-                                          # checkboxInput("twoCARTTreeRules", "Tick to show rules", value = FALSE),
-                                    #),
-                                    
-                                    #column(width = 3,
-                                    #       checkboxInput("twoCARTTreeVARIMP", "Tick to show variable importance", value = FALSE),
-                                    #),
-                                   
-                                    uiOutput("twoCARTTreeRulesTableUI"),
-                                    textOutput("eCART")),
-                                    
-                                #uiOutput("twoCARTTreeRulesTableUIVARIMP"),                                
-                              ),
+                              
                        ),
+ 
+ 
+ fluidRow(
+   box(width = 12, title = "Decision Tree",
+       visNetworkOutput("twoCARTTree"),
+       #column(width = 3#,
+       # checkboxInput("twoCARTTreeRules", "Tick to show rules", value = FALSE),
+       #),
+       
+       #column(width = 3,
+       #       checkboxInput("twoCARTTreeVARIMP", "Tick to show variable importance", value = FALSE),
+       #),
+       
+       uiOutput("twoCARTTreeRulesTableUI"),
+       textOutput("eCART"))),
+ fluidRow(
+   column(width = 6,
+          actionButton("twoCARTgo",label = "Go!")
+   )
+     
+     #uiOutput("twoCARTTreeRulesTableUIVARIMP"),                                
+   ),
                        column(width = 5,
        fluidRow(
          column(width = 12,
@@ -206,4 +206,4 @@ decision_tree <- tabPanel("Decision Tree",
        )
 )
                 ) # added closing parenthesis here
-        )
+        #)
