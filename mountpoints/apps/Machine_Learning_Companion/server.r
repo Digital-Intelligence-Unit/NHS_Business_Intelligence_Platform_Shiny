@@ -329,7 +329,7 @@ server <- function(input,output,session){
           tree <- visTree(
             model,
             # width = "100%", 
-            main = "classification Tree", 
+            main = "", 
             colorVar = c("lightgreen", "yellow", "orange","red"),
             colorY = c("green","red"),
             rules = TRUE,
@@ -350,10 +350,10 @@ server <- function(input,output,session){
                 physics = FALSE
               )
             ),
-            submain = list(
-              text = paste0(input$twoCARTVar2),
-              style = "font-family:Arial;color:black;font-size:15px;text-align:center;"
-            ), 
+            #submain = list(
+              #text = paste0(input$twoCARTVar2),
+              #style = "font-family:Arial;color:black;font-size:15px;text-align:center;"
+            #), 
             width = "100%"
           ) %>% 
           visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
