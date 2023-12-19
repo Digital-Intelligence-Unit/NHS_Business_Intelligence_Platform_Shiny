@@ -1,5 +1,5 @@
-
-Bayesian_cols = c("Asthma"                               ,  "Coronary Artery Disease" ,             
+library(stringr)
+Bayesian_cols = str_to_sentence(c("Asthma"                               ,  "Coronary Artery Disease" ,             
 "Congestive Heart Failure"             ,  "Cancer",                               
 "Chronic obstructive pulmonary disease",  "Persistent depressive disorder" ,      
 "Diabetes"                             ,  "Hypertension" ,                        
@@ -11,14 +11,14 @@ Bayesian_cols = c("Asthma"                               ,  "Coronary Artery Dis
 "Stroke"                               ,  "Sex",                                  
 "top 20 percent deprived"              ,  "age 55 and over",                      
 "age 65 and over"                      ,  "age 75 and over" ,                     
-"age Children"                         ,  "age 17-54")
+"age Children"                         ,  "age 17-54"))
 
 
 
 bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                      mainPanel(
                        fluidRow(
-                         column(width = 7,
+                         column(width = 5,
                                 fluidRow(
                                   box(width = 12, title = "Variable Setup",
                                       column(width = 6,
@@ -61,7 +61,7 @@ bayesian_network <-tabPanel("Bayesian network", fluid = TRUE,
                                    )))),
 
 
-           column(width = 5,
+           column(width = 7,
        fluidRow(
          column(width = 12,
                 div(

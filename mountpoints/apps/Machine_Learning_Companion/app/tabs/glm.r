@@ -1,4 +1,5 @@
-glm_vars = c("Sex"                                   ,"Risk Score Group",                     
+library(stringr)
+glm_vars = str_to_sentence(c("Sex"                                   ,"Risk Score Group",                     
 "Asthma"                                ,"Coronary Artery Disease" ,             
 "Congestive Heart Failure"              ,"Cancer" ,                              
 "Chronic obstructive pulmonary disease" ,"Persistent depressive disorder",       
@@ -27,12 +28,10 @@ glm_vars = c("Sex"                                   ,"Risk Score Group",
 "household description"                 ,"wellbeing acorn group" ,               
 "wellbeing acorn type"                  ,"wellbeing acorn description",          
 "ethniccategory"                        ,"du",                                   
-"electoral ward or division" )
+"electoral ward or division" ))
 
-glm_targets = c("Age"                                    ,  "Sex" ,                                    
-"Risk Score"                             ,  "Risk Score Int" ,                         
-"IP Admissions in Last 12 Months"        ,  "IP Elective Admissions in Last 12 Months",
-"OP Appointments in Last 12 Months"      ,  "AE Attendances in Last 12 Months"  ,      
+glm_targets = append(str_to_sentence(c("Age"                                    ,                                    
+"Risk Score"                             ,  "Risk Score Int" ,                              
 "Asthma"                                 ,  "Coronary Artery Disease" ,                
 "Congestive Heart Failure"               ,  "Cancer"  ,                                
 "Chronic obstructive pulmonary disease"  ,  "Persistent depressive disorder" ,         
@@ -42,7 +41,9 @@ glm_targets = c("Age"                                    ,  "Sex" ,
 "Hypothyroid"                            ,  "Mental health" ,                          
 "Learning disability"                    ,  "Osteoporosis",                            
 "Peripheral artery disease"              ,  "Rheumatoid arthritis"  ,                  
-"Stroke" )
+"Stroke" )),
+c("IP admissions in last 12 months"          , "IP elective admissions in last 12 months",
+ "OP appointments in last 12 months"        , "AE attendances in last 12 months"))
 
 glm <-tabPanel("GLM", fluid = TRUE,
          mainPanel(

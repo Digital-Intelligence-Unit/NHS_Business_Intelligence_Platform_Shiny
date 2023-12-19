@@ -10,7 +10,19 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libssl-dev \
   libcurl4-openssl-dev \
   libssh2-1-dev \
-  unixodbc-dev
+  libxml2-dev \
+  unixodbc-dev \
+  libfontconfig1-dev \
+  libharfbuzz-dev \ 
+  libfribidi-dev \
+  libfreetype6-dev \
+  libpng-dev \
+  libtiff5-dev \
+  libjpeg-dev \
+  r-cran-rcpp \
+  r-cran-inline \
+  r-cran-rcpp \
+  build-essential
 
 RUN install2.r --error  --skipinstalled \
     --deps TRUE \
@@ -56,4 +68,17 @@ RUN install2.r --error  --skipinstalled \
     rpart\
     plot\
     rattle\
+    xml2\
+    rvest\
+    visNetwork\
+    jsonlite\
+    forcat\
+    shinythemes\
+    tidyverse\
+    NHSRplotthedots\
+    runcharter\
+    qicharts2\
+    forecast\
+    lubridate\
+    prophet\
     && rm -rf /tmp/downloaded_packages

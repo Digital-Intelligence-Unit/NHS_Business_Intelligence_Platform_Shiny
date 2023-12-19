@@ -62,17 +62,17 @@ Query <- dbGetQuery(con, "SELECT
  --nhs_number_report, 
  age as \"Age\", 
  sex as \"Sex\", 
- risk_score as \"Risk Score\", 
+ risk_score as \"Risk score\", 
  risk_score_rank as \"Risk Score Rank\", 
  risk_score_trend as \"Risk Score Trend\", 
  risk_score_group as \"Risk Score Group\", 
- risk_score_int as \"Risk Score Int\", 
+ risk_score_int as \"Risk score int\", 
  risk_segment as \"Risk Segment\", 
- ip_admissions_in_last_12_months as \"IP Admissions in Last 12 Months\", 
+ ip_admissions_in_last_12_months as \"IP admissions in last 12 months\", 
  --\"ip_admissions_in_last_12_months_(cpm)\", 
- ip_elective_admissions_in_last_12_months as \"IP Elective Admissions in Last 12 Months\", 
- op_appointments_in_last_12_months as \"OP Appointments in Last 12 Months\", 
- ae_attendances_in_last_12_months as \"AE Attendances in Last 12 Months\", 
+ ip_elective_admissions_in_last_12_months as \"IP elective admissions in last 12 months\", 
+ op_appointments_in_last_12_months as \"OP appointments in last 12 months\", 
+ ae_attendances_in_last_12_months as \"AE attendances in last 12 months\", 
  asthma 					as \"Ltc_asth\",
  chd                     as \"Ltc_cad\",
  heart_failure            as \"Ltc_chf\",
@@ -210,10 +210,7 @@ Query <- dbGetQuery(con, "SELECT
  --lcnt, 
  --fcnt
 	FROM public.population_master
-    where \"deprivation_decile\" <> 0
-    and \"sex\" <> 'I'
-
-    ")
+  WHERE \"deprivation_decile\" <> 0")
 dbDisconnect(con)
 
 ## Welcome page stuff
@@ -226,8 +223,8 @@ maxdate <- as.Date(max(dates, na.rm = TRUE))
 ## Renaming columns
 df_names <- c(
 Asthma	=	"Ltc_asth",
-`Coronary Artery Disease`	=	"Ltc_cad",
-`Congestive Heart Failure`	=	"Ltc_chf",
+`Coronary artery disease`	=	"Ltc_cad",
+`Congestive heart failure`	=	"Ltc_chf",
 Cancer	=	"Ltc_cncr",
 `Chronic obstructive pulmonary disease`	=	"Ltc_copd",
 `Persistent depressive disorder`	=	"Ltc_depr",
@@ -290,14 +287,14 @@ Query$`wellbeing acorn description` <- relevel(factor(Query$`wellbeing acorn des
 
 binomials <- ( c("Sex",ltc))
 
-poissons <- (c("IP Admissions in Last 12 Months",
-              "IP Elective Admissions in Last 12 Months",
-              "OP Appointments in Last 12 Months",
-              "AE Attendances in Last 12 Months" ))
+poissons <- (c("IP admissions in last 12 months",
+              "IP elective admissions in last 12 months",
+              "OP appointments in last 12 months",
+              "AE attendances in last 12 months" ))
 
 gaussians <- (c("Age",
-              "Risk Score",
-              "Risk Score Int"))
+              "Risk score",
+              "Risk score int"))
 
 modeltype <- as.data.frame(if_else(colnames(Query) %in% binomials, "binomial",
                                    if_else(colnames(Query) %in% poissons, "poisson",
@@ -316,13 +313,14 @@ DATA2 <- Query[ , names(Query) %in% modeltype$lookup]
 
 DATA2 <- DATA2 %>% mutate(Sex = if_else(Sex == 'M',1,0))
 
+Query  <- Query %>% mutate(Sex = if_else(Sex == 'M',"Male",if_else(Sex == 'F',"Female",'I')))
 ##Columns for UI
 decision_tree_vars = colnames(Query %>% select(3:length(Query)))
 decision_tree_targets = colnames(Query %>% select (c(3:39,`deprivation decile`,`age band broad`,`age band narrow`)))
 
-glm_vars = colnames(Query %>% select(c(3:length(Query),-Age,-`Risk Score`, -`Risk Score Rank`, -`Risk Score Trend`, -`Risk Score Int`,
-  -`Risk Segment`, -`IP Admissions in Last 12 Months`, -`IP Elective Admissions in Last 12 Months`, -`OP Appointments in Last 12 Months`,
-  -`AE Attendances in Last 12 Months`, -`average ip admission in following year`, -`average nel costs in following year`,-`chronic condition count`,
+glm_vars = colnames(Query %>% select(c(3:length(Query),-Age,-`Risk score`, -`Risk Score Rank`, -`Risk Score Trend`, -`Risk score int`,
+  -`Risk Segment`, -`IP admissions in last 12 months`, -`IP elective admissions in last 12 months`, -`OP appointments in last 12 months`,
+  -`AE attendances in last 12 months`, -`average ip admission in following year`, -`average nel costs in following year`,-`chronic condition count`,
   -`cpm risk score` )))
 
 glm_targets = colnames(DATA2)
@@ -330,3 +328,11 @@ glm_targets = colnames(DATA2)
 Bayesian_cols = colnames(Query %>% select (c(ltc,Sex,`top 20 percent deprived`,`age 55 and over`, `age 65 and over`, `age 75 and over`, `age Children`, `age 17-54`)))
 
 clustering_cols = colnames(Query %>% select(5:length(Query)))
+
+names(Query) <- str_to_sentence(names(Query))
+names(DATA2) <- str_to_sentence(names(DATA2))
+Query <- rename(Query, "IP admissions in last 12 months" = "Ip admissions in last 12 months", "IP elective admissions in last 12 months" = "Ip elective admissions in last 12 months",
+              "OP appointments in last 12 months"  = "Op appointments in last 12 months", "AE attendances in last 12 months" = "Ae attendances in last 12 months")
+
+DATA2 <- rename(DATA2, "IP admissions in last 12 months" = "Ip admissions in last 12 months", "IP elective admissions in last 12 months" = "Ip elective admissions in last 12 months",
+              "OP appointments in last 12 months"  = "Op appointments in last 12 months", "AE attendances in last 12 months" = "Ae attendances in last 12 months")

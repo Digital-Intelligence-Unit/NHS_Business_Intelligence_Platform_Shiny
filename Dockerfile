@@ -32,9 +32,36 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libcurl4-openssl-dev \
     xtail \
-    wget
+    libxml2-dev \
+    wget \
+    libfontconfig1-dev \
+    libharfbuzz-dev \ 
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    unixodbc-dev \
+    r-cran-rcpp \
+    r-cran-inline \
+    r-cran-rcpp \
+    r-cran-rstan \
+    build-essential \
+    g++ \
+    libnlopt-dev \
+    libmariadb-dev
 
-RUN sudo apt install -y libmariadb-dev
+# Run this to install prophet package
+# install BH otherwise it would complain with the errors
+RUN R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/BH/BH_1.62.0-1.tar.gz')"
+# install remotes to pull rstan from the source
+RUN R -e "install.packages('remotes', type = 'source')"
+RUN R -e "library('remotes')"
+RUN R -e "install.packages('rstan', type = 'source')"
+# somehow prophet installs correctly (ignore all the red things)
+RUN R -e "library('rstan')"
+RUN R -e "install.packages('prophet', type='source')"
+RUN R -e "library('prophet')"
 
 RUN R -e "install.packages(\
   c(\
@@ -80,9 +107,20 @@ RUN R -e "install.packages(\
     'plot',\
     'rattle',\
     'sparkline',\
-    'forcats'\
+    'xml2',\
+    'rvest',\
+    'visNetwork',\
+    'jsonlite',\
+    'forcats',\
+    'shinythemes',\
+    'tidyverse',\
+    'NHSRplotthedots',\
+    'runcharter',\
+    'qicharts2',\
+    'forecast',\
+    'lubridate'\
   ),\
-  repos = 'https://www.stats.bris.ac.uk/R/'\
+  repos = 'https://cran.rstudio.com/'\
 )" && \
   cp -R /usr/local/lib/R/site-library/shiny/examples/* /srv/shiny-server/ && \
   chown shiny:shiny /var/lib/shiny-server

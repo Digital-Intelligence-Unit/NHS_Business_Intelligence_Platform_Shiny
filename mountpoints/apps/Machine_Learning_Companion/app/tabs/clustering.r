@@ -1,9 +1,7 @@
-
-clustering_cols = c("Risk Score"                              , "Risk Score Rank" ,                        
+library(stringr)
+clustering_cols = append(str_to_sentence(c("Risk Score"                              , "Risk Score Rank" ,                        
 "Risk Score Trend"                        , "Risk Score Group"  ,                      
-"Risk Score Int"                          , "Risk Segment" ,                           
-"IP Admissions in Last 12 Months"         , "IP Elective Admissions in Last 12 Months",
-"OP Appointments in Last 12 Months"       , "AE Attendances in Last 12 Months",        
+"Risk Score Int"                          , "Risk Segment" ,                             
 "Asthma"                                  , "Coronary Artery Disease",                 
 "Congestive Heart Failure"                , "Cancer"  ,                                
 "Chronic obstructive pulmonary disease"   , "Persistent depressive disorder" ,         
@@ -18,27 +16,28 @@ clustering_cols = c("Risk Score"                              , "Risk Score Rank
 "psychotic disorder flag"                 , "cdiff flag",                              
 "oxygen flag"                             , "mosaic label" ,                           
 "average ip admission in following year"  , "average nel costs in following year",     
-"community matron status"                 , "community matron status-type" ,           
+#"community matron status"                 , "community matron status-type" ,           
 "wardcode"                                , "wardname",                                
-"age markers"                             , "age 55 and over" ,                        
-"age 65 and over"                         , "age 75 and over" ,                        
-"age Children"                            , "age 17-54"  ,                             
+# "age markers"                             , "age 55 and over" ,                        
+# "age 65 and over"                         , "age 75 and over" ,                        
+# "age Children"                            , "age 17-54"  ,                             
 "age band narrow"                         , "age band broad" ,                         
 "chronic condition count"                 , "taxonomy"  ,                              
 "area"                                    , "top 20 percent deprived"   ,             
 "deprivation decile"                      , "gp data feed" ,                           
-"fcvanguard"                              , "data date" ,                              
+"fcvanguard"                              , #"data date" ,                              
 "cpm risk score"                          , "lsoa",                                    
 "msoa"                                    , "household category",                      
 "household group"                         , "household type",                          
 "household description"                   , "wellbeing acorn group",                   
 "wellbeing acorn type"                    , "wellbeing acorn description" ,            
 "ethniccategory"                          , "du"  ,                                    
-"electoral ward or division")
+"electoral ward or division")),c("IP admissions in last 12 months"          , "IP elective admissions in last 12 months",
+ "OP appointments in last 12 months"        , "AE attendances in last 12 months"))
 
 
 
-clustering <- tabPanel("Clustering", fluid = TRUE,
+clustering <- tabPanel("Clustering", value = 'clustering',fluid = TRUE,
                      mainPanel(
                        fluidRow(
                          column(width = 7,
