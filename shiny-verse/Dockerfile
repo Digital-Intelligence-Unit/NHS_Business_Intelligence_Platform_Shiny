@@ -81,4 +81,14 @@ RUN install2.r --error  --skipinstalled \
     forecast\
     lubridate\
     prophet\
+    caret\
+    PHEindicatormethods\
+    xgboost\
+    caret\
+    zoo\
+    readr\
+    shinydashboardPlus\
+    shinycssloaders\
+    funnelR\
+
     && rm -rf /tmp/downloaded_packages

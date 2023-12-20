@@ -118,7 +118,17 @@ RUN R -e "install.packages(\
     'runcharter',\
     'qicharts2',\
     'forecast',\
-    'lubridate'\
+    'lubridate',\
+    'caret',\
+    'PHEindicatormethods',\
+    'xgboost',\
+    'caret',\
+    'zoo',\
+    'readr',\
+    'shinydashboardPlus',\
+    'shinycssloaders',\
+    'funnelR'\
+
   ),\
   repos = 'https://cran.rstudio.com/'\
 )" && \
