@@ -33,8 +33,8 @@ con <- dbConnect(
 ## mean cost per pbc
 pop_mean_cost <- dbGetQuery(con, "
 SELECT CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
+      WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+      ELSE '90+'
     END as age_group
       ,Sex
       ,\"ProgrammeBudgetCode\"
@@ -104,6 +104,91 @@ left join public.population_activity a
 group by  to_char(DATE (a.\"Event Date\"), 'YYYY-MM')  , 
 gpp_code, gpp_short_name,\"ProgrammeBudgetCode\"
         ")
+
+# ## Query
+pop_total_cost <- dbGetQuery(con, "
+WITH total AS (
+  SELECT gpp_code, CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END as age_groups
+  ,COUNT(DISTINCT Det.NHS_Number) as pop
+  FROM public.population_master as Det
+  GROUP BY gpp_code, CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END
+)
+
+SELECT Det.gpp_code, \"ProgrammeBudgetCode\", CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END as age_group
+      
+      ,total.pop
+      ,COUNT(*) as activity
+      ,SUM(Act.\"Total Cost\") total_cost
+      ,CAST(SUM(Act.\"Total Cost\") AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_avg
+      ,CAST(COUNT(*) AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_activity_avg
+  FROM public.population_master as Det 
+  LEFT JOIN public.population_activity as Act
+  ON Det.NHS_Number = Act.\"NHS Number\"
+  left join total on
+  total.gpp_code = Det.gpp_code and
+  total.age_groups = CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END
+  --where sex <> 'I'
+GROUP BY Det.gpp_code, \"ProgrammeBudgetCode\", CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END, total.pop
+
+")
+
+## Query
+pop_total_cost_pcn <- dbGetQuery(con, "
+WITH total AS (
+  SELECT pcn, CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END as age_groups
+  ,COUNT(DISTINCT Det.NHS_Number) as pop
+  FROM public.population_master as Det
+  GROUP BY pcn, CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END
+)
+
+SELECT Det.pcn, \"ProgrammeBudgetCode\", CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END as age_group
+      
+      ,total.pop
+      ,COUNT(*) as activity
+      ,SUM(Act.\"Total Cost\") total_cost
+      ,CAST(SUM(Act.\"Total Cost\") AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_avg
+      ,CAST(COUNT(*) AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_activity_avg
+  FROM public.population_master as Det 
+  LEFT JOIN public.population_activity as Act
+  ON Det.NHS_Number = Act.\"NHS Number\"
+  left join total on
+  total.pcn = Det.pcn and
+  total.age_groups = CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END
+  --where sex <> 'I'
+GROUP BY Det.pcn, \"ProgrammeBudgetCode\", CASE 
+        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
+        ELSE '90+'
+    END, total.pop
+
+")
+
 # monthcost <- dbGetQuery(con, "
 # 
 # SELECT to_char(DATE (a.\"Event Date\"), 'YYYY-MM') , gpp_code, gpp_short_name, a.\"ProgrammeBudgetCode\",
@@ -130,9 +215,9 @@ gpp_code, gpp_short_name,\"ProgrammeBudgetCode\"
 #    -- LIMIT 100 
 #         ")
 
-dbDisconnect(con)
-
 ## month cost
+
+dbDisconnect(con)
 
 monthcost$date <- as.Date(as.yearmon(monthcost$to_char, format = "%Y-%m"))
 
@@ -513,103 +598,6 @@ calculate_funnel_limits_2 <- function (data, numerator, denominator, rate, type 
   }
   return(t)
 }
-
-print("Testing connection to database...")
-con <- dbConnect(
-  PostgreSQL(),
-  dbname = config$database,
-  user = config$uid,
-  host = config$server,
-  password = config$pwd,
-  port = config$port
-)
-
-
-# ## Query
-pop_total_cost <- dbGetQuery(con, "
-WITH total AS (
-  SELECT gpp_code, CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END as age_groups
-  ,COUNT(DISTINCT Det.NHS_Number) as pop
-  FROM public.population_master as Det
-  GROUP BY gpp_code, CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END
-)
-
-SELECT Det.gpp_code, \"ProgrammeBudgetCode\", CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END as age_group
-      
-      ,total.pop
-      ,COUNT(*) as activity
-      ,SUM(Act.\"Total Cost\") total_cost
-      ,CAST(SUM(Act.\"Total Cost\") AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_avg
-      ,CAST(COUNT(*) AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_activity_avg
-  FROM public.population_master as Det 
-  LEFT JOIN public.population_activity as Act
-  ON Det.NHS_Number = Act.\"NHS Number\"
-  left join total on
-  total.gpp_code = Det.gpp_code and
-  total.age_groups = CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END
-  --where sex <> 'I'
-GROUP BY Det.gpp_code, \"ProgrammeBudgetCode\", CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END, total.pop
-
-")
-
-## Query
-pop_total_cost_pcn <- dbGetQuery(con, "
-WITH total AS (
-  SELECT pcn, CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END as age_groups
-  ,COUNT(DISTINCT Det.NHS_Number) as pop
-  FROM public.population_master as Det
-  GROUP BY pcn, CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END
-)
-
-SELECT Det.pcn, \"ProgrammeBudgetCode\", CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END as age_group
-      
-      ,total.pop
-      ,COUNT(*) as activity
-      ,SUM(Act.\"Total Cost\") total_cost
-      ,CAST(SUM(Act.\"Total Cost\") AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_avg
-      ,CAST(COUNT(*) AS FLOAT) / COUNT(DISTINCT Det.NHS_Number) mean_activity_avg
-  FROM public.population_master as Det 
-  LEFT JOIN public.population_activity as Act
-  ON Det.NHS_Number = Act.\"NHS Number\"
-  left join total on
-  total.pcn = Det.pcn and
-  total.age_groups = CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END
-  --where sex <> 'I'
-GROUP BY Det.pcn, \"ProgrammeBudgetCode\", CASE 
-        WHEN age < 90 THEN CONCAT(FLOOR(age/5)*5, '-', FLOOR(age/5)*5 + 4)
-        ELSE '90+'
-    END, total.pop
-
-")
-
-dbDisconnect(con)
 
 ## ordering age band levels
 pop_total_cost$age_bands <- factor(pop_total_cost$age_group,
