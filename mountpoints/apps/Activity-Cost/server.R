@@ -19,7 +19,7 @@ library(RColorBrewer)
 library(NHSRplotthedots)
 library(runcharter)
 
-# source("preprocessing.R",local=TRUE)
+source("preprocessing.R",local=TRUE)
 # Shiny server
 server <- function(input, output, session) {
 

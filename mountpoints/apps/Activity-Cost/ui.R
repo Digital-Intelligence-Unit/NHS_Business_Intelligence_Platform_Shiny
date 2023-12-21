@@ -1,5 +1,4 @@
 # Load required libraries
-source("preprocessing.R",local=TRUE)
 
 library(shiny)
 library(shinyjs)
@@ -20,6 +19,45 @@ library(RColorBrewer)
 
 library(NHSRplotthedots)
 library(runcharter)
+
+
+
+config <- config::get(file = "config.yml")
+
+  print("Testing connection to database...")
+  con <- dbConnect(
+    PostgreSQL(),
+    dbname = config$database,
+    user = config$uid,
+    host = config$server,
+    password = config$pwd,
+    port = config$port
+  )
+
+
+  pcn_lookup <- dbGetQuery(con, "
+    SELECT distinct gpp_short_name, pcn FROM public.population_master;
+  ")
+
+  dbDisconnect(con)
+
+ Programme_Budgeting_Mappings_Definitions <- read_excel("Programme-Budgeting-Mappings-Definitions.xls", sheet = "Inpatient Activity", skip = 4)
+
+  Programme_Budgeting_MAIN <- read_excel("Programme-Budgeting-Mappings-Definitions.xls", sheet = "Programme Budgeting Categories", skip = 3) %>%
+    # Grouping by 'Main Programme'
+    group_by(Main_Programme = `Main Programme`) %>%
+    # Creating a new column with the number of observations per group
+    mutate(count = n()) %>%
+    # Ungrouping to remove the grouping structure
+    ungroup() %>%
+    # Creating a new column 'Programme_Display' with 'Other' for groups with less than 2 observations
+    mutate(Programme_Display = ifelse(count >= 2, as.character(Main_Programme), "Other"))                                                       
+
+  Programme_Budgeting_Mappings_Definitions <- Programme_Budgeting_Mappings_Definitions %>%
+    select(PBC02, `Programme Category Name`) %>%
+    mutate(pbccode = str_sub(PBC02, -3, -1)) %>%
+    distinct %>%
+    left_join(Programme_Budgeting_MAIN, by = c("pbccode" = "Programme Budgeting Code"))
 
 # Shiny UI
 ui <- dashboardPage(
@@ -215,7 +253,7 @@ ui <- dashboardPage(
                      selectizeInput(
                        inputId = "pbc",
                        label = "Select PBCs to highlight:",
-                       choices = setdiff(unique(df_pbc$`Programme Category Name`), "Not coded"),
+                       choices = setdiff(unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`), "Not coded"),
                        multiple = TRUE
                      )),
               
@@ -224,7 +262,7 @@ ui <- dashboardPage(
                      selectizeInput(
                        inputId = "gpp",
                        label = "Select GP:",
-                       choices = unique(df_pbc$gpp_short_name),
+                       choices = unique(pcn_lookup$gpp_short_name),
                        width = "100%"
                      ))
               ,
@@ -232,7 +270,7 @@ ui <- dashboardPage(
                      selectizeInput(
                        inputId = "excludePBC",
                        label = "PBCs to exclude:",
-                       choices = unique(df_pbc$`Programme Category Name`),
+                       choices = unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`),
                        multiple = TRUE,
                        selected = 'Not coded'
                      ))
@@ -250,7 +288,7 @@ ui <- dashboardPage(
                      selectizeInput(
                        inputId = "pbc_pcn",
                        label = "Select PBCs to highlight:",
-                       choices = setdiff(unique(df_pbc$`Programme Category Name`), "Not coded"),
+                       choices = setdiff(unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`), "Not coded"),
                        multiple = TRUE
                      )),
               column(width = 6,selectizeInput(
@@ -261,7 +299,7 @@ ui <- dashboardPage(
               column(width = 3,selectizeInput(
                 inputId = "excludePBC_pcn",
                 label = "PBCs to exclude:",
-                choices = unique(df_pbc$`Programme Category Name`),
+                choices = unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`),
                 multiple = TRUE,
                 selected = 'Not coded'
               ))
@@ -500,18 +538,18 @@ ui <- dashboardPage(
                      selectizeInput(
                        inputId = "GP_H",
                        label = "Select GPs to highlight:",
-                       choices = unique(df_pbc$gpp_short_name),
+                       choices = unique(pcn_lookup$gpp_short_name),
                        multiple = TRUE
                      )),
               column(width = 6,selectizeInput(
                 inputId = "program",
                 label = "Select Program Code:",
-                choices = setdiff(unique(df_pbc %>% arrange(pbccode) %>% select(`Programme Category Name`) %>% distinct(.) %>% pull()), "Not coded")
+                choices = setdiff(unique(Programme_Budgeting_Mappings_Definitions %>% arrange(pbccode) %>% select(`Programme Category Name`) %>% distinct(.) %>% pull()), "Not coded")
               )),
               column(width = 3,selectizeInput(
                 inputId = "excludeGP",
                 label = "GPs to exclude:",
-                choices = unique(df_pbc$gpp_short_name),
+                choices = unique(pcn_lookup$gpp_short_name),
                 multiple = TRUE
               ))
             )),
@@ -531,7 +569,7 @@ ui <- dashboardPage(
               column(width = 6,selectizeInput(
                 inputId = "programpcn",
                 label = "Select Program Code:",
-                choices = setdiff(unique(df_pbc %>% arrange(pbccode) %>% select(`Programme Category Name`) %>% distinct(.) %>% pull()), "Not coded")
+                choices = setdiff(unique(Programme_Budgeting_Mappings_Definitions %>% arrange(pbccode) %>% select(`Programme Category Name`) %>% distinct(.) %>% pull()), "Not coded")
               )),
               column(width = 3,selectizeInput(
                 inputId = "excludePCN",
@@ -771,18 +809,18 @@ ui <- dashboardPage(
             selectizeInput(
               inputId = "program_MC",
               label = "Select Program Code:",
-              choices = setdiff(unique(df_pbc$`Programme Category Name`), "Not coded")
+              choices = setdiff(unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`), "Not coded")
             ),
             selectizeInput(
               inputId = "GP_MC",
               label = "Select GPs to highlight:",
-              choices = unique(df_pbc$gpp_short_name),
+              choices = unique(pcn_lookup$gpp_short_name),
               multiple = TRUE
             ),
             selectizeInput(
               inputId = "excludeGP_MC",
               label = "GPs to exclude:",
-              choices = unique(df_pbc$gpp_short_name),
+              choices = unique(pcn_lookup$gpp_short_name),
               multiple = TRUE
             )
           ),
