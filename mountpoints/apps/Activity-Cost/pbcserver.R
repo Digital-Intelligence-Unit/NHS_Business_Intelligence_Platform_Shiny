@@ -55,7 +55,7 @@ output$RMSEBox_pbc <- renderValueBox({
 
 output$programSPC <- renderPlotly({
 
-  dollar_formatter <- scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)
+  dollar_formatter <- scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)
   
   data <- monthcostdf %>%
     left_join(gp_lookup) %>%
@@ -91,7 +91,7 @@ run_chart <- runcharter(data %>% group_by(ProgrammeBudgetCode, date) %>%
   spc_chart <- spc_chart + theme(axis.text.x = element_text(size = 6, angle = 45)) + ylab('Cost') + labs(
     title = paste("SPC of ", input$program))+
     labs(color = "Point Type")+
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     aes(text = paste("Point Type:", `point_type` , "\n", "Date:", as.Date(x), "\n" , "Cost:" ,
      dollar_formatter(y)))
   
@@ -153,7 +153,7 @@ run_chart <- runcharter(data %>% group_by(ProgrammeBudgetCode, date) %>%
             spc_chart2 <- spc_chart2 + theme(axis.text.x = element_text(size = 6, angle = 45)) + ylab('Cost') + labs(
               title = paste("SPC of Highligted GPs", input$GP_H ))+
               labs(color = "Point Type")+
-              scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+              scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
               aes(text = paste("Point Type:", `point_type` , "\n", "Date:", as.Date(x), "\n" , "Cost:" ,
                                dollar_formatter(y)))
             
@@ -248,8 +248,8 @@ observe({
     scale_color_manual(values = c('Selected' = 'red', 'Not Selected' = 'black')) +
     geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
     labs(x = "Actual", y = "Predicted") +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
-    scale_x_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
+    scale_x_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     ggtitle(paste("Actual vs Predicted by Program Code", input$program)) +
     theme_minimal()
   
@@ -277,8 +277,8 @@ observe({
     scale_color_manual(values = c('Selected' = 'red', 'Not Selected' = 'black')) +
     geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
     labs(x = "Actual", y = "Predicted") +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1), trans = "log10") +
-    scale_x_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1), trans = "log10") +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1), trans = "log10") +
+    scale_x_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1), trans = "log10") +
     ggtitle(paste("Actual vs Predicted by Program Code", input$program)) +
     theme_minimal()
   
@@ -320,7 +320,7 @@ observe({
 "\n", "Residuals:", dollar_formatter(residuals)))) +
     geom_col(position = "dodge", aes( fill = `Place`)) +  # Using geom_col() for bar charts and position="dodge" to have separate bars when there are multiple observations for the same `Programme Category Name`
     scale_color_manual(values = c('Selected' = 'red', 'Not Selected' = 'white')) +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     scale_fill_manual(values = my_colors) +
     labs(x = "GP", y = "Difference") +
     theme_minimal() +
@@ -425,7 +425,7 @@ output$programHist <- renderPlotly({
   
   p <- ggplot(data, aes(x = residuals, text= paste0("Residals:", dollar_formatter(round(residuals,2))))) +
     geom_histogram() +
-    scale_x_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_x_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     labs(x = "Difference", y = "Frequency") +
     theme_minimal() +
     ggtitle(paste("Histogram of Prediction Differences by Program Code", input$program)) 
@@ -441,10 +441,10 @@ output$programDensity <- renderPlotly({
   p <- ggplot(data) +
     geom_histogram(aes(x = predicted, fill = 'predicted', text = paste0("Predicted:",dollar_formatter(predicted))), binwidth = binwidth, alpha = 0.5) +
     geom_histogram(aes(x = `Total Cost`, fill = 'Total Cost', text = paste0("Total Cost:",dollar_formatter(`Total Cost`))), binwidth = binwidth, alpha = 0.5) +
-    labs(x = "Cost (£)", y = "Frequency", title = "Cost Analysis: Predicted vs. Actual") +
+    labs(x = "Cost (Â£)", y = "Frequency", title = "Cost Analysis: Predicted vs. Actual") +
     
     theme_minimal() +
-    scale_x_continuous(labels = scales::comma_format(prefix = "£")) +
+    scale_x_continuous(labels = scales::comma_format(prefix = "Â£")) +
     guides(fill = guide_legend(title = "Cost Type")) +
     scale_fill_manual(values = c('blue', 'red'), labels = c('Predicted', 'Total Cost'))
   

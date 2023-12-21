@@ -53,7 +53,7 @@ output$RMSEBox <- renderValueBox({
 
 output$PredictedCostBox <- renderValueBox({
   data <- df_pbc %>% filter(gpp_short_name == input$gpp, `Programme Category Name` %!in% (input$excludePBC))
-  predicted_cost <- dollar_format(prefix = "£")(data %>% group_by(gpp_short_name) %>% summarise(p = sum(predicted, na.rm=T)) %>% pull())
+  predicted_cost <- dollar_format(prefix = "Â£")(data %>% group_by(gpp_short_name) %>% summarise(p = sum(predicted, na.rm=T)) %>% pull())
   valueBox(
     predicted_cost,
    
@@ -67,7 +67,7 @@ output$PredictedCostBox <- renderValueBox({
 
 output$ActualCostBox <- renderValueBox({
   data <- df_pbc %>% filter(gpp_short_name == input$gpp, `Programme Category Name` %!in% (input$excludePBC))
-  actual_cost <- dollar_format(prefix = "£")(data %>% group_by(gpp_short_name) %>% summarise(p = sum(`Total Cost`, na.rm = TRUE)) %>% pull())
+  actual_cost <- dollar_format(prefix = "Â£")(data %>% group_by(gpp_short_name) %>% summarise(p = sum(`Total Cost`, na.rm = TRUE)) %>% pull())
   valueBox(
     actual_cost,
      
@@ -142,7 +142,7 @@ run_chart <- runcharter(data %>% group_by(gpp_short_name, date) %>%
   spc_chart <- spc_chart + theme(axis.text.x = element_text(size = 6, angle = 45)) + ylab('Cost') + labs(
     title = paste("SPC of ", input$gpp))+
     labs(color = "Point Type") +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     aes(text = paste("Point Type:", `point_type` , "\n", "Date:", as.Date(x), "\n" , "Cost:" ,
      dollar_formatter(y)))
   
@@ -205,7 +205,7 @@ run_chart <- runcharter(data %>% group_by(gpp_short_name, date) %>%
             spc_chart2 <- spc_chart2 + theme(axis.text.x = element_text(size = 6, angle = 45)) + ylab('Cost') + labs(
               title = paste("SPC of Highligted PBCs",input$pbc ))+
               labs(color = "Point Type")+
-              scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+              scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
               aes(text = paste("Point Type:", `point_type` , "\n", "Date:", as.Date(x), "\n" , "Cost:" ,
                                dollar_formatter(y)))
             
@@ -303,8 +303,8 @@ observe({
     scale_color_manual(values = c('Selected' = 'red', 'Not Selected' = 'black')) +
     geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
     labs(x = "Actual", y = "Predicted") +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
-    scale_x_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
+    scale_x_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     ggtitle(paste("Actual vs Predicted by GPP Code", input$gpp)) +
     theme_minimal()
   
@@ -328,8 +328,8 @@ observe({
     scale_color_manual(values = c('Selected' = 'red', 'Not Selected' = 'black')) +
     geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
     labs(x = "Actual", y = "Predicted") +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1), trans = "log10") +
-    scale_x_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1), trans = "log10") +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1), trans = "log10") +
+    scale_x_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1), trans = "log10") +
     ggtitle(paste("Actual vs Predicted by GPP Code", input$gpp)) +
     theme_minimal()
   
@@ -375,7 +375,7 @@ p <- ggplot(data, aes(x = `Programme Category Name`, y = residuals, colour = Leg
 "\n", "Residuals:", dollar_formatter(residuals)))) +
     geom_col(position = "dodge", aes( fill = `Programme_Display`)) +  # Using geom_col() for bar charts and position="dodge" to have separate bars when there are multiple observations for the same `Programme Category Name`
     scale_color_manual(values = c('Selected' = 'red', 'Not Selected' = 'white')) +
-    scale_y_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_y_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     scale_fill_manual(values = my_colors) +
     labs(x = "Programme Category Name", y = "Difference") +
     geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
@@ -466,7 +466,7 @@ output$gppHist <- renderPlotly({
   
   p <- ggplot(data, aes(x = residuals, text= paste0("Residals:", dollar_formatter(round(residuals,2))))) +
     geom_histogram() +
-    scale_x_continuous(labels = scales::dollar_format(prefix = "£", big.mark = ",", accuracy = 1)) +
+    scale_x_continuous(labels = scales::dollar_format(prefix = "Â£", big.mark = ",", accuracy = 1)) +
     labs(x = "Difference", y = "Frequency") +
     theme_minimal() +
     ggtitle(paste0("Histogram of Prediction Differences for GP: ",input$gpp)) 
@@ -581,10 +581,10 @@ output$gppDensity <- renderPlotly({
   p <- ggplot(data) +
     geom_histogram(aes(x = predicted, fill = 'predicted', text = paste0("Predicted:",dollar_formatter(predicted))), binwidth = binwidth, alpha = 0.5) +
     geom_histogram(aes(x = `Total Cost`, fill = 'Total Cost', text = paste0("Total Cost:",dollar_formatter(`Total Cost`))), binwidth = binwidth, alpha = 0.5) +
-    labs(x = "Cost (£)", y = "Frequency", title = "Cost Analysis: Predicted vs. Actual") +
+    labs(x = "Cost (Â£)", y = "Frequency", title = "Cost Analysis: Predicted vs. Actual") +
     
     theme_minimal() +
-    scale_x_continuous(labels = scales::comma_format(prefix = "£")) +
+    scale_x_continuous(labels = scales::comma_format(prefix = "Â£")) +
     guides(fill = guide_legend(title = "Cost Type")) +
     scale_fill_manual(values = c('blue', 'red'), labels = c('Predicted', 'Total Cost'))
   
