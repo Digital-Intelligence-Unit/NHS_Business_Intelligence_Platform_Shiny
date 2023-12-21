@@ -16,11 +16,14 @@ library(shinyBS)
 library(shinyWidgets)
 library(PHEindicatormethods)
 library(RColorBrewer)
-
+library(DBI)
+library(RPostgreSQL)
 library(NHSRplotthedots)
 library(runcharter)
-
-
+library(readxl)
+library(tidyverse)
+library(plotly)
+library(zoo)
 
 config <- config::get(file = "config.yml")
 
@@ -33,7 +36,6 @@ config <- config::get(file = "config.yml")
     password = config$pwd,
     port = config$port
   )
-
 
   pcn_lookup <- dbGetQuery(con, "
     SELECT distinct gpp_short_name, pcn FROM public.population_master;
