@@ -25,6 +25,7 @@ library(tidyverse)
 library(plotly)
 library(zoo)
 
+
 config <- config::get(file = "config.yml")
 
   print("Testing connection to database...")
@@ -272,7 +273,7 @@ ui <- dashboardPage(
                      selectizeInput(
                        inputId = "excludePBC",
                        label = "PBCs to exclude:",
-                       choices = unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`),
+                       choices = append(c('Not coded'),unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`)),
                        multiple = TRUE,
                        selected = 'Not coded'
                      ))
@@ -301,7 +302,7 @@ ui <- dashboardPage(
               column(width = 3,selectizeInput(
                 inputId = "excludePBC_pcn",
                 label = "PBCs to exclude:",
-                choices = unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`),
+                choices = append(c('Not coded'),unique(Programme_Budgeting_Mappings_Definitions$`Programme Category Name`)),
                 multiple = TRUE,
                 selected = 'Not coded'
               ))
