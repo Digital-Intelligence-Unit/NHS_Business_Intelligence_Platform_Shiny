@@ -20,6 +20,7 @@ ARG AWS_SECRETKEY
 ENV AWS_SECRETKEY ${AWS_SECRETKEY}
 ENV API_NAME=biplatform-shiny, AWSREGION=eu-west-2
 
+RUN echo "disable_protocols websocket xdr-polling;" >> /etc/shiny-server/shiny-server.conf
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     sudo \
