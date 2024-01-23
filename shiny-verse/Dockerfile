@@ -1,5 +1,7 @@
 FROM rocker/shiny:4.0.2
 
+RUN echo "disable_protocols websocket xdr-polling;" >> /etc/shiny-server/shiny-server.conf
+
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libxml2-dev \
   libcairo2-dev \
