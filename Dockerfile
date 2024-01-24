@@ -19,6 +19,7 @@ ENV AWS_SECRETID ${AWS_SECRETID}
 ARG AWS_SECRETKEY
 ENV AWS_SECRETKEY ${AWS_SECRETKEY}
 ENV API_NAME=biplatform-shiny, AWSREGION=eu-west-2
+ENV R_REMOTES_NO_ERRORS_FROM_WARNINGS=true
 
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
@@ -38,6 +39,9 @@ RUN apt-get update && apt-get install -y \
     libharfbuzz-dev \ 
     libfribidi-dev \
     libfreetype6-dev \
+    libnlopt-dev \
+    g++ \
+    libmariadb-dev \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
@@ -46,10 +50,7 @@ RUN apt-get update && apt-get install -y \
     r-cran-inline \
     r-cran-rcpp \
     r-cran-rstan \
-    build-essential \
-    g++ \
-    libnlopt-dev \
-    libmariadb-dev
+    build-essential 
 
 # Run this to install prophet package
 # install BH otherwise it would complain with the errors
