@@ -1,6 +1,6 @@
 FROM rocker/shiny:4.0.2
 
-RUN echo "disable_protocols websocket xdr-polling xdr-streaming xhr-streaming;" >> /etc/shiny-server/shiny-server.conf
+RUN echo "disable_protocols xhr-streaming;" >> /etc/shiny-server/shiny-server.conf
 
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libxml2-dev \
