@@ -68,7 +68,7 @@ ui <- fluidPage(
              titlePanel("SPC Chart Generator"),
              sidebarLayout(
                sidebarPanel(
-                 materialSwitch(inputId = "facet_toggle", label = "Enable Facet", value = FALSE),
+                 
                  hr(),
                  selectInput(
                    "commissioner",
@@ -92,7 +92,8 @@ ui <- fluidPage(
                    sliderInput("run_length", "Run Length", min = 3, max = 20, value = 6)
                  ),
                  hr(),
-                 helpText("Note: With facet enabled, providers and tests data will be combined and displayed as aggregated results."),
+                 materialSwitch(inputId = "facet_toggle", label = "Enable Facet", value = FALSE),
+                 helpText("Note: Enabling facets will put providers/tests into different plots."),
                  conditionalPanel(condition = "input.facet_toggle",
                                   tags$div(
                                     materialSwitch(inputId = "facet_field", label = "Provider Org Name", inline = TRUE, value = FALSE),
@@ -127,7 +128,7 @@ ui <- fluidPage(
                selectInput("value_field_ts", "Value Field",
                            choices = c("Total Activity", "Total WL"), multiple = FALSE),
                #materialSwitch(inputId = "decomposition_toggle", label = "Display Decomposition", value = TRUE),
-               numericInput("predict_months", "Predict X Months", value = 6, min = 1),
+               numericInput("predict_months", "Forecast Period (Months)", value = 6, min = 1),
                actionButton("generate_model", "Generate Model"),
                
              ),
