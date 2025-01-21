@@ -510,6 +510,7 @@ server <- function(input, output, session) {
                 
                 # Convert decomposed time series to data frame with Date column
                 decomposed_df <- data.frame(Date = historical_dates, Decomposed = as.data.frame(decomposed$time.series))
+                decomposed_df$Date <- as.Date(decomposed_df$Date)
                 global_min <- min(decomposed_df$Date, na.rm = TRUE)
                 print(global_min)
                 global_max <- max(decomposed_df$Date, na.rm = TRUE) + months(input$predict_months)
@@ -524,7 +525,7 @@ server <- function(input, output, session) {
                 
                 # Combine plots into a single plot with multiple subplots
                 subplots <- plotly::subplot(p1, p2, p3, nrows = 3, shareX = TRUE)
-                subplots <- subplots %>% layout(title = "Decomposition Plots")
+                subplots <- subplots %>% layout(title = "Decomposition Plots", legend = list(orientation = 'h'))
                 subplots
               } else {
                 "No seasonal component detected in the time series."
@@ -555,7 +556,7 @@ server <- function(input, output, session) {
           # Confidence intervals for forecasted data
           plotly::add_ribbons(x = forecasted_data$ds, ymin = forecasted_data$yhat_lower, ymax = forecasted_data$yhat_upper, name = "Confidence Interval", fillcolor = "rgba(255, 127, 80, 0.3)", line = list(color = "transparent")) %>%
           # Layout
-          plotly::layout(title = "Prophet Model Forecast", yaxis = list(title = paste0(plottitle)), xaxis = list(title = "Date"))
+          plotly::layout(title = "Prophet Model Forecast", yaxis = list(title = paste0(plottitle)), xaxis = list(title = "Date"), legend = list(orientation = 'h'))
         
         return(plotly_forecast)
       })
@@ -591,7 +592,7 @@ server <- function(input, output, session) {
               
               # Convert decomposed time series to data frame with Date column
               decomposed_df <- data.frame(Date = historical_dates, Decomposed = as.data.frame(decomposed$time.series))
-              
+              decomposed_df$Date <- as.Date(decomposed_df$Date)
               global_min <- min(decomposed_df$Date, na.rm = TRUE)
               print(global_min)
               global_max <- max(decomposed_df$Date, na.rm = TRUE) + months(input$predict_months)
@@ -609,7 +610,7 @@ server <- function(input, output, session) {
               
               # Combine plots into a single plot with multiple subplots
               subplots <- plotly::subplot(p1, p2, p3, nrows = 3, shareX = TRUE)
-              subplots <- subplots %>% layout(title = "Decomposition Plots")
+              subplots <- subplots %>% layout(title = "Decomposition Plots", legend = list(orientation = 'h'))
               subplots
             } else {
               "No seasonal component detected in the time series."
@@ -644,7 +645,7 @@ server <- function(input, output, session) {
           plotly::add_trace(data = historical_df, x = ~Date, y = ~Value, name = "Historical", type = "scatter", mode = "lines", line = list(color = "blue")) %>%
           plotly::add_trace(data = forecast_df, x = ~Date, y = ~Value, name = "Forecast", type = "scatter", mode = "lines", line = list(color = "red")) %>%
           plotly::add_ribbons(data = forecast_df, x = ~Date, ymin = ~Lower, ymax = ~Upper, name = "Confidence Interval", fillcolor = "rgba(255, 127, 80, 0.3)", line = list(color = "transparent")) %>%
-          plotly::layout(title = paste("ARIMA Model Forecast"), yaxis = list(title = plottitle), xaxis = list(title = "Date"))
+          plotly::layout(title = paste("ARIMA Model Forecast"), yaxis = list(title = plottitle), xaxis = list(title = "Date"), legend = list(orientation = 'h'))
         
         return(plotly_forecast)
       })
