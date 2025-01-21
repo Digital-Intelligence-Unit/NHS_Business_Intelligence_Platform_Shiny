@@ -25,7 +25,6 @@ RUN apt-get update && apt-get install -y \
     sudo \
     gdebi-core \
     pandoc \
-    pandoc-citeproc \
     libcairo2-dev \
     libxt-dev \
     libpq-dev \
