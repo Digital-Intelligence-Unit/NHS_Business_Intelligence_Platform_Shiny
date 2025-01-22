@@ -20,12 +20,12 @@ ARG AWS_SECRETKEY
 ENV AWS_SECRETKEY ${AWS_SECRETKEY}
 ENV API_NAME=biplatform-shiny, AWSREGION=eu-west-2
 
+
 RUN apt-get update && apt-get install -y \
     --no-install-recommends \
     sudo \
     gdebi-core \
     pandoc \
-    pandoc-citeproc \
     libcairo2-dev \
     libxt-dev \
     libpq-dev \
