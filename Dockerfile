@@ -128,6 +128,7 @@ RUN R -e "install.packages(\
     'readr',\
     'shinydashboardPlus',\
     'shinycssloaders',\
+    'd3r',\
     'funnelR'\
 
   ),\

@@ -90,6 +90,7 @@ RUN install2.r --error  --skipinstalled \
     zoo\
     readr\
     shinydashboardPlus\
+    d3r\
     shinycssloaders\
     funnelR\
 
