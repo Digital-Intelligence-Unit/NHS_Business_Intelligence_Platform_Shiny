@@ -6,3 +6,4 @@ mountpoints/apps/*
 !mountpoints/apps/Machine_Learning_Companion
 !mountpoints/apps/PHE_Interventions
 !mountpoints/apps/Activity-Cost
+!mountpoints/apps/Health_Inequalities

@@ -26,7 +26,6 @@ RUN apt-get update && apt-get install -y \
     sudo \
     gdebi-core \
     pandoc \
-    pandoc-citeproc \
     libcairo2-dev \
     libxt-dev \
     libpq-dev \
@@ -128,6 +127,7 @@ RUN R -e "install.packages(\
     'readr',\
     'shinydashboardPlus',\
     'shinycssloaders',\
+    'd3r',\
     'funnelR'\
 
   ),\
