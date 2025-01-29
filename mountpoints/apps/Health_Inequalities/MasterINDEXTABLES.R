@@ -663,6 +663,22 @@ function(row, data, dataIndex, columnIndex) {
       filtered_data_rates$Legend <- ifelse(as.numeric(str_sub(filtered_data_rates$Year, end = 4)) %in% pbc_selected, 'Year Selected', 'Not Selected')
       
       model_data <- data.frame(Year = unique(filtered_data_rates$Year))
+      if (length(model_data) == 1) {
+
+        p <- ggplot(data = filtered_data_rates, aes(color = Legend,x = Year, y = sii)) +
+        geom_bar(aes(y = sii), stat = "identity", fill = "lightblue") +
+        geom_errorbar(width = 0.2, data = filtered_data_rates, 
+                      aes(color = Legend, x = Year, ymin = sii - (sii  - sii_lower95_0cl), ymax = sii + (sii_upper95_0cl  - sii))) +
+        #geom_line(data = model_data, aes(x = Year, y = Predicted, color = 'green')) +
+        scale_color_manual(values = c('Year Selected' = 'red', 'Not Selected' = 'black')) +
+        ggtitle(paste0("SII of ",paste(strwrap(indicator,45), collapse="\n")," by Year" )) +
+        ylab(paste0("SII of ",paste(strwrap(indicator,45), collapse="\n"))) +
+        xlab("Year") +
+        theme_minimal() + 
+        theme(plot.title = element_text(hjust = 0.5, size = 14))#+
+
+      } else {
+
       model_data$Predicted <- predict(lm(sii ~ Year, data=filtered_data_rates), newdata=model_data)
       
       p <- ggplot(data = filtered_data_rates, aes(color = Legend,x = Year, y = sii)) +
@@ -677,6 +693,8 @@ function(row, data, dataIndex, columnIndex) {
         theme_minimal() + 
         theme(plot.title = element_text(hjust = 0.5, size = 14))#+
 
+      }
+
       p
       
     })
@@ -689,6 +707,22 @@ function(row, data, dataIndex, columnIndex) {
       filtered_data_rates$Legend <- ifelse(as.numeric(str_sub(filtered_data_rates$Year, end = 4)) %in% pbc_selected, 'Year Selected', 'Not Selected')
       
       model_data <- data.frame(Year = unique(filtered_data_rates$Year))
+
+      if (length(model_data) == 1) {
+        p <- ggplot(data = filtered_data_rates, aes(color = Legend,x = Year, y = (rii))) +
+        geom_bar(aes(y = (rii)), stat = "identity", fill = "lightblue") +
+        geom_errorbar(width = 0.2, data = filtered_data_rates, 
+                      aes(color = Legend, x = Year, ymin = rii - (rii  - rii_lower95_0cl), ymax = rii + (rii_upper95_0cl  - rii))) +
+        #geom_line(data = model_data, aes(x = Year, y = Predicted, color = 'green')) +
+        scale_color_manual(values = c('Year Selected' = 'red', 'Not Selected' = 'black')) +
+        ggtitle(paste0("RII of ",paste(strwrap(indicator,45), collapse="\n"), " by Year")) +
+        ylab(paste0("RII of ",paste(strwrap(indicator,45), collapse="\n"))) +
+        xlab("Year") +
+        theme_minimal() + 
+        theme(plot.title = element_text(hjust = 0.5, size = 14))#+
+
+      } else {
+
       model_data$Predicted <- predict(lm(rii ~ Year, data=filtered_data_rates), newdata=model_data)
     
       p <- ggplot(data = filtered_data_rates, aes(color = Legend,x = Year, y = (rii))) +
@@ -702,6 +736,9 @@ function(row, data, dataIndex, columnIndex) {
         xlab("Year") +
         theme_minimal() + 
         theme(plot.title = element_text(hjust = 0.5, size = 14))#+
+
+      }
+
       p
       
     })
