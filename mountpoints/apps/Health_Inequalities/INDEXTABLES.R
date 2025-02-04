@@ -236,7 +236,7 @@ observeEvent(input$rii_sii_icd10_switch2, {
                          "function(settings, json) {",
                          
                          
-                         "$(this.api().table().header()).css({'z-index': '1', 'background-color': '#4775BC', 'color': '#fff', 'font-size': '10pt', 'border': '10px solid white', 'border-color': 'white'});",
+                         "$(this.api().table().header()).css({'z-index': '1', 'background-color': '#27205D', 'color': '#fff', 'font-size': '10pt', 'border': '10px solid white', 'border-color': 'white'});",
                          "var table = this.api().table().header();",
                          "var newHeaderRow1 = $('<tr>').append('<th colspan=\"2\" style = \"text-align: center;  border: 3px solid white;  \"><select id= \"group-by-select-add-mort_nonelectiverii\"></select>  </th><th id = \"th_title\" colspan=\"8\" style = \"text-align: center;  border: 3px solid white;\"></th>');",
                          "var newHeaderRow2 = $('<tr>').append('<th colspan=\"2\" style = \"text-align: center;  border: 3px solid white;\"><h5>Select ICD10 Chapter</h5> <select id= \"group-by-select\"></select></th><th colspan=\"3\" style = \"text-align: center;  border: 3px solid white;\">",SELECTED_DATASET()$slopeorrel," Index of Inequality</th><th colspan=\"3\" style = \"text-align: center;  border: 3px solid white;\">Yearly Change</th>');",
@@ -313,13 +313,13 @@ function(row, data, dataIndex, columnIndex) {
   
   let barColor;
   if(group === 'GP Fingertips Data') {
-    barColor = '#FF0000';//RED
+    barColor = '#FC4B6C;//RED
     $('#group-by-select').attr('disabled','disabled');
   } else if (group === 'Local Health Data') {
-    barColor = '#008000';//green
+    barColor = '#8C1E78';//green
     $('#group-by-select').attr('disabled','disabled');
   } else {
-    barColor = '#1E90FF';//green
+    barColor = '#6BAED6';//green
     $('#group-by-select').removeAttr('disabled');
   }
   
@@ -756,7 +756,7 @@ function(row, data, dataIndex, columnIndex) {
       fluidRow(column(12,
                       box(
                         title = paste(indicator, " (", header, ")"),
-                        status = "maroon",
+                        background = '#BB2882',
                         solidHeader = TRUE,
                         closable = FALSE,
                         id = paste0("box", clickedRow),
@@ -769,7 +769,7 @@ function(row, data, dataIndex, columnIndex) {
                                                                                                                                                                                    filter(Chapter == indicator) %>% select(Year) %>% pull()), end = 4)), value = as.numeric(str_sub(max(allDsrs%>%
                                                                                                                                                                                                                                                          filter(Chapter == indicator) %>% select(Year) %>% pull()), end = 4)), step = 1, sep = "", ticks = F),
                                  column(6,
-                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,status = "maroon",tabsetPanel(
+                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,background = '#BB2882',tabsetPanel(
                                    id = 'plots_tab',
                                    
                                    
