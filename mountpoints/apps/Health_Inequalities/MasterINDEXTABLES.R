@@ -501,7 +501,7 @@ function(row, data, dataIndex, columnIndex) {
       fluidRow(column(12,
                       box(
                         title = paste(indicator),
-                        background = '#BB2882',
+                        status = "maroon",
                         solidHeader = TRUE,
                         closable = FALSE,
                         id = paste0("box", clickedRow),
@@ -524,7 +524,7 @@ function(row, data, dataIndex, columnIndex) {
                                                   pull()), end = 4)),
                                              step = 1, sep = "", ticks = F),
                                  column(6,
-                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,background = '#BB2882',tabsetPanel(
+                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,status = "maroon",tabsetPanel(
                                    id = 'plots_tab',
 
                                    tabPanel("RII Plot", tags$hr(style = "border-top: 2px solid #ccc; margin-top: 20px; margin-bottom: 20px;"),
@@ -590,7 +590,7 @@ function(row, data, dataIndex, columnIndex) {
                                    
                                    ))),
                                  column(6,
-                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,background = '#BB2882',plotOutput("ICDODSRPLOTSMASTER", height = '452px')%>% 
+                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,status = "maroon",plotOutput("ICDODSRPLOTSMASTER", height = '452px')%>% 
                                           withSpinner(type = 3, color = '#3c8dbc', size = 1.5
                                                       ,color.background ='#ecf0f5' ),dataTableOutput("ICD10DSRTABLEMASTER"))),
   

@@ -313,7 +313,7 @@ function(row, data, dataIndex, columnIndex) {
   
   let barColor;
   if(group === 'GP Fingertips Data') {
-    barColor = '#FC4B6C;//RED
+    barColor = '#FC4B6C';//RED
     $('#group-by-select').attr('disabled','disabled');
   } else if (group === 'Local Health Data') {
     barColor = '#8C1E78';//green
@@ -756,7 +756,7 @@ function(row, data, dataIndex, columnIndex) {
       fluidRow(column(12,
                       box(
                         title = paste(indicator, " (", header, ")"),
-                        background = '#BB2882',
+                        status = "maroon",
                         solidHeader = TRUE,
                         closable = FALSE,
                         id = paste0("box", clickedRow),
@@ -769,7 +769,7 @@ function(row, data, dataIndex, columnIndex) {
                                                                                                                                                                                    filter(Chapter == indicator) %>% select(Year) %>% pull()), end = 4)), value = as.numeric(str_sub(max(allDsrs%>%
                                                                                                                                                                                                                                                          filter(Chapter == indicator) %>% select(Year) %>% pull()), end = 4)), step = 1, sep = "", ticks = F),
                                  column(6,
-                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,background = '#BB2882',tabsetPanel(
+                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,status = "maroon",tabsetPanel(
                                    id = 'plots_tab',
                                    
                                    
@@ -835,7 +835,7 @@ function(row, data, dataIndex, columnIndex) {
                                            
                                                    ))),
                                  column(6,
-                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,status = "",plotOutput("ICDODSRPLOTS", height = '452px')%>% 
+                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,status = "maroon",plotOutput("ICDODSRPLOTS", height = '452px')%>% 
                                           withSpinner(type = 3, color = '#3c8dbc', size = 1.5
                                                       ,color.background ='#ecf0f5' ),dataTableOutput("ICD10DSRTABLE"))),
                                  
@@ -844,8 +844,7 @@ function(row, data, dataIndex, columnIndex) {
                       )),
 
       tags$div(
-        style = "text-align: center; margin-top: 20px;",
-        maroon
+        style = "text-align: center; margin-top: 20px;"
       )
     )
     
