@@ -100,7 +100,7 @@ siidataset <- allSlopes %>%
               rename(AVG_RII = rii, avg_rii_lower95_0cl = rii_lower95_0cl,
                      avg_rii_upper95_0cl = rii_upper95_0cl)) %>%
   mutate(SII_Plot = sii, AVG_RII_PLOT = AVG_RII) %>%
-  select(name,description,Title.y,Year, sii, sii_lower95_0cl, sii_upper95_0cl,SII_Plot, AVG_RII, avg_rii_lower95_0cl, avg_rii_upper95_0cl,AVG_RII_PLOT, flag,option,`p Value`) %>%
+  select(name,description,Title.y,Year, sii, sii_lower95_0cl, sii_upper95_0cl,SII_Plot, AVG_RII, avg_rii_lower95_0cl, avg_rii_upper95_0cl,AVG_RII_PLOT, flag,option,dataset,`p Value`) %>%
   #mutate(across(where(is.numeric), sprintf, fmt = '%.2f')) %>%
   rename(`Metrics` = name, Value = sii, LCI = sii_lower95_0cl, UCI = sii_upper95_0cl)%>% 
   #mutate(`% Differnce` = (`National RII` - Value) / Value * 100) %>%
@@ -120,7 +120,7 @@ riidataset <- allSlopes %>%
               rename(AVG_RII = rii, avg_rii_lower95_0cl = rii_lower95_0cl,
                      avg_rii_upper95_0cl = rii_upper95_0cl)) %>%
   mutate(RII_Plot = rii, AVG_RII_PLOT = AVG_RII) %>%
-  select(name,description,Title.y,Year, rii, rii_lower95_0cl, rii_upper95_0cl,RII_Plot, AVG_RII, avg_rii_lower95_0cl, avg_rii_upper95_0cl,AVG_RII_PLOT, flag,option,`p Value`) %>%
+  select(name,description,Title.y,Year, rii, rii_lower95_0cl, rii_upper95_0cl,RII_Plot, AVG_RII, avg_rii_lower95_0cl, avg_rii_upper95_0cl,AVG_RII_PLOT, flag,option,dataset,`p Value`) %>%
   #mutate(across(where(is.numeric), sprintf, fmt = '%.2f')) %>%
   rename(`Metrics` = name, Value = rii, LCI = rii_lower95_0cl, UCI = rii_upper95_0cl)%>% 
   #mutate(`% Differnce` = (`National RII` - Value) / Value * 100) %>%
@@ -134,8 +134,8 @@ for (i in c("Value", "LCI", "UCI", "RII_Plot", "AVG_RII", "avg_rii_lower95_0cl",
 globalMin <- min(allSlopes2$rii, na.rm=T)  
 globalMax <- max(allSlopes2$rii, na.rm=T)  
 
-SELECTED_DATASET <- eventReactive(c(input$rii_sii_icd10_switch2, input$variableOptions),{
-  if(input$rii_sii_icd10_switch2 & input$variableOptions) {
+SELECTED_DATASET <- eventReactive(c(input$rii_sii_icd10_switch2),{
+  if(input$rii_sii_icd10_switch2) {
     slopeorrel <- "Relative"
     widthSlope <- 0.03
     df <- riidataset %>% 
@@ -146,7 +146,7 @@ SELECTED_DATASET <- eventReactive(c(input$rii_sii_icd10_switch2, input$variableO
              `AVG UCI` = avg_rii_upper95_0cl) %>%
       select(c(-"AVG lCI", -"AVG UCI")) 
     
-  } else if (!input$rii_sii_icd10_switch2 & input$variableOptions){
+  } else if (!input$rii_sii_icd10_switch2){
     slopeorrel <- "Slope"
     widthSlope <- 0.0
     df <- siidataset %>% 
@@ -156,31 +156,32 @@ SELECTED_DATASET <- eventReactive(c(input$rii_sii_icd10_switch2, input$variableO
       rename(SII = Value, `Inequality Change` = AVG_RII, `AVG lCI` = avg_rii_lower95_0cl,
              `AVG UCI` = avg_rii_upper95_0cl) %>%
       select(c(-"AVG lCI", -"AVG UCI")) 
-  } else if (!input$variableOptions & input$rii_sii_icd10_switch2 ) {
-    slopeorrel <- "Relative"
-    widthSlope <- 0.03
-    df <- riidataset %>% 
-      select(c(-"RII_Plot", -"AVG_RII_PLOT",-"description")) %>% 
-      filter(`Metrics` !="ALL_EVENTS") %>%
-      rename(RII = Value, `Inequality Change` = AVG_RII, `AVG lCI` = avg_rii_lower95_0cl,
-             `AVG UCI` = avg_rii_upper95_0cl) %>%
-      select(c(-"AVG lCI", -"AVG UCI"))  %>%
-      filter(flag == 'chapter')
-    
-  } else if (!input$variableOptions & !input$rii_sii_icd10_switch2) {
-    slopeorrel <- "Slope"
-    widthSlope <- 0.0
-    df <- siidataset %>% 
-      
-      select(c(-"SII_Plot", -"AVG_RII_PLOT", -"description")) %>% 
-      filter(`Metrics` !="ALL_EVENTS") %>%
-      rename(SII = Value, `Inequality Change` = AVG_RII, `AVG lCI` = avg_rii_lower95_0cl,
-             `AVG UCI` = avg_rii_upper95_0cl) %>%
-      select(c(-"AVG lCI", -"AVG UCI"))  %>%
-      filter(flag == 'chapter')
-    
-    
   }
+  #  else if (!input$variableOptions & input$rii_sii_icd10_switch2 ) {
+  #   slopeorrel <- "Relative"
+  #   widthSlope <- 0.03
+  #   df <- riidataset %>% 
+  #     select(c(-"RII_Plot", -"AVG_RII_PLOT",-"description")) %>% 
+  #     filter(`Metrics` !="ALL_EVENTS") %>%
+  #     rename(RII = Value, `Inequality Change` = AVG_RII, `AVG lCI` = avg_rii_lower95_0cl,
+  #            `AVG UCI` = avg_rii_upper95_0cl) %>%
+  #     select(c(-"AVG lCI", -"AVG UCI"))  %>%
+  #     filter(flag == 'chapter')
+    
+  # } else if (!input$variableOptions & !input$rii_sii_icd10_switch2) {
+  #   slopeorrel <- "Slope"
+  #   widthSlope <- 0.0
+  #   df <- siidataset %>% 
+      
+  #     select(c(-"SII_Plot", -"AVG_RII_PLOT", -"description")) %>% 
+  #     filter(`Metrics` !="ALL_EVENTS") %>%
+  #     rename(SII = Value, `Inequality Change` = AVG_RII, `AVG lCI` = avg_rii_lower95_0cl,
+  #            `AVG UCI` = avg_rii_upper95_0cl) %>%
+  #     select(c(-"AVG lCI", -"AVG UCI"))  %>%
+  #     filter(flag == 'chapter')
+    
+    
+  # }
   
   list(df = df , slopeorrel = slopeorrel, widthSlope = widthSlope)
  
@@ -199,7 +200,7 @@ output$dynamic_datatables_ui2 <- renderUI({
   
   
   
-  
+
       
 })   
 
@@ -222,7 +223,7 @@ observeEvent(input$rii_sii_icd10_switch2, {
                        rowGroup = list(dataSrc = group_column_index),
                        
                        columnDefs = list(list(
-                         targets = c(1,7,8),
+                         targets = c(1,7,8,9),
                          visible = F, filter = list(show = FALSE), targets = 1
                        ),list(targets = 0, render = JS("function(data, type, row) {return '<div style=\"white-space: normal; line-height:1.5;\">'+ data + '</div>';}"))),
                        
@@ -235,7 +236,7 @@ observeEvent(input$rii_sii_icd10_switch2, {
                          "function(settings, json) {",
                          
                          
-                         "$(this.api().table().header()).css({'z-index': '1', 'background-color': '#005eb8', 'color': '#fff', 'font-size': '10pt', 'border': '10px solid white', 'border-color': 'white'});",
+                         "$(this.api().table().header()).css({'z-index': '1', 'background-color': '#4775BC', 'color': '#fff', 'font-size': '10pt', 'border': '10px solid white', 'border-color': 'white'});",
                          "var table = this.api().table().header();",
                          "var newHeaderRow1 = $('<tr>').append('<th colspan=\"2\" style = \"text-align: center;  border: 3px solid white;  \"><select id= \"group-by-select-add-mort_nonelectiverii\"></select>  </th><th id = \"th_title\" colspan=\"8\" style = \"text-align: center;  border: 3px solid white;\"></th>');",
                          "var newHeaderRow2 = $('<tr>').append('<th colspan=\"2\" style = \"text-align: center;  border: 3px solid white;\"><h5>Select ICD10 Chapter</h5> <select id= \"group-by-select\"></select></th><th colspan=\"3\" style = \"text-align: center;  border: 3px solid white;\">",SELECTED_DATASET()$slopeorrel," Index of Inequality</th><th colspan=\"3\" style = \"text-align: center;  border: 3px solid white;\">Yearly Change</th>');",
@@ -243,7 +244,8 @@ observeEvent(input$rii_sii_icd10_switch2, {
                          "$(table).prepend(newHeaderRow1);",
                          
                       
-
+                         
+                         
                          "var table = this.api();
                         table.column(8).search('Paediatric Admissions 16 Years and Under  per 100,000 Persons' ? '^' + 'Paediatric Admissions 16 Years and Under  per 100,000 Persons'  + '$' : '', true, false).draw(); 
                      
@@ -299,15 +301,26 @@ function(row, data, dataIndex, columnIndex) {
 
   $('td', row).addClass('clickable');
   
+
+  const groupValue = data[9];
+    
+  if (groupValue === 'GP Fingertips Data Metrics per 100'){
+  $('td', row).addClass('CrudeRates');
+     }
+
+  
   const group = data[8];
   
   let barColor;
   if(group === 'GP Fingertips Data') {
     barColor = '#FF0000';//RED
+    $('#group-by-select').attr('disabled','disabled');
   } else if (group === 'Local Health Data') {
     barColor = '#008000';//green
+    $('#group-by-select').attr('disabled','disabled');
   } else {
     barColor = '#1E90FF';//green
+    $('#group-by-select').removeAttr('disabled');
   }
   
 
@@ -697,8 +710,8 @@ function(row, data, dataIndex, columnIndex) {
         #formatStyle('SII', width = '20%')
         DT::formatStyle(names(SELECTED_DATASET()$df),lineHeight='10%')%>%
         formatRound(columns=c(4, 5, 6), digits=2) %>%
-        DT::formatStyle(names(SELECTED_DATASET()$df), fontSize = '75%')
-      
+        DT::formatStyle(names(SELECTED_DATASET()$df), fontSize = '100%')
+
       dt1icd10
       #reset("picker_ui2")
       
@@ -714,16 +727,16 @@ function(row, data, dataIndex, columnIndex) {
     clickedRow <- input$dynamicContentRII_ICD10_2Index_rows_selected
     #print(paste0("Row", clickedRow, "clicked"))
     
-    if(is.null(input$variableOptions)) {
+    # if(is.null(input$variableOptions)) {
       
-      indicator <- SELECTED_DATASET()$df %>% filter(flag == 'chapter')
-      header <- indicator$option[clickedRow]
-      indicator <- indicator$`Metrics`[clickedRow]
+    #   indicator <- SELECTED_DATASET()$df %>% filter(flag == 'chapter')
+    #   header <- indicator$option[clickedRow]
+    #   indicator <- indicator$`Metrics`[clickedRow]
       
-    } else {
+    # } else {
       indicator <- SELECTED_DATASET()$df$`Metrics`[clickedRow]
       header <- SELECTED_DATASET()$df$option[clickedRow]
-    }
+    #}
     
     
     chapter <- unique(allSlopes %>% filter(name == indicator) %>% select(Chapter_group) %>% pull())
@@ -743,7 +756,7 @@ function(row, data, dataIndex, columnIndex) {
       fluidRow(column(12,
                       box(
                         title = paste(indicator, " (", header, ")"),
-                        status = "primary",
+                        status = "maroon",
                         solidHeader = TRUE,
                         closable = FALSE,
                         id = paste0("box", clickedRow),
@@ -756,7 +769,7 @@ function(row, data, dataIndex, columnIndex) {
                                                                                                                                                                                    filter(Chapter == indicator) %>% select(Year) %>% pull()), end = 4)), value = as.numeric(str_sub(max(allDsrs%>%
                                                                                                                                                                                                                                                          filter(Chapter == indicator) %>% select(Year) %>% pull()), end = 4)), step = 1, sep = "", ticks = F),
                                  column(6,
-                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,status = "primary",tabsetPanel(
+                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,status = "maroon",tabsetPanel(
                                    id = 'plots_tab',
                                    
                                    
@@ -822,7 +835,7 @@ function(row, data, dataIndex, columnIndex) {
                                            
                                                    ))),
                                  column(6,
-                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,status = "primary",plotOutput("ICDODSRPLOTS", height = '452px')%>% 
+                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,status = "",plotOutput("ICDODSRPLOTS", height = '452px')%>% 
                                           withSpinner(type = 3, color = '#3c8dbc', size = 1.5
                                                       ,color.background ='#ecf0f5' ),dataTableOutput("ICD10DSRTABLE"))),
                                  
@@ -832,7 +845,7 @@ function(row, data, dataIndex, columnIndex) {
 
       tags$div(
         style = "text-align: center; margin-top: 20px;",
-        
+        maroon
       )
     )
     
