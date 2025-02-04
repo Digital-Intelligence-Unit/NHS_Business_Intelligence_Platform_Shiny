@@ -86,7 +86,7 @@ output$masterdynamic_datatables_ui2 <- renderUI({
                          "function(settings, json) {",
                          
                          
-                         "$(this.api().table().header()).css({'z-index': '1', 'background-color': '#4775BC', 'color': '#fff', 'font-size': '10pt', 'border': '10px solid white', 'border-color': 'white'});",
+                         "$(this.api().table().header()).css({'z-index': '1', 'background-color': '#27205D', 'color': '#fff', 'font-size': '10pt', 'border': '10px solid white', 'border-color': 'white'});",
                          "var table = this.api().table().header();",
                          #"var newHeaderRow1 = $('<tr>').append('<th colspan=\"2\" style = \"text-align: center;  border: 3px solid white;  \">  </th><th id = \"th_title\" colspan=\"6\" style = \"text-align: center;  border: 3px solid white;\"></th>');",
                          "var newHeaderRow2 = $('<tr>').append('<th colspan=\"2\" style = \"text-align: center;  border: 3px solid white;\"><h5></h5></th><th colspan=\"3\" style = \"text-align: center;  border: 3px solid white;\">",SELECTED_DATASET_MASTER()$slopeorrel," Index of Inequality</th><th colspan=\"3\" style = \"text-align: center;  border: 3px solid white;\">Yearly Change</th>');",
@@ -105,7 +105,7 @@ function(row, data, dataIndex, columnIndex) {
   
   const group = data[",group_column_index,"];
   
-  const barColor = (group === 'Life Expectancy') ? '#FFA500' : '#1E90FF';
+  const barColor = (group === 'Life Expectancy') ? '#FFB22B' : '#6BAED6';
 
   function xsc(d) {
     return d3.scaleLinear()
@@ -501,7 +501,7 @@ function(row, data, dataIndex, columnIndex) {
       fluidRow(column(12,
                       box(
                         title = paste(indicator),
-                        status = "maroon",
+                        background = '#BB2882',
                         solidHeader = TRUE,
                         closable = FALSE,
                         id = paste0("box", clickedRow),
@@ -524,7 +524,7 @@ function(row, data, dataIndex, columnIndex) {
                                                   pull()), end = 4)),
                                              step = 1, sep = "", ticks = F),
                                  column(6,
-                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,status = "maroon",tabsetPanel(
+                                 box(title = "Metrics by Year" ,solidHeader = TRUE,width=12,background = '#BB2882',tabsetPanel(
                                    id = 'plots_tab',
 
                                    tabPanel("RII Plot", tags$hr(style = "border-top: 2px solid #ccc; margin-top: 20px; margin-bottom: 20px;"),
@@ -590,7 +590,7 @@ function(row, data, dataIndex, columnIndex) {
                                    
                                    ))),
                                  column(6,
-                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,status = "maroon",plotOutput("ICDODSRPLOTSMASTER", height = '452px')%>% 
+                                        box(title = "Metrics by Quintile" ,solidHeader = TRUE,width=12,background = '#BB2882',plotOutput("ICDODSRPLOTSMASTER", height = '452px')%>% 
                                           withSpinner(type = 3, color = '#3c8dbc', size = 1.5
                                                       ,color.background ='#ecf0f5' ),dataTableOutput("ICD10DSRTABLEMASTER"))),
   

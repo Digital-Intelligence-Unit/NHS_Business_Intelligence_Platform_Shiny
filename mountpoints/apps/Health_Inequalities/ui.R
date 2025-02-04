@@ -208,7 +208,7 @@ ui <- dashboardPage(
       tabItem(tabName = "MainMenu", 
               
               # fluidRow(
-              #   box(title = "Welcome", status = "maroon", solidHeader = T, width = 12
+              #   box(title = "Welcome", background = '#BB2882', solidHeader = T, width = 12
               #       ,tags$h1("Welcome to the Health Inequalities Explorer"),
               #       tags$p("Thank you for using the Health Inequalities Explorer, a tool designed to provide insights into disparities in health outcomes.
               #              The app focuses on the Relative Index of Inequality (RII), offering users the ability to select a health metric of intrest and explore detialied breakdowns, including yearly trends and directly standardised rates. \n
@@ -221,7 +221,7 @@ ui <- dashboardPage(
                                 div(style = "margin-left: 100px",
                                 materialSwitch(inputId = "rii_sii_icd10_switch2Master",
                                   label = "SII", inline = TRUE, value = T),
-                                  span("RII"))), status = "maroon",
+                                  span("RII"))), background = '#BB2882',
                     solidHeader = T, width = 12, 
                  
                   
@@ -1097,7 +1097,7 @@ tabItem(
                     
         closable = FALSE, 
         width = 12,
-        status = "maroon", 
+        background = '#BB2882', 
         solidHeader = TRUE, 
         collapsible = FALSE,
         height = '100%',
