@@ -788,13 +788,13 @@ function(row, data, dataIndex, columnIndex) {
           geom_line() +
           geom_errorbar(data = filtered_data ,
                         aes(x = Year, ymin = Std_Rate - (Std_Rate - Std_LCL), ymax = Std_Rate + (Std_UCL - Std_Rate))) +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == 'ALL_EVENTS',option == indicator) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) 
       } else if (input$chart_typeMASTER == "lines" & input$add_oaDSRMASTER == 'no') {
         p <- p + geom_line() +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == 'ALL_EVENTS',option == indicator) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) #+
@@ -815,7 +815,7 @@ function(row, data, dataIndex, columnIndex) {
           geom_line(data = allDSRsOverarching %>%
                       filter(Chapter == 'ALL_EVENTS',option == indicator) %>%
                       mutate(Quintile = "Total Population"),aes(x = Year, y= Std_Rate)) +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == 'ALL_EVENTS',option == indicator) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) 
@@ -825,7 +825,7 @@ function(row, data, dataIndex, columnIndex) {
           geom_line(data = allDSRsOverarching %>%
                       filter(Chapter == 'ALL_EVENTS',option == indicator) %>%
                       mutate(Quintile = "Total Population"),aes(x = Year, y= Std_Rate)) +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == 'ALL_EVENTS',option == indicator) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) 

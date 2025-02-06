@@ -1078,17 +1078,13 @@ tabItem(
         }
         
 
-         .box.box-solid.box-primary>.box-header {
+         .box.box-solid.box-maroon>.box-header {
 
-         background:#BB2882
+            color: #fff;
+            background: #BB2882;
+            background-color: #BB2882;
 
-                }
-
-                .box.box-solid.box-primary{
-
-                
-                }
-
+        }
 
 
               "
