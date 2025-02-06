@@ -247,7 +247,7 @@ observeEvent(input$rii_sii_icd10_switch2, {
                          
                          
                          "var table = this.api();
-                        table.column(8).search('Paediatric Admissions 16 Years and Under  per 100,000 Persons' ? '^' + 'Paediatric Admissions 16 Years and Under  per 100,000 Persons'  + '$' : '', true, false).draw(); 
+                        table.column(8).search('GP Fingertips Data' ? '^' + 'GP Fingertips Data'  + '$' : '', true, false).draw(); 
                      
                       $('#group-by-select-add-mort_nonelectiverii').on('change', function() {
                         var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -257,7 +257,7 @@ observeEvent(input$rii_sii_icd10_switch2, {
                       });
                       
                       
-                      table.column(8).data().unique().sort().reverse().each(function(d) {
+                      table.column(8).data().unique().sort().each(function(d) {
                        $('#group-by-select-add-mort_nonelectiverii').append('<option value=\"' + d + '\">' + d + '</option>');
                       
                       
@@ -304,7 +304,7 @@ function(row, data, dataIndex, columnIndex) {
 
   const groupValue = data[9];
     
-  if (groupValue === 'GP Fingertips Data Metrics per 100'){
+  if (groupValue === 'GP Fingertips Data Metrics per 100' || groupValue === 'Local Health Data Metrics per 100'){
   $('td', row).addClass('CrudeRates');
      }
 
@@ -316,6 +316,9 @@ function(row, data, dataIndex, columnIndex) {
     barColor = '#FC4B6C';//RED
     $('#group-by-select').attr('disabled','disabled');
   } else if (group === 'Local Health Data') {
+    barColor = '#8C1E78';//green
+    $('#group-by-select').attr('disabled','disabled');
+  } else if (group === 'Wider Determinants') {
     barColor = '#8C1E78';//green
     $('#group-by-select').attr('disabled','disabled');
   } else {
@@ -1026,13 +1029,13 @@ function(row, data, dataIndex, columnIndex) {
           geom_line() +
           geom_errorbar(data = filtered_data ,
                         aes(x = Year, ymin = Std_Rate - (Std_Rate - Std_LCL), ymax = Std_Rate + (Std_UCL - Std_Rate))) +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == indicator, option == header) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) 
       } else if (input$chart_type == "lines" & input$add_oaDSR == 'no') {
         p <- p + geom_line() +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == indicator, option == header) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) #+
@@ -1053,7 +1056,7 @@ function(row, data, dataIndex, columnIndex) {
           geom_line(data = allDSRsOverarching %>%
                       filter(Chapter == indicator, option == header)%>%
                       mutate(Quintile = "Total Population"),aes(x = Year, y= Std_Rate)) +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == indicator, option == header) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) 
@@ -1064,7 +1067,7 @@ function(row, data, dataIndex, columnIndex) {
           geom_line(data = allDSRsOverarching %>%
                       filter(Chapter == indicator, option == header)%>%
                       mutate(Quintile = "Total Population"),aes(x = Year, y= Std_Rate)) +
-          ylim(0, max(allDSRsOverarching %>%
+          ylim(0, max(allDsrs %>%
                         filter(Chapter == indicator, option == header) %>% 
                         select(Std_Rate) %>%
                         pull()) * 1.5) 
