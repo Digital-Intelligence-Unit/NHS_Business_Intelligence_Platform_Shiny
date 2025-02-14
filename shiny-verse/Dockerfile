@@ -1,5 +1,7 @@
 FROM rocker/shiny:4.0.2
 
+RUN echo "disable_protocols xhr-streaming;" >> /etc/shiny-server/shiny-server.conf
+
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
   libxml2-dev \
   libcairo2-dev \
@@ -81,4 +83,15 @@ RUN install2.r --error  --skipinstalled \
     forecast\
     lubridate\
     prophet\
+    caret\
+    PHEindicatormethods\
+    xgboost\
+    caret\
+    zoo\
+    readr\
+    shinydashboardPlus\
+    d3r\
+    shinycssloaders\
+    funnelR\
+
     && rm -rf /tmp/downloaded_packages
